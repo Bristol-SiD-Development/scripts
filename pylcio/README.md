@@ -1,0 +1,1 @@
+Directory to put simple scripts based on the pylcio bindings
