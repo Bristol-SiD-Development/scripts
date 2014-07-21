@@ -13,15 +13,34 @@ def print_params(event, inputCollectionTypeName=None, inputCollectionName=None):
     for collectionName, collection in event:
         if ((not inputCollectionName) or collectionName == inputCollectionName) \
                 and ((not inputCollectionTypeName) or collection.getTypeName() == inputCollectionTypeName):
-            print "CN: " + str(collectionName) + ", CTN: " + str(collection.getTypeName())
+            print "collectionName: " + str(collectionName) + ", collectionTypeName: " + str(collection.getTypeName())
             params =  collection.getParameters()
-            for intKey in params.getIntKeys():
-                print intKey + " : " + params.getIntVal(intKey)
-            for floatKey in params.getFloatKeys():
-                print floatKey + " : " + params.getFloatVal(floatKey)
-            for stringKey in params.getStringKeys():
-                print stringKey + " : " + params.getStringVal(stringKey)
 
+            intKeyStringVec = EVENT.StringVec()
+            floatKeyStringVec = EVENT.StringVec()
+            stringKeyStringVec = EVENT.StringVec()
+
+            intValStringVec = EVENT.StringVec()
+            floatValStringVec = EVENT.StringVec()
+            stringValStringVec = EVENT.StringVec()
+            """
+            print len(params.getIntKeys(intKeyStringVec))
+            print len(params.getFloatKeys(floatKeyStringVec))
+            print len(params.getStringKeys(stringKeyStringVec))
+            """
+            stringKeys = params.getStringKeys(stringKeyStringVec)
+            for stringKey in stringKeys:
+                stringVals = params.getStringVals(stringKey, stringValStringVec)
+                for j, string in enumerate(stringVals):
+                    print "    " + stringKey + "[" + str(j) + "]" + " ~> " + string
+            """
+            for intKey in params.getIntKeys(intKeyStringVec):
+                print intKey + " : " + params.getIntVal(intKey)
+            for floatKey in params.getFloatKeys(floatKeyStringVec):
+                print floatKey + " : " + params.getFloatVal(floatKey)
+            for stringKey in params.getStringKeys(stringKeyStringVec):
+                print stringKey + " : " + params.getStringVal(stringKey)
+            """
 def walk_particles(root, depth=0):
     tabs = ""
     for i in range(depth):
@@ -38,7 +57,7 @@ if __name__ == "__main__":
         print "Opening argv[1] = " + sys.argv[1]
         reader.open( sys.argv[1] )
     else:
-        print "Opening default = pythiaZPolebbbar_with_particle_tbl.10.full.slcio" 
+        print "Opening default = pythiaZPolebbbar_with_particle_tbl.full.slcio" 
         reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
 
     for event in reader:
@@ -47,9 +66,13 @@ if __name__ == "__main__":
 
 # loop over all events in the file
 """
+reader = IOIMPL.LCFactory.getInstance().createLCReader()
+print "Opening argv[1] = " + sys.argv[1]
+reader.open( sys.argv[1] )
 for event in reader:
     print 'Content of event number %s' % ( event.getEventNumber() )
-
+    for collectionName, collection in event:
+        print collectionName
 
     BuildUpVertex = event.getCollection("BuildUpVertex")
 
@@ -95,9 +118,7 @@ for event in reader:
         #for thing in collection:
             params = collection.parameters()
             
-            #lInt = EVENT.StringVec()
-            #lFloat = EVENT.StringVec()
-            lStr = EVENT.StringVec()
+            
             
             valStrVec = EVENT.StringVec()
             strKeys = EVENT.StringVec()
@@ -115,6 +136,6 @@ for event in reader:
                 if params.getNString(key) == 1:
                     print params.getStringVal(key) 
    
-
+     """
 reader.close()
-"""
+
