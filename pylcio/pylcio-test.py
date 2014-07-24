@@ -1,4 +1,4 @@
-#! /bin/env python
+x#! /bin/env python
 
 from pyLCIO import IOIMPL
 from pyLCIO import UTIL
@@ -8,39 +8,62 @@ import sys
  
 # create a reader and open an LCIO file
 
-
 def print_params(event, inputCollectionTypeName=None, inputCollectionName=None):
     for collectionName, collection in event:
-        if ((not inputCollectionName) or collectionName == inputCollectionName) \
-                and ((not inputCollectionTypeName) or collection.getTypeName() == inputCollectionTypeName):
-            print "collectionName: " + str(collectionName) + ", collectionTypeName: " + str(collection.getTypeName())
+        if ((not inputCollectionName) \
+                or collectionName == inputCollectionName) \
+                and ((not inputCollectionTypeName) \
+                or collection.getTypeName() == inputCollectionTypeName):
+
+            print "collectionName: " + str(collectionName) \
+                + ", collectionTypeName: " \
+                + str(collection.getTypeName())
+
             params =  collection.getParameters()
 
             intKeyStringVec = EVENT.StringVec()
             floatKeyStringVec = EVENT.StringVec()
             stringKeyStringVec = EVENT.StringVec()
 
-            intValStringVec = EVENT.StringVec()
-            floatValStringVec = EVENT.StringVec()
-            stringValStringVec = EVENT.StringVec()
-            """
-            print len(params.getIntKeys(intKeyStringVec))
-            print len(params.getFloatKeys(floatKeyStringVec))
-            print len(params.getStringKeys(stringKeyStringVec))
-            """
+            intValVec = EVENT.IntVec()
+            floatValVec = EVENT.FloatVec()
+            stringValVec = EVENT.StringVec()
+
+            intKeys = params.getIntKeys(intKeyStringVec)
+            print "Ints: "
+            for intKey in intKeys:
+                intVals = params.getIntVals(intKey, intValVec)
+                for j, intVal in enumerate(intVals):
+                    print "    " + intKey + "[" + str(j) + "]" + " ~> " + str(intVal)
+            print "Floats: "
+            floatKeys = params.getFloatKeys(floatKeyStringVec)
+            for floatKey in floatKeys:
+                floatVals = params.getFloatVals(floatKey, floatValVec)
+                for j, floatVal in enumerate(floatVals):
+                    print "    " + floatKey + "[" + str(j) + "]" + " ~> " + str(floatVal)
+            print "Strings: "
             stringKeys = params.getStringKeys(stringKeyStringVec)
             for stringKey in stringKeys:
-                stringVals = params.getStringVals(stringKey, stringValStringVec)
+                stringVals = params.getStringVals(stringKey, stringValVec)
                 for j, string in enumerate(stringVals):
                     print "    " + stringKey + "[" + str(j) + "]" + " ~> " + string
-            """
-            for intKey in params.getIntKeys(intKeyStringVec):
-                print intKey + " : " + params.getIntVal(intKey)
-            for floatKey in params.getFloatKeys(floatKeyStringVec):
-                print floatKey + " : " + params.getFloatVal(floatKey)
-            for stringKey in params.getStringKeys(stringKeyStringVec):
-                print stringKey + " : " + params.getStringVal(stringKey)
-            """
+
+def print_pids(event):
+    for collectionName, collection in event:
+        if collection.getTypeName() == "ReconstructedParticle":
+            for recon_particle in collection:
+                print "Type: " + str(recon_particle.getType()) + " Goodness: " + str(recon_particle.getGoodnessOfPID())
+
+def print_tags(event,inputCollectionName="RefinedJets"):
+    collection = event.getCollection(inputCollectionName)
+    pidh = UTIL.PIDHandler(collection)
+    algo = pidh.getAlgorithmID( "lcfiplus" )
+    ibtag = pidh.getParameterIndex(algo, "BTag")
+    ictag = pidh.getParameterIndex(algo, "CTag")
+    for particle in collection:
+        pid = pidh.getParticleID(particle, algo)
+        print "    BTag = " + str(pid.getParameters()[ibtag])   + " CTag = " + str(pid.getParameters()[ictag])
+
 def walk_particles(root, depth=0):
     tabs = ""
     for i in range(depth):
@@ -50,6 +73,9 @@ def walk_particles(root, depth=0):
     for daughter in root.getParticles():
         walk_particles(daughter, depth+1)
 
+def printCollectionNames(event):
+    for collectionName, collection in event:
+        print "collectionName: \"" + collectionName + "\", collectionTypeName: \"" + collection.getTypeName() + "\""
 
 if __name__ == "__main__":
     reader = IOIMPL.LCFactory.getInstance().createLCReader()
@@ -59,12 +85,16 @@ if __name__ == "__main__":
     else:
         print "Opening default = pythiaZPolebbbar_with_particle_tbl.full.slcio" 
         reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
-
-    for event in reader:
+        
+    for i, event in enumerate(reader):
         # inputCollectionTypeName="ReconstructedParticle"
-        print_params(event)
-
+        #print_params(event, inputCollectionName="RefinedJets")
+        #print_pids(event)
+        #printCollectionNames(event)
+        print "Event[" + str(i) + "]"
+        print_tags(event)
 # loop over all events in the file
+
 """
 reader = IOIMPL.LCFactory.getInstance().createLCReader()
 print "Opening argv[1] = " + sys.argv[1]
@@ -86,8 +116,7 @@ for event in reader:
             for vertex in collection:
                 if vertex.isPrimary():
                     print "Found primary"
-                    primary_vertex = vertex
-                
+                    primary_vertex = vertex                
     primary_particle = primary_vertex.getAssociatedParticle()
     walk_particles(primary_particle)
 
