@@ -1,6 +1,6 @@
 #! /bin/env python2
 
-from subprocess import check_call
+from subprocess import check_call, call
 import argparse
 
 import os
@@ -8,14 +8,14 @@ import os
 import itertools
 
 def parse_args(steering_files, geometry_files):
-
+    #Note that is impossible to set the weight and probability options that marlin takes because the resulting string would have multiple '.'s in it... 
     current_directory = os.getcwd()
     
     default_steering_dir = os.path.join(current_directory, "steering_files")
     default_geometry_dir = os.path.join(current_directory, "geometry_files")
-    default_weight_dir = os.path.join(current_directory, "weight_files")
-    default_weight_prefix = "qq91_v02_p01"
-    default_prob_dir = os.path.join(current_directory, "prob_files")
+    #default_weight_dir = os.path.join(current_directory, "weight_files")
+    #default_weight_prefix = "qq91_v02_p01"
+    #default_prob_dir = os.path.join(current_directory, "prob_files")
 
     parser = argparse.ArgumentParser("Run the SiD reco chain")
 
@@ -29,17 +29,18 @@ def parse_args(steering_files, geometry_files):
                         help="Path to the directory containing the following files: "  + ", ".join([geometry_files[key] for key in geometry_files]),
                         default=default_geometry_dir)
 
-    parser.add_argument("-w", "--weight-dir", 
+    """parser.add_argument("-w", "--weight-dir", 
                         help="Path to the weight files directory",
-                        default="default_weight_dir")
+                        default="default_weight_dir")"""
 
-    parser.add_argument("-W", "--weight-prefix", 
+    """parser.add_argument("-W", "--weight-prefix", 
                         help="Weight file prefix to use",
-                        default=default_weight_prefix)
+                        default=default_weight_prefix)"""
 
-    parser.add_argument("-p", "--prob-dir", 
+    """parser.add_argument("-p", "--prob-dir", 
                         help="Path to the probability files directory",
-                        default=default_prob_dir)
+                        default=default_prob_dir)"""
+
     parser.add_argument("-o", "--output-dir",
                         help="Path to the output directory",
                         default=current_directory)
@@ -49,22 +50,28 @@ def parse_args(steering_files, geometry_files):
     return parser.parse_args()
 
 def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
+
     current_directory = os.getcwd()
-    input_file_no_ext, ext = os.path.splitext(args.stdhep_input)
+    input_file_no_ext, stdhep_ext = os.path.splitext(args.stdhep_input)
+    slcio_ext = ".slcio"
 
-    slic_output              = os.path.join(args.output_dir, input_file_no_ext + "_slic" + ext)
-    lcsim_digi_output        = os.path.join(args.output_dir, input_file_no_ext + "_lcsimDigi" + ext)
-    pandora_output           = os.path.join(args.output_dir, input_file_no_ext  + "_pandora" + ext)
-    marlin_vertexing_output  = os.path.join(args.output_dir, input_file_no_ext + "_marlinVertexing" + ext)
-    lcsim_dst_output         = os.path.join(args.output_dir, input_file_no_ext + "lcsimDst" + ext)
-    lcsim_full_output        = os.path.join(args.output_dir, input_file_no_ext + "lcsimFull" + ext)
-    marlin_flavortag_output = os.path.join(args.output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + ext)
+    slic_output_file_no_ext = input_file_no_ext + "_slic" #needed because slic wants the output path and filenames split into two arguments!
+    slic_output_file = slic_output_file_no_ext + slcio_ext
 
+    slic_output              = os.path.join(args.output_dir,slic_output_file)
 
+    lcsim_digi_output        = os.path.join(args.output_dir, input_file_no_ext + "_lcsimDigi" + slcio_ext)
+    pandora_output           = os.path.join(args.output_dir, input_file_no_ext  + "_pandora" + slcio_ext)
+    marlin_vertexing_output  = os.path.join(args.output_dir, input_file_no_ext + "_marlinVertexing" + slcio_ext)
+    lcsim_dst_output         = os.path.join(args.output_dir, input_file_no_ext + "lcsimDst" + slcio_ext)
+    lcsim_full_output        = os.path.join(args.output_dir, input_file_no_ext + "lcsimFull" + slcio_ext)
+    marlin_flavortag_output = os.path.join(args.output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
+
+    """
     check_call([binaries["slic"], 
            "-g", geometry_files["slic"],
            "-i", args.stdhep_input,
-           "-o", slic_output,
+           "-o", slic_output_file,
            "-p", args.output_dir,
            "-r", args.runs,
            "-P", "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/slic/v03-01-03/simulation/particle.tbl"
@@ -74,7 +81,7 @@ def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
            steering_files["lcsim_digi"],
            "-DinputFile=" +  slic_output,
            "-DoutputFile=" + lcsim_digi_output,
-           "-DtrackingStrategies=" + steeringFiles["lcsim_track_strat"]
+           "-DtrackingStrategies=" + steering_files["lcsim_track_strat"]
            ])
 
     old_LD_LIBRARY_PATH = os.environ.get("LD_LIBRARY_PATH")
@@ -101,15 +108,11 @@ def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
            "-DinputFile=" + marlin_vertexing_output,
            "-DrecFile=" + lcsim_full_output,
            "-DdstFile=" + lcsim_dst_output])
-
-    check_call( binaries["marlin"], 
+    """
+    check_call( [binaries["marlin"], 
            "--global.LCIOInputFiles=" + lcsim_dst_output,
            "--MyLCIOOutputProcessor.LCIOOutputFile=" + marlin_flavortag_output,
-           "--FlavorTag.WeightsDirectory=" + args.weight_dir,
-           "--FlavorTag.WeightsPrefix=" + args.weight_prefix,
-           "--FlavorTag.D0ProbFileName=" + os.path.join(args.prob_dir, "d0prob_zpole.root"),
-           "--FlavorTag.Z0ProbFileName=" + os.path.join(args.prob_dir, "z0prob_zpole.root"),
-           steering_files["marlin_flavortag"])
+           steering_files["marlin_flavortag"]])
 
     return 0
 
@@ -140,10 +143,11 @@ if __name__=="__main__":
                 "marlin": marlin_binary,
                 "anajob": anajob_binary}
 
-    check_call([os.path.join(ilcsoft_dir, "init_ilcsoft.sh")])
+    print "sourcing " + os.path.join(ilcsoft_dir, "init_ilcsoft.sh") + "..."
+    check_call(["source " + os.path.join(ilcsoft_dir, "init_ilcsoft.sh")], shell=True)
 
     args = parse_args(steering_files, geometry_files)
-    print args
+    #print args
     for key in steering_files:
         steering_files[key] = os.path.join(args.steering_dir, steering_files[key])
 

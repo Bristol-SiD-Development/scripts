@@ -1,0 +1,79 @@
+<lcsim xmlns:lcsim="http://www.lcsim.org/schemas/lcsim/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+    xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+    <inputFiles>
+        <file>${inputFile}</file>
+    </inputFiles>
+    
+    <control>
+        <numberOfEvents>-1</numberOfEvents>
+        <verbose>false</verbose>
+        <printDriverStatistics>true</printDriverStatistics>
+        <printDriversDetailed>true</printDriversDetailed>
+    </control>
+    
+    <execute>
+        <driver name="EventMarkerDriver"/>
+        <driver name="MCTruthLinker"/>
+        <driver name="RECWriter"/>
+        <driver name="TrackHitRemover"/>
+        <driver name="DSTPreparation"/>
+        <driver name="DSTWriter"/>
+    </execute>
+    
+    <drivers>
+        <!-- Give feedback on loop progress -->
+        <driver name="EventMarkerDriver"
+                type="org.lcsim.job.EventMarkerDriver">
+            <eventInterval>1</eventInterval>
+        </driver>
+        
+        <!-- Create truth links between mc particles and tracks, clusters and reconstructed particles -->
+        <driver name="MCTruthLinker"
+                type="org.lcsim.recon.util.McTruthLinker">
+           <trackHitMcRelationName>HelicalTrackMCRelations</trackHitMcRelationName>
+           <trackCollectionName>Tracks</trackCollectionName>
+           <trackMcRelationName>TrackMCTruthLink</trackMcRelationName>
+           <caloHitSimHitRelationName>CalorimeterHitRelations</caloHitSimHitRelationName>
+           <clusterCollectionName>ReconClusters</clusterCollectionName>
+           <clusterMcRelationName>ClusterMCTruthLink</clusterMcRelationName>
+           <pfoCollectionName>PandoraPFOCollection</pfoCollectionName>
+           <pfoMcRelationName>RecoMCTruthLink</pfoMcRelationName>
+           <mcParticleCollectionName>MCParticle</mcParticleCollectionName>
+           <mcParticlesSkimmedName>MCParticlesSkimmed</mcParticlesSkimmedName>
+           <pfoTrackWeight>1.0</pfoTrackWeight>
+           <pfoClusterWeight>0.0</pfoClusterWeight>
+           <keepDaughtersPDGID>22 111 310 13 211 321 3122 3112 3312 3212</keepDaughtersPDGID>
+           <daughterEnergyCut>0.010</daughterEnergyCut>
+           <fullRecoRelation>false</fullRecoRelation>
+        </driver>
+        
+        <!-- Write files with all collections -->
+        <driver name="RECWriter"
+                type="org.lcsim.util.loop.LCIODriver">
+            <outputFilePath>${recFile}</outputFilePath>
+        </driver>
+
+        <!-- Remove all HelicalTrackHits not associated with a track and clear RawTrackerHit References-->
+        <driver name="TrackHitRemover"
+                type="org.lcsim.recon.util.RemoveUnusedTrackerHits">
+            <clearRawTrackerHits>true</clearRawTrackerHits>
+        </driver>
+        
+        <!-- Prepare collections for DST output -->
+        <driver name="DSTPreparation"
+                type="org.lcsim.util.LCIOFlagDriver">
+            <subset>MCParticlesSkimmed false</subset>
+            <keepTrackHits>Tracks true</keepTrackHits>
+            <keepClusterHits>ReconClusters false</keepClusterHits>
+        </driver>
+        
+        <!-- Write files with just reconstructed particles -->
+        <driver name="DSTWriter"
+                type="org.lcsim.util.loop.LCIODriver">
+            <outputFilePath>${dstFile}</outputFilePath>
+            <writeOnlyCollections>PrimaryVertex PrimaryVertex_RP BuildUpVertex BuildUpVertex_RP BuildUpVertex_V0 BuildUpVertex_V0_RP PandoraPFOCollection RecoMCTruthLink Tracks TrackMCTruthLink ReconClusters ClusterMCTruthLink MCParticlesSkimmed HelicalTrackHits</writeOnlyCollections>
+        </driver>
+    </drivers>
+</lcsim>
+
