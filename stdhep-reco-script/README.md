@@ -1,4 +1,6 @@
 #Overall
+To run either script you must have access to afs as they depend heavily on things in /afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/ and lightly on files in my public directory (for flavortagging).
+
 Both scripts are heavily based on the 'From Zero to SiD' guide found [here](https://confluence.slac.stanford.edu/display/~stanitz/From+Zero+to+SiD+-+Running+Sim+Reco) some things  must be changed in the sample xml files provided [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/) to make them compatable with the sidloi3 detector files. 
 
 ##Changes in marlin flavortag steering file:
@@ -13,7 +15,7 @@ Also note that the gear.xml file that is passed to marlin flavortag is a dummy c
 
 The shell script is a simple (if ugly) script to automate the SiD Sim-Reco chain. Currently it requires all of the input files to be in specific hardcoded directories in my (/afs/cern.ch/user/o/oreardon/) afs home.
 
-It is set up to run the chain with the pythiaZPolebbbar.stdhep (found here: ftp://ftp-lcd.slac.stanford.edu/lcd/ILC/ZPole/stdhep/pythia/) input file although it can be edited with a simple find and replace.
+It is set up to run the chain with the pythiaZPoleccbar-0-1000.stdhep (found [here](ftp://ftp-lcd.slac.stanford.edu/lcd/ILC/ZPole/stdhep/pythia/)) input file although it can be edited with a simple find and replace.
 
 The file BB_sid_dbd_vertexing.xml must also be edited to reflect any changes in the input and output files marlin uses for the LCFIplus vertexing.
 
