@@ -5,8 +5,6 @@ import argparse
 
 import os
 
-import itertools
-
 def parse_args(steering_files, geometry_files):
     #Note that is impossible to set the weight and probability options that marlin takes because the resulting string would have multiple '.'s in it... 
     current_directory = os.getcwd()
@@ -49,88 +47,24 @@ def parse_args(steering_files, geometry_files):
                         default=10)
     return parser.parse_args()
 
-def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
-
-    current_directory = os.getcwd()
-    input_file_no_ext, stdhep_ext = os.path.splitext(args.stdhep_input)
-    slcio_ext = ".slcio"
-
-    slic_output_file_no_ext = input_file_no_ext + "_slic" #needed because slic wants the output path and filenames split into two arguments!
-    slic_output_file = slic_output_file_no_ext + slcio_ext
-
-    slic_output              = os.path.join(args.output_dir,slic_output_file)
-
-    lcsim_digi_output        = os.path.join(args.output_dir, input_file_no_ext + "_lcsimDigi" + slcio_ext)
-    pandora_output           = os.path.join(args.output_dir, input_file_no_ext  + "_pandora" + slcio_ext)
-    marlin_vertexing_output  = os.path.join(args.output_dir, input_file_no_ext + "_marlinVertexing" + slcio_ext)
-    lcsim_dst_output         = os.path.join(args.output_dir, input_file_no_ext + "lcsimDst" + slcio_ext)
-    lcsim_full_output        = os.path.join(args.output_dir, input_file_no_ext + "lcsimFull" + slcio_ext)
-    marlin_flavortag_output = os.path.join(args.output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
-
-
-    check_call([binaries["slic"], 
-           "-g", geometry_files["slic"],
-           "-i", args.stdhep_input,
-           "-o", slic_output_file,
-           "-p", args.output_dir,
-           "-r", args.runs,
-           "-P", "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/slic/v03-01-03/simulation/particle.tbl"
-           ])
-
-    check_call(["java", "-jar", binaries["lcsim"],
-           steering_files["lcsim_digi"],
-           "-DinputFile=" +  slic_output,
-           "-DoutputFile=" + lcsim_digi_output,
-           "-DtrackingStrategies=" + steering_files["lcsim_track_strat"]
-           ])
-
-    old_LD_LIBRARY_PATH = os.environ.get("LD_LIBRARY_PATH")
-    os.putenv("LD_LIBRARY_PATH", 
-              "{0}:{1}".format(old_LD_LIBRARY_PATH, 
-                               os.path.join(ilcsoft_dir, "slicPandora/v01-00-00/build/lib/")))
-
-    check_call([binaries["pandora"], 
-           "-g", geometry_files["pandora"],
-           "-c", steering_files["pandora"],
-           "-i", lcsim_digi_output,
-           "-o", pandora_output])
-
-    os.putenv("LD_LIBRARY_PATH", old_LD_LIBRARY_PATH)
-
-    check_call([binaries["marlin"],
-           "--global.LCIOInputFiles=" + pandora_output,
-           "--MyLCIOOutputProcessor.LCIOOutputFile="+  marlin_vertexing_output,
-           steering_files["marlin_vertexing"]
-           ])
-
-    check_call(["java", "-jar", binaries["lcsim"],
-           steering_files["lcsim_dst"],
-           "-DinputFile=" + marlin_vertexing_output,
-           "-DrecFile=" + lcsim_full_output,
-           "-DdstFile=" + lcsim_dst_output])
-
-    check_call( [binaries["marlin"], 
-           "--global.LCIOInputFiles=" + lcsim_dst_output,
-           "--MyLCIOOutputProcessor.LCIOOutputFile=" + marlin_flavortag_output,
-           steering_files["marlin_flavortag"]])
-
-    return 0
-
-if __name__=="__main__":
+def setup_steering_dict():
     steering_files = {"lcsim_digi":"lcsim_prepandora.xml", 
                       "lcsim_track_strat":"lcsim_tracking_strategies.xml", 
                       "pandora":"pandora.xml", 
                       "marlin_vertexing":"marlin_vertexing.xml",
                       "lcsim_dst":"lscim_postpandora.xml", 
                       "marlin_flavortag":"marlin_flavortag.xml"}
+    return steering_files
 
+def setup_geom_dict():
     geometry_files = {"slic":"geom_slic.lcdd",
                       "pandora":"geom_pandora.xml",
                       "marlin":"geom_marlin_gear.xml"}
-
-    ilcsoft_dir="/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05"
-    slic_binary=os.path.join(ilcsoft_dir,"slic/v03-01-03/build/bin/slic")
-    
+    return geometry_files
+def setup_binary_dict(ilcsoft_dir):
+    #slic_binary="/afs/cern.ch/eng/clic/software/slic/2.9.8/rhel5_i686_gcc/packages/slic/v2r9p8/bin/Linux-g++/slic" 
+    #slic_binary=os.path.join(ilcsoft_dir,"slic/v03-01-03/build/bin/slic")
+    slic_binary="/afs/cern.ch/eng/clic/software/slic/2.9.8/rhel5_i686_gcc/scripts/slic.sh"
     pandora_binary=os.path.join(ilcsoft_dir, "slicPandora/v01-00-00/build/bin/PandoraFrontend")
     marlin_binary=os.path.join(ilcsoft_dir,"Marlin/v01-05/bin/Marlin")
     anajob_binary=os.path.join(ilcsoft_dir,"lcio/v02-04-03/bin/anajob")
@@ -142,19 +76,120 @@ if __name__=="__main__":
                 "pandora": pandora_binary,
                 "marlin": marlin_binary,
                 "anajob": anajob_binary}
+    return binaries
 
-    print "sourcing " + os.path.join(ilcsoft_dir, "init_ilcsoft.sh") + "..."
-    check_call(["source " + os.path.join(ilcsoft_dir, "init_ilcsoft.sh")], shell=True)
 
+def setup_output_dicts(input_file, extension, output_dir):
+    input_dir, input_file_ext = os.path.split(input_file)
+
+    input_file_no_ext, stdhep_ext = os.path.splitext(input_file_ext)
+    slcio_ext = ".slcio"
+
+    slic_output_file_no_ext = input_file_no_ext + "_slic" #needed because slic wants the output path and filenames split into two arguments!
+    slic_output_file = slic_output_file_no_ext + slcio_ext
+
+    slic_output              = os.path.join(output_dir,slic_output_file)
+
+    lcsim_digi_output        = os.path.join(output_dir, input_file_no_ext + "_lcsimDigi" + slcio_ext)
+    pandora_output           = os.path.join(output_dir, input_file_no_ext + "_pandora" + slcio_ext)
+    marlin_vertexing_output  = os.path.join(output_dir, input_file_no_ext + "_marlinVertexing" + slcio_ext)
+    lcsim_dst_output         = os.path.join(output_dir, input_file_no_ext + "lcsimDst" + slcio_ext)
+    lcsim_full_output        = os.path.join(output_dir, input_file_no_ext + "lcsimFull" + slcio_ext)
+    marlin_flavortag_output  = os.path.join(output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
+
+    output_paths_dict = {"slic": slic_output,
+                         "lcsim_digi":lcsim_digi_output,
+                         "pandora":pandora_output,
+                         "marlin_vert":marlin_vertexing_output,
+                         "lcsim_dst":lcsim_dst_output,
+                         "lcsim_full":lcsim_full_output,
+                         "marlin_flav":marlin_flavortag_output}
+
+    #Only used for slic but may as well do all of them
+    output_names_dict = {}
+    for key in output_paths_dict:
+        output_dir, output_name = os.path.split(output_paths_dict[key])
+        output_names_dict[key] = output_name
+
+    return output_names_dict, output_paths_dict
+    
+def main():
+    ilcsoft_dir="/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05"
+    steering_files = setup_steering_dict()
+    geometry_files = setup_geom_dict()
+    binaries = setup_binary_dict(ilcsoft_dir)
+    
     args = parse_args(steering_files, geometry_files)
-    #print args
+
+    if not args:
+        print "Invalid args"
+        return -1
+
     for key in steering_files:
         steering_files[key] = os.path.join(args.steering_dir, steering_files[key])
 
     for key in geometry_files:
         geometry_files[key] = os.path.join(args.geometry_dir, geometry_files[key])
 
-    if args:
-        main(steering_files, geometry_files, binaries, ilcsoft_dir, args)
-    else:
-        print "Invalid args"
+
+    output_names_dict, output_paths_dict = setup_output_dict(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
+
+    print "[^]Running CLIC's version of slic (through their bash script)..."
+    check_call([binaries["slic"], 
+                "-g", geometry_files["slic"],
+                "-i", args.stdhep_input,
+                "-o", output_names_dict["slic"],
+                "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy
+                "-r", args.runs,
+                ])
+
+    #Probably worth pointing this out...
+    print "[^] Warning!!! slic has returned 0 but it does this even if it screws up!!!!!!!!!"
+
+    print "[^] Running ilcsoft's lcsim"
+    check_call(["java", "-jar", binaries["lcsim"],
+                steering_files["lcsim_digi"],
+                "-DinputFile=" +  output_paths_dict["slic"],
+                "-DoutputFile=" + output_paths_dict["lcsim_digi"],
+                "-DtrackingStrategies=" + steering_files["lcsim_track_strat"]
+                ])
+
+    
+    print "[^] Adding pandora libraries to path..."
+    old_LD_LIBRARY_PATH = os.path.expandvars("$LD_LIBRARY_PATH")
+    os.putenv("$LD_LIBRARY_PATH", "{0}:{1}".format(os.path.join(ilcsoft_dir, "slicPandora/v01-00-00/build/lib"),old_LD_LIBRARY_PATH))
+
+    print "[^] Running pandora..."
+    check_call([binaries["pandora"], 
+           "-g",  geometry_files["pandora"],
+           "-c",  steering_files["pandora"],
+           "-i",  output_paths_dict["lcsim_digi"],
+           "-o",  output_paths_dict["pandora"]])
+
+    print "[^]Removing pandora libraries from path..."
+    os.putenv("$LD_LIBRARY_PATH", old_LD_LIBRARY_PATH)
+
+    print "[^] Running marlin vertexing..."
+    check_call([binaries["marlin"],
+           "--global.LCIOInputFiles=" + output_paths_dict["pandora"],
+           "--MyLCIOOutputProcessor.LCIOOutputFile="+  output_paths_dict["marlin_vert"],
+           steering_files["marlin_vertexing"]
+           ])
+
+    print "[^] Running lcsim dsting..."
+    check_call(["java", "-jar", binaries["lcsim"],
+           steering_files["lcsim_dst"],
+           "-DinputFile=" + output_paths_dict["marlin_vert"],
+           "-DrecFile=" + output_paths_dict["lcsim_full"],
+           "-DdstFile=" + output_paths_dict["lcsim_dst"]])
+
+    print "[^] Running marlin flavortagging..."
+    check_call( [binaries["marlin"], 
+           "--global.LCIOInputFiles=" + output_paths_dict["lcsim_dst"],
+           "--MyLCIOOutputProcessor.LCIOOutputFile=" + output_paths_dict["marlin_flav"],
+           steering_files["marlin_flavortag"]])
+
+    return 0
+    
+if __name__=="__main__":
+    main()
