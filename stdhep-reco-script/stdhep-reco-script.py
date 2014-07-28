@@ -67,7 +67,7 @@ def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
     lcsim_full_output        = os.path.join(args.output_dir, input_file_no_ext + "lcsimFull" + slcio_ext)
     marlin_flavortag_output = os.path.join(args.output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
 
-    """
+
     check_call([binaries["slic"], 
            "-g", geometry_files["slic"],
            "-i", args.stdhep_input,
@@ -108,7 +108,7 @@ def main(steering_files, geometry_files, binaries, ilcsoft_dir, args):
            "-DinputFile=" + marlin_vertexing_output,
            "-DrecFile=" + lcsim_full_output,
            "-DdstFile=" + lcsim_dst_output])
-    """
+
     check_call( [binaries["marlin"], 
            "--global.LCIOInputFiles=" + lcsim_dst_output,
            "--MyLCIOOutputProcessor.LCIOOutputFile=" + marlin_flavortag_output,
