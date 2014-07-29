@@ -60,6 +60,8 @@ def setup_geom_dict():
     geometry_files = {"slic":"geom_slic.lcdd",
                       "pandora":"geom_pandora.xml",
                       "marlin":"geom_marlin_gear.xml"}
+
+
     return geometry_files
 def setup_binary_dict(ilcsoft_dir):
     #slic_binary="/afs/cern.ch/eng/clic/software/slic/2.9.8/rhel5_i686_gcc/packages/slic/v2r9p8/bin/Linux-g++/slic" 
@@ -112,34 +114,54 @@ def setup_output_dicts(input_file, extension, output_dir):
         output_names_dict[key] = output_name
 
     return output_names_dict, output_paths_dict
+
+def check_all_paths_in_dict_exist(file_dict):
+    all_files_good = True
+    for key in file_dict:
+        if not os.path.isfile(file_dict[key]):
+            print "[^] Error! no valid \"" + str(key) "\" found. \"" + str(file_dict[key]) "\" is not valid!!"
+            all_files_good = False
+    if not all_files_good:
+        return False
+    return True
     
 def main():
     ilcsoft_dir="/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05"
+
     steering_files = setup_steering_dict()
     geometry_files = setup_geom_dict()
     binaries = setup_binary_dict(ilcsoft_dir)
-    
+
     args = parse_args(steering_files, geometry_files)
 
     if not args:
         print "Invalid args"
         return -1
 
+    #Add the path to the steering and geometry dirs to the file names
     for key in steering_files:
         steering_files[key] = os.path.join(args.steering_dir, steering_files[key])
 
     for key in geometry_files:
         geometry_files[key] = os.path.join(args.geometry_dir, geometry_files[key])
 
+    #Error checking is good
+    if not check_all_paths_exist(steering_files):
+        return -1
+    if not check_all_paths_exist(geometry_files):
+        return -1
 
-    output_names_dict, output_paths_dict = setup_output_dict(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
+    if not os.path.isdir(args.output_dir):
+        print "[^] Error no valid output dir found. \"" + str(args.output_dir) "\" is not valid!!" 
+
+    output_names_dict, output_paths_dict = setup_output_dicts(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
 
     print "[^]Running CLIC's version of slic (through their bash script)..."
     check_call([binaries["slic"], 
                 "-g", geometry_files["slic"],
                 "-i", args.stdhep_input,
                 "-o", output_names_dict["slic"],
-                "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy
+                "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy (this is probably not a portable solution...)
                 "-r", args.runs,
                 ])
 
@@ -186,6 +208,7 @@ def main():
     print "[^] Running marlin flavortagging..."
     check_call( [binaries["marlin"], 
            "--global.LCIOInputFiles=" + output_paths_dict["lcsim_dst"],
+           "--global.GearXMLFile=" + geometry_files["marlin"],
            "--MyLCIOOutputProcessor.LCIOOutputFile=" + output_paths_dict["marlin_flav"],
            steering_files["marlin_flavortag"]])
 
