@@ -27,16 +27,15 @@ def parse_args(steering_files, geometry_files):
                         help="Path to the directory containing the following files: "  + ", ".join([geometry_files[key] for key in geometry_files]),
                         default=default_geometry_dir)
     
-    
     parser.add_argument("-o", "--output-dir",
                         help="Path to the output directory",
                         default=current_directory)
     parser.add_argument("-r", "--runs",
                         help="Number of events to run",
                         default=10)
-    parser.add_argument("-d","--delete-intermediate-files",
+    parser.add_argument("-d" ,"--delete-intermediate-files",
                         help="Deletes intermediate (all except the last) files as they become useless to save on disk usage. Defaults to False (as the intermediate files may be useful)",
-                        type=bool, nargs='?',default=False,const=True)
+                        action='store_true')
     return parser.parse_args()
 
 def setup_steering_dict():
@@ -44,7 +43,7 @@ def setup_steering_dict():
                       "lcsim_track_strat":"lcsim_tracking_strategies.xml", 
                       "pandora":"pandora.xml", 
                       "marlin_vertexing":"marlin_vertexing.xml",
-                      "lcsim_dst":"lscim_postpandora.xml", 
+                      "lcsim_dst":"lcsim_postpandora.xml", 
                       "marlin_flavortag":"marlin_flavortag.xml"}
     return steering_files
 
@@ -111,7 +110,7 @@ def check_all_paths_in_dict_exist(file_dict):
     all_files_good = True
     for key in file_dict:
         if not os.path.isfile(file_dict[key]):
-            print "[^] Error! no valid \"" + str(key) "\" found. \"" + str(file_dict[key]) "\" is not valid!!"
+            print "[^] Error! no valid \"" + str(key) + "\" found. \"" + str(file_dict[key]) + "\" is not valid!!"
             all_files_good = False
     if not all_files_good:
         return False
@@ -138,13 +137,13 @@ def main():
         geometry_files[key] = os.path.join(args.geometry_dir, geometry_files[key])
 
     #Error checking is good
-    if not check_all_paths_exist(steering_files):
+    if not check_all_paths_in_dict_exist(steering_files):
         return -1
-    if not check_all_paths_exist(geometry_files):
+    if not check_all_paths_in_dict_exist(geometry_files):
         return -1
 
     if not os.path.isdir(args.output_dir):
-        print "[^] Error no valid output dir found. \"" + str(args.output_dir) "\" is not valid!!" 
+        print "[^] Error no valid output dir found. \"" + str(args.output_dir) + "\" is not valid!!" 
 
     output_names_dict, output_paths_dict = setup_output_dicts(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
 
@@ -154,15 +153,15 @@ def main():
                 "-i", args.stdhep_input,
                 "-o", output_names_dict["slic"],
                 "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy (this is probably not a portable solution...)
-                "-r", args.runs,
+                "-r", args.runs
                 ])
 
-    if not os.isfile(output_paths_dict["slic"]):
+    if not os.path.isfile(output_paths_dict["slic"]):
         print "[^] Error! Slic doesn't seem to have created its output file. Aborting..."
         return -1
 
     #Probably worth pointing this out...
-    print "[^] Warning! slic has returned 0 but it does this even if it screws up!!!!!!!!!"
+    print "[^] Warning! slic has returned 0 but it does this even if it screws up!!"
 
     print "[^] Running ilcsoft's lcsim"
     check_call(["java", "-jar", binaries["lcsim"],
@@ -172,16 +171,16 @@ def main():
                 "-DtrackingStrategies=" + steering_files["lcsim_track_strat"]
                 ])
     
-    if not os.isfile(output_paths_dict["lcsim_digi"]):
+    if not os.path.isfile(output_paths_dict["lcsim_digi"]):
         print "[^] Error! lcsim digitisation doesn't seem to have created its output file. Aborting..."
         return -1
 
-    if args.d:
+    if args.delete_intermediate_files:
         print "[^] Warning! Deleting slic's output file..."
         os.remove(output_paths_dict["slic"])
 
     print "[^] Adding pandora libraries to path..."
-    old_LD_LIBRARY_PATH = os.path.expandvars("$LD_LIBRARY_PATH")
+    old_LD_LIBRARY_PATH = os.path.expandvars("$LD_LIBRARY_PATH") #We need to restore this before marlin can run
     os.putenv("$LD_LIBRARY_PATH", "{0}:{1}".format(os.path.join(ilcsoft_dir, "slicPandora/v01-00-00/build/lib"),old_LD_LIBRARY_PATH))
 
     print "[^] Running pandora..."
@@ -192,16 +191,15 @@ def main():
            "-o",  output_paths_dict["pandora"]])
 
 
-    if not os.isfile(output_paths_dict["pandora"]):
+    if not os.path.isfile(output_paths_dict["pandora"]):
         print "[^] Error! pandora doesn't seem to have created its output file. Aborting..."
         return -1
 
-    if args.d:
+    if args.delete_intermediate_files:
         print "[^] Warning! Deleting lcsim digitisation output file..."
         os.remove(output_paths_dict["lcsim_digi"])
 
-
-    print "[^]Removing pandora libraries from path..."
+    print "[^] Removing pandora libraries from path..."
     os.putenv("$LD_LIBRARY_PATH", old_LD_LIBRARY_PATH)
 
     print "[^] Running marlin vertexing..."
@@ -211,11 +209,11 @@ def main():
            steering_files["marlin_vertexing"]
            ])
 
-    if not os.isfile(output_paths_dict["marlin_vert"]):
+    if not os.path.isfile(output_paths_dict["marlin_vert"]):
         print "[^] Error! marlin vertexing doesn't seem to have created its output file. Aborting..."
         return -1
 
-    if args.d:
+    if args.delete_intermediate_files:
         print "[^] Warning! Deleting pandora output file..."
         os.remove(output_paths_dict["pandora"])
 
@@ -227,14 +225,13 @@ def main():
            "-DrecFile=" + output_paths_dict["lcsim_full"],
            "-DdstFile=" + output_paths_dict["lcsim_dst"]])
 
-    if not os.isfile(output_paths_dict["lcsim_dst"]):
+    if not os.path.isfile(output_paths_dict["lcsim_dst"]):
         print "[^] Error! lcsim dsting doesn't seem to have created its output file. Aborting..."
         return -1
 
-    if args.d:
+    if args.delete_intermediate_files:
         print "[^] Warning! Deleting marlin vertexing output file..."
         os.remove(output_paths_dict["marlin_vert"])
-
 
     print "[^] Running marlin flavortagging..."
     check_call( [binaries["marlin"], 
@@ -243,14 +240,13 @@ def main():
            "--MyLCIOOutputProcessor.LCIOOutputFile=" + output_paths_dict["marlin_flav"],
            steering_files["marlin_flavortag"]])
 
-    if not os.isfile(output_paths_dict["marlin_flav"]):
+    if not os.path.isfile(output_paths_dict["marlin_flav"]):
         print "[^] Error! marlin flavortagging doesn't seem to have created its output file. Aborting..."
         return -1
 
-    if args.d:
+    if args.delete_intermediate_files:
         print "[^] Warning! Deleting lcsim dsting output file..."
-        os.remove(output_paths_dict["marlin_vert"])
-
+        os.remove(output_paths_dict["lcsim_dst"])
 
     return 0
     
