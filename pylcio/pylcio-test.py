@@ -1,10 +1,14 @@
-x#! /bin/env python
+#! /bin/env python
 
 from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
 import sys
+
+from pylciohelperfunctions import *
+
+import itertools
  
 # create a reader and open an LCIO file
 
@@ -54,45 +58,76 @@ def print_pids(event):
             for recon_particle in collection:
                 print "Type: " + str(recon_particle.getType()) + " Goodness: " + str(recon_particle.getGoodnessOfPID())
 
-def print_tags(event,inputCollectionName="RefinedJets"):
-    collection = event.getCollection(inputCollectionName)
-    pidh = UTIL.PIDHandler(collection)
-    algo = pidh.getAlgorithmID( "lcfiplus" )
-    ibtag = pidh.getParameterIndex(algo, "BTag")
-    ictag = pidh.getParameterIndex(algo, "CTag")
-    for particle in collection:
-        pid = pidh.getParticleID(particle, algo)
-        print "    BTag = " + str(pid.getParameters()[ibtag])   + " CTag = " + str(pid.getParameters()[ictag])
-
-def walk_particles(root, depth=0):
-    tabs = ""
-    for i in range(depth):
-        tabs += "    "
-
-    print tabs + str(root.getType()) + " " + str(root.getMass()) + " " + str(root.isCompound())
-    for daughter in root.getParticles():
-        walk_particles(daughter, depth+1)
-
 def printCollectionNames(event):
     for collectionName, collection in event:
         print "collectionName: \"" + collectionName + "\", collectionTypeName: \"" + collection.getTypeName() + "\""
+
+def printRecoMcTruthLinkInfo(RecoMCTruthLinkCollection):
+    for RecoMCTruthLink in RecoMCTruthLinkCollection:
+        recoParticle = RecoMCTruthLink.getFrom()
+        mcParticle = RecoMCTruthLink.getTo()
+        
+        aPDG = abs(mcParticle.getPDG())
+        #print "Reco mass: {0}, MC mass: {1}".format(recoParticle.getMass(), mcParticle.getMass())
+        #if not (aPDG == 13 or aPDG == 22 or aPDG == 211 or aPDG == 321 or aPDG == 2112):
+        print mcParticle.getPDG()
+
+def printTrackMCTruthLinkInfo(TrackMCTruthLinkCollection):
+    for TrackMCTruthLink in TrackMCTruthLinkCollection:
+        print type(TrackMCTruthLink.getFrom())
+        print type(TrackMCTruthLink.getTo())
+
+def walkMcParticles(root, depth=0, max_depth=None):
+    if max_depth and (depth >= max_depth):
+        return False
+
+    tabs = ""
+    for i in range(0, depth):
+        tabs += "     "
+
+    momentum = []
+    for i, m in enumerate(root.getMomentum()):
+        if i < 3:
+            momentum.append(m)
+        else:
+            break
+
+    print tabs + str(root.getPDG()) + " (" + ", ".join([str(m) for m in momentum]) + ")"
+    for daughter in root.getDaughters():
+        walkMcParticles(daughter, depth+1,max_depth=max_depth)
+
+    return True
 
 if __name__ == "__main__":
     reader = IOIMPL.LCFactory.getInstance().createLCReader()
     if len(sys.argv) == 2:
         print "Opening argv[1] = " + sys.argv[1]
         reader.open( sys.argv[1] )
-    else:
-        print "Opening default = pythiaZPolebbbar_with_particle_tbl.full.slcio" 
-        reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
+
+        #print "Opening default = pythiaZPolebbbar_with_particle_tbl.full.slcio" 
+        #reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
         
     for i, event in enumerate(reader):
-        # inputCollectionTypeName="ReconstructedParticle"
-        #print_params(event, inputCollectionName="RefinedJets")
+        #inputCollectionTypeName="ReconstructedParticle"
+        #print_params(event, inputCollectionName="RecoMCTruthLink")
         #print_pids(event)
         #printCollectionNames(event)
-        print "Event[" + str(i) + "]"
-        print_tags(event)
+        #printTrackMCTruthLinkInfo(event.getCollection("TrackMCTruthLink"))
+        #print "Event[" + str(i) + "]"
+        #printRecoMcTruthLinkInfo(event.getCollection("RecoMCTruthLink"))
+        #printRefinedJets_relInfo(event.getCollection("RefinedJets_rel"))
+        #for mcParticle in event.getCollection("MCParticlesSkimmed"):
+            ##print mcParticle.getPDG()
+            #if len(mcParticle.getParents()) == 0:
+            #    walkMcParticles(mcParticle,max_depth=6)
+            #    break
+        #get_jet_flavor_from_mc(event)
+        #break
+        #print get_decay_product_of_interesting_mcParticle(event)
+        likenesses = get_b_and_c_likenesses(event)
+        actual_flavour = get_decay_product_of_interesting_mcParticle(event)
+        for  likeness_dict in likenesses:
+            print  str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]),str(likeness_dict["CTag"])])
 # loop over all events in the file
 
 """
