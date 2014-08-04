@@ -13,9 +13,13 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 
 def main():
-    if len(sys.argv) != 2:
+    tag = None
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
         print "Error: script requires a slcio file as input!"
         return -1
+    if len(sys.argv) == 3:
+        tag = sys.argv[2]
+    
     
     print "Opening argv[1] = " + sys.argv[1]
     reader = IOIMPL.LCFactory.getInstance().createLCReader()
@@ -23,9 +27,13 @@ def main():
     
     for event in reader:
         likenesses = get_b_and_c_likenesses(event)
-        actual_flavour = get_decay_product_of_interesting_mcParticle(event)
-        for  likeness_dict in likenesses:
-            print  str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]),str(likeness_dict["CTag"])])
+        actual_flavour = None
+        if tag:
+            actual_flavour = tag
+        else:
+            actual_flavour = get_decay_product_of_interesting_mcParticle(event)
+        for likeness_dict in likenesses:
+            print str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]), str(likeness_dict["CTag"])])
                          
 if __name__ == "__main__":
     main()
