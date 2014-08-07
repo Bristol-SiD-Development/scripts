@@ -33,6 +33,9 @@ def parse_args(steering_files, geometry_files):
     parser.add_argument("-r", "--runs",
                         help="Number of events to run",
                         default=10)
+    parser.add_argument("-f", "--final-output-name",
+                        help="If given forces the output name of the final output file (marlin flavourtagging output)",
+                        default=None)
     parser.add_argument("-S", "--skip-num",
                         help="Number of events to skip at the start of the file",
                         default=0)
@@ -149,6 +152,10 @@ def main():
         print "[^] Error no valid output dir found. \"" + str(args.output_dir) + "\" is not valid!!" 
 
     output_names_dict, output_paths_dict = setup_output_dicts(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
+
+    if args.final_output_name != None:
+        output_names_dict["marlin_flav"] = args.final_output_name
+        output_paths_dict["marlin_flav"] = os.path.join(args.output_dir, output_names_dict)
 
     print "[^]Running CLIC's version of slic (through their bash script)..."
     check_call([binaries["slic"], 
