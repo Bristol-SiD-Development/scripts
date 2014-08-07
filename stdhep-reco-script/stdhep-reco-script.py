@@ -33,6 +33,9 @@ def parse_args(steering_files, geometry_files):
     parser.add_argument("-r", "--runs",
                         help="Number of events to run",
                         default=10)
+    parser.add_argument("-S", "--skip-num",
+                        help="Number of events to skip at the start of the file",
+                        default=0)
     parser.add_argument("-d" ,"--delete-intermediate-files",
                         help="Deletes intermediate (all except the last) files as they become useless to save on disk usage. Defaults to False (as the intermediate files may be useful)",
                         action='store_true')
@@ -86,8 +89,8 @@ def setup_output_dicts(input_file, extension, output_dir):
     lcsim_digi_output        = os.path.join(output_dir, input_file_no_ext + "_lcsimDigi" + slcio_ext)
     pandora_output           = os.path.join(output_dir, input_file_no_ext + "_pandora" + slcio_ext)
     marlin_vertexing_output  = os.path.join(output_dir, input_file_no_ext + "_marlinVertexing" + slcio_ext)
-    lcsim_dst_output         = os.path.join(output_dir, input_file_no_ext + "lcsimDst" + slcio_ext)
-    lcsim_full_output        = os.path.join(output_dir, input_file_no_ext + "lcsimFull" + slcio_ext)
+    lcsim_dst_output         = os.path.join(output_dir, input_file_no_ext + "_lcsimDst" + slcio_ext)
+    lcsim_full_output        = os.path.join(output_dir, input_file_no_ext + "_lcsimFull" + slcio_ext)
     marlin_flavortag_output  = os.path.join(output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
 
     output_paths_dict = {"slic": slic_output,
@@ -152,6 +155,7 @@ def main():
                 "-g", geometry_files["slic"],
                 "-i", args.stdhep_input,
                 "-o", output_names_dict["slic"],
+                " --skip-events", args.skip_num,
                 "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy (this is probably not a portable solution...)
                 "-r", args.runs
                 ])
