@@ -11,7 +11,8 @@ Both scripts are heavily based on the 'From Zero to SiD' guide found [here](http
 5. A sample ~/.lcsim/alias.properties is below
 6. The directory pointed to by the alias should (at a minimum) contain a compact.xml and a detector.properties file
 
-```Sample alias.properties
+###Sample alias.properties:
+```
 sidloi3: mySidLoi3
 
 trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3                          mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
