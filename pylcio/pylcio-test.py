@@ -98,6 +98,14 @@ def walkMcParticles(root, depth=0, max_depth=None):
 
     return True
 
+def sign(x):
+    if x > 0:
+        return 1
+    elif x < 0:
+        return -1
+    else:
+        return None
+
 if __name__ == "__main__":
     reader = IOIMPL.LCFactory.getInstance().createLCReader()
     if len(sys.argv) == 2:
@@ -108,6 +116,7 @@ if __name__ == "__main__":
         #reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
         
     for i, event in enumerate(reader):
+        
         #inputCollectionTypeName="ReconstructedParticle"
         #print_params(event, inputCollectionName="RecoMCTruthLink")
         #print_pids(event)
@@ -116,18 +125,55 @@ if __name__ == "__main__":
         #print "Event[" + str(i) + "]"
         #printRecoMcTruthLinkInfo(event.getCollection("RecoMCTruthLink"))
         #printRefinedJets_relInfo(event.getCollection("RefinedJets_rel"))
-        #for mcParticle in event.getCollection("MCParticlesSkimmed"):
-            ##print mcParticle.getPDG()
-            #if len(mcParticle.getParents()) == 0:
-            #    walkMcParticles(mcParticle,max_depth=6)
-            #    break
-        #get_jet_flavor_from_mc(event)
+                #get_jet_flavor_from_mc(event)
         #break
         #print get_decay_product_of_interesting_mcParticle(event)
+         
+        for trackMcTruthLink in event.getCollection("TrackMCTruthLink"):
+            recoTrack = trackMcTruthLink.getFrom()
+            mcParticle = trackMcTruthLink.getTo()
+            #getTrackParams(mcParticle, 5.)
+            try:
+                if mcParticle.getCharge() !=  sign(recoTrack.getOmega()):
+                    print >> sys.stderr, "Error (mc)charge: {0} and (reco)omega {1} don't match".format(mcParticle.getCharge(), recoTrack.getOmega())
+                else:
+                    print "{0} {1} {2} {3} {4} {5}".format(recoTrack.getD0(), recoTrack.getPhi(), recoTrack.getOmega(), recoTrack.getZ0(), recoTrack.getTanLambda(),
+                                                           " ".join([str(thing) for thing in getTrackParams(mcParticle, 5.) ]))
+            except:
+                continue
+
+        #for track in event.getCollection("TrueTracks"):
+        #    print "1"
+        #    print track.getZ0()
+            
+        #break
+        """
+        for track in event.getCollection("Tracks"):
+            covariances = track.getCovMatrix()
+
+            counter = 0
+            for i in range(0, 5):
+                s = ""
+                for j in range(0,i+1):
+                    s += " {0}".format(covariances[counter])
+                    counter += 1
+                print s
+        break
+        """
+        """
         likenesses = get_b_and_c_likenesses(event)
         actual_flavour = get_decay_product_of_interesting_mcParticle(event)
+
         for  likeness_dict in likenesses:
-            print  str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]),str(likeness_dict["CTag"])])
+            if actual_flavour == 15 and likeness_dict["CTag"] > 0.6:
+                #print  str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]),str(likeness_dict["CTag"])])
+                for mcParticle in event.getCollection("MCParticlesSkimmed"):
+                    if len(mcParticle.getParents()) == 0:
+                        walkMcParticles(mcParticle)
+                        
+                break
+        """
+
 # loop over all events in the file
 
 """
