@@ -57,8 +57,6 @@ def reconstructEventTheta(event):
     theta = math.acos(cos_theta)
     return theta
 
-
-
 def getParticleCosTheta(particle):
     fourMomentum = getFourMomentum(particle)
     threeMomentum = fourMomentum[:3]
@@ -92,38 +90,6 @@ def get_b_and_c_likenesses(event):
         
     return likenesses
 
-def decaysToQQBar(root):
-    daughters = root.getDaughters()
-
-    qPDGs = range(1, 7)
-    qBarPDGs = range(-6, 0)
-
-    qs = filter(lambda p: any([p.getPDG() == qPDG for qPDG in qPDGs]),daughters)
-    qBars = filter(lambda p: any([p.getPDG() == qPDG for qPDG in qBarPDGs]),daughters)
-
-    for element in itertools.product(qs, qBars):
-        if element[0].getPDG() == -element[1].getPDG():
-            #print "found qqBar: {0} {1}".format(element[0].getPDG(), element[1].getPDG())
-            return abs(element[0].getPDG())
-    return None
-
-def walkMcParticlesUntilQQBar(root, depth=0):
-    qPDG = decaysToQQBar(root)
-    if qPDG:
-        return qPDG
-
-    for daughter in root.getDaughters():
-        ret = walkMcParticlesUntilQQBar(daughter, depth+1)
-        if ret != -1:
-            return ret
-            
-    return -1
-
-def get_jet_flavor_from_mc(event):
-    for mcParticle in event.getCollection("MCParticlesSkimmed"):
-        if len(mcParticle.getParents()) == 0:
-            return walkMcParticlesUntilQQBar(mcParticle, 0)
-            break
 
 def getDecayPDG(root):
     daughters = root.getDaughters()
@@ -153,8 +119,6 @@ def get_decay_product_of_interesting_mcParticle(event, interesting=[23, 25]):
     for mcParticle in event.getCollection("MCParticlesSkimmed"):
         if mcParticle.getPDG() in interesting and not mcParticle in found_interesting_particles:
             found_interesting_particles.append(mcParticle)
-    
-    #print [p.getPDG() for p in found_interesting_particles]
 
     interesting_particle = None
     if len(found_interesting_particles) == 0:
@@ -166,12 +130,6 @@ def get_decay_product_of_interesting_mcParticle(event, interesting=[23, 25]):
 
     return getDecayPDG(interesting_particle)    
         
-"""
-def threeVectorCross(a,b):
-    return [a[1]*b[2] - a[2]*b[1], 
-            a[2]*b[0] - a[0]*b[2], 
-            a[0]*b[1] - a[1]*b[0])
-"""
 def getTrackParams(mcParticle, BField):
     px, py, pz = getFourMomentum(mcParticle)[0:3]
     
