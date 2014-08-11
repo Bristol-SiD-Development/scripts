@@ -15,7 +15,9 @@ Both scripts are heavily based on the 'From Zero to SiD' guide found [here](http
 ```
 sidloi3: mySidLoi3
 
-trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3                          mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
+trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3           
+
+mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
 
 ```
 
