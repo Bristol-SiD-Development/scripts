@@ -31,7 +31,6 @@
 
 <strong>IMPORTANT:</strong>
 You must send off extra information for verification. This is specified in the terms and conditions box at the bottom of the page.
-- Send off list of requested information
 
 *For Bristol people:*
 - Working Group: Bristol Particle Physics
