@@ -21,7 +21,9 @@ Use Certificate Wizard on ngs website: http://www.ngs.ac.uk/ukca/certificates/ce
 - Go to Preferences->Advanced->Certificates->View Certificates
 - Go to 'Your Certificates', and import .p12 file.
 
-##Go to https://grid-voms.desy.de:8443/voms/ilc/register/start.action
+##Register for ILC Virtual Organisation (VO)
+
+-Go [here](https://grid-voms.desy.de:8443/voms/ilc/register/start.action)
 - Browser will complain that it is unsafe but just ignore it / make an exception
 - Accept its request to validate security certificate
 
