@@ -24,7 +24,9 @@ mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-sc
 
 
 ###Actual solution
-Removing the "TrackSubdetectorHitNumbers" driver from the lcsim_prepandora steering file is the correct solution to this problem as it is the only one which requires the detector name "sidloi3". It requires this because its method for working out in what subdetector is totally dependent on the detector geometry being exactly that of sidloi3. Furthermore the data it writes to the .slcio file seems to not be used at all.
+Not having the "TrackSubdetectorHitNumbers" driver in the lcsim_prepandora steering file is the correct solution to this problem as it is the only one which requires the detector name "sidloi3". It requires this because its method for working out in what subdetector is totally dependent on the detector geometry being exactly that of sidloi3. Furthermore the data it writes to the .slcio file seems to not be used at all.
+
+Having done this give your detector a new name!
 
 ##Changes in marlin flavortag steering file:
 1. The parameter "PFOCollection" should have value "PandoraPFOCollection" instead of "PandoraPFOs"
