@@ -4,7 +4,7 @@
 - Go [here](https://portal.ca.grid-support.ac.uk/caportal/)
 -Follow instructions
 
-*For PIN, use an easy memorable passphrase*
+<strong>For PIN, use an easy memorable passphrase<\strong>
 - only used for identification, so do not need to remember
 
 *For Bristol people:*
@@ -29,7 +29,7 @@
 - Fill in information
 - Confirm email address
 
-####IMPORTANT:
+<strong>IMPORTANT:<\strong>
 You must send off extra information for verification. This is specified in the terms and conditions box at the bottom of the page.
 - Send off list of requested information
 
