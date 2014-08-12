@@ -3,6 +3,24 @@ To run either script you must have access to afs as they depend heavily on thing
 
 Both scripts are heavily based on the 'From Zero to SiD' guide found [here](https://confluence.slac.stanford.edu/display/~stanitz/From+Zero+to+SiD+-+Running+Sim+Reco) some things  must be changed in the sample xml files provided [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/) to make them compatable with the sidloi3 detector files. 
 
+##Notes on org.lcsim:
+1. Rather than having it passed on the command line org.lcsim takes it's detector geometry from a database described [here](https://confluence.slac.stanford.edu/display/ilc/Conditions+Database+Overview)
+2. If you are making significant changes to the detector you therefore need to point org.lcsim at the new version as described [here](https://confluence.slac.stanford.edu/display/ilc/Creating+a+New+Detector+Description)
+3. However one (possibly more) of the drivers used in the digitisation will throw a runtime error if the dector isn't called "sidloi3".
+4. The solution therefore is to call your detector "sidloi3" in it's compact.xml and detector.properties and then set up an alias in ~/.lcsim/alias.properties so you can point org.lcsim at the correct detector each time you run the chain
+5. A sample ~/.lcsim/alias.properties is below
+6. The directory pointed to by the alias should (at a minimum) contain a compact.xml and a detector.properties file
+
+###Sample alias.properties:
+```
+sidloi3: mySidLoi3
+
+trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3           
+
+mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
+
+```
+
 ##Changes in marlin flavortag steering file:
 1. The parameter "PFOCollection" should have value "PandoraPFOCollection" instead of "PandoraPFOs"
 2. The parameter "TrackHitOrdering" should have value "0" instead of "1"
