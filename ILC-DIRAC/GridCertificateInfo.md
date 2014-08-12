@@ -1,6 +1,6 @@
 #Instructions for getting grid certificate
 
-##Apply for grid certificate through UK portal
+###Apply for grid certificate through UK portal
 https://portal.ca.grid-support.ac.uk/caportal/
 Follow instructions
 For PIN, use an easy memorable passphrase 
