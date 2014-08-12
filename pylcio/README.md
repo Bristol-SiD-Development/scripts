@@ -10,4 +10,4 @@ Note that when it starts up pylcio prints a message about loading root dictionar
 tail -n +2
 ```
 
-Using tail like this will simply write it's stdin to its stdout starting from the second line
+Using tail like this will simply write it's stdin to it's stdout starting from the second line
