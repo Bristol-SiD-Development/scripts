@@ -8,15 +8,14 @@
 - only used for identification, so do not need to remember
 
 *For Bristol people:*
--Your Institution: Bristol IS (Bristol Physics is outdated, IS = "Information Services")
--Talk to Winnie Lacesso to have it approved
-
-Paste the halves in the boxes as instructed on the webpage (including header) to generate certificate
+- Your Institution: Bristol IS (Bristol Physics is outdated, IS = "Information Services")
+- Talk to Winnie Lacesso to have it approved
+- Paste the halves in the boxes as instructed on the webpage (including header) to generate certificate
 
 ###Installing certificate on computer
-Use Certificate Wizard on ngs website: http://www.ngs.ac.uk/ukca/certificates/certwizard
+- Install [Certificate Wizard](http://www.ngs.ac.uk/ukca/certificates/certwizard) on ngs website
 - Import certificate (make sure it is backup up to a few places)
-- Install
+- Click install
 
 ###Importing certificate into Firefox browser
 - Go to Preferences->Advanced->Certificates->View Certificates
@@ -41,4 +40,4 @@ You must send off extra information for verification. This is specified in the t
 ###Instructions for ILC DIRAC registration:
 - Email ilcdirac-register@cern.ch with name, institution, supervisor, project
 
-All permissions are now on your certificate so you can use ILC-DIRAC.
+###All permissions are now on your certificate so you can use ILC-DIRAC.###
