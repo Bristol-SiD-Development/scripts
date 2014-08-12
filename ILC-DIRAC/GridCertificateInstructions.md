@@ -39,4 +39,7 @@ You must send off extra information for verification. This is specified in the t
 ###Instructions for ILC DIRAC registration:
 - Email ilcdirac-register@cern.ch with name, institution, supervisor, project
 
-###All permissions are now on your certificate so you can use ILC-DIRAC.###
+<strong>All permissions are now on your certificate so you can use ILC-DIRAC.</strong>
+
+###Instructions for installing your grid certificate on LXPLUS
+- 
