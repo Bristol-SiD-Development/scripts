@@ -27,7 +27,6 @@
 		<driver name="TrackHitRemover" />
 		<driver name="SeedTracker" />
 		<driver name="TrackStateDriver" />
-		<driver name="TrackSubdetectorHitNumbers" />
 		<driver name="Writer" />
 	</execute>
 	
@@ -158,12 +157,7 @@
 		<driver name="TrackStateDriver"
 			    type="org.lcsim.recon.tracking.seedtracker.SeedTrackerTrackStateDriver">
 	    </driver>
-	    
-	    <!-- Calculate the number of track hits in each subdetector required for LCFI -->
-	    <driver name="TrackSubdetectorHitNumbers"
-	            type="org.lcsim.recon.util.TrackSubdetectorHitNumbersDriver">
-	    </driver>
-	    
+	    	    
 		<!-- Write output slcio file -->
 		<driver name="Writer"
 		        type="org.lcsim.util.loop.LCIODriver">
