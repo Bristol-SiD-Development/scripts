@@ -4,6 +4,7 @@ To run either script you must have access to afs as they depend heavily on thing
 Both scripts are heavily based on the 'From Zero to SiD' guide found [here](https://confluence.slac.stanford.edu/display/~stanitz/From+Zero+to+SiD+-+Running+Sim+Reco) some things  must be changed in the sample xml files provided [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/) to make them compatable with the sidloi3 detector files. 
 
 ##Notes on org.lcsim:
+###Dodgy workaround
 1. Rather than having it passed on the command line org.lcsim takes it's detector geometry from a database described [here](https://confluence.slac.stanford.edu/display/ilc/Conditions+Database+Overview)
 2. If you are making significant changes to the detector you therefore need to point org.lcsim at the new version as described [here](https://confluence.slac.stanford.edu/display/ilc/Creating+a+New+Detector+Description)
 3. However one (possibly more) of the drivers used in the digitisation will throw a runtime error if the dector isn't called "sidloi3".
@@ -11,7 +12,7 @@ Both scripts are heavily based on the 'From Zero to SiD' guide found [here](http
 5. A sample ~/.lcsim/alias.properties is below
 6. The directory pointed to by the alias should (at a minimum) contain a compact.xml and a detector.properties file
 
-###Sample alias.properties:
+####Sample alias.properties:
 ```
 sidloi3: mySidLoi3
 
@@ -20,6 +21,10 @@ trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-
 mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
 
 ```
+
+
+###Actual solution
+Removing the "TrackSubdetectorHitNumbers" driver from the lcsim_prepandora steering file is the correct solution to this problem as it is the only one which requires the detector name "sidloi3". It requires this because its method for working out in what subdetector is totally dependent on the detector geometry being exactly that of sidloi3. Furthermore the data it writes to the .slcio file seems to not be used at all.
 
 ##Changes in marlin flavortag steering file:
 1. The parameter "PFOCollection" should have value "PandoraPFOCollection" instead of "PandoraPFOs"
