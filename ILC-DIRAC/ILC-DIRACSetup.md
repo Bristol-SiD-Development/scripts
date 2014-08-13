@@ -5,4 +5,4 @@
 ###Setting environmental variables
 - Use the following command to set up environmental variables:
 
-```source /afs/cern.ch/eng/clic/software/DIRAC/bashrc
+``` source /afs/cern.ch/eng/clic/software/DIRAC/bashrc
