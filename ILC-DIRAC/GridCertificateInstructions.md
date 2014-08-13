@@ -2,7 +2,8 @@
 
 ###Applying for grid certificate through UK portal
 - Go [here](https://portal.ca.grid-support.ac.uk/caportal/)
--Follow instructions
+- Request new User Certificate
+- Follow instructions
 
 <strong>For PIN, use an easy memorable passphrase</strong>
 - only used for identification, so do not need to remember
