@@ -41,6 +41,8 @@ You must send off extra information for verification. This is specified in the t
 
 <strong>All permissions are now on your certificate so you can use ILC-DIRAC.</strong>
 
+##Setting up LXplus
+
 ###Instructions for installing your grid certificate on LXplus
 - Need to copy $HOME/.globus on local machine to LXplus account
 - Use eg. rsync -avz ~/.globus USERNAME@lxplus.cern.ch:~/.globus where USERNAME is your personal username
