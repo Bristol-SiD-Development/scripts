@@ -22,7 +22,6 @@
 - Go to 'Your Certificates', and import .p12 file.
 
 ###Register for ILC Virtual Organisation (VO)
-
 - Go [here](https://grid-voms.desy.de:8443/voms/ilc/register/start.action)
 - Browser will complain that it is unsafe but just ignore it / make an exception
 - Accept its request to validate security certificate
@@ -41,5 +40,8 @@ You must send off extra information for verification. This is specified in the t
 
 <strong>All permissions are now on your certificate so you can use ILC-DIRAC.</strong>
 
-###Instructions for installing your grid certificate on LXPLUS
-- 
+###Instructions for installing your grid certificate on LXplus
+- Need to copy $HOME/.globus on local machine to LXplus account
+- Use eg. rsync -avz ~/.globus USERNAME@lxplus.cern.ch:~/.globus where USERNAME is your personal username
+
+<strong>You can now use ILC DIRAC as explained in ILC-DIRACSetup.md</strong>
