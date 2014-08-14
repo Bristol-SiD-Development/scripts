@@ -129,8 +129,23 @@ def get_decay_product_of_interesting_mcParticle(event, interesting=[23, 25]):
         interesting_particle = max(lambda p: p.getEnergy(), found_interesting_particles)[0]
 
     return getDecayPDG(interesting_particle)    
-        
+
+def getTrackParamsVariances(recoTrack):
+    covariances = recoTrack.getCovMatrix()
+    variances = [None]*5
+    
+    for i in range(0, 5):
+        index = int(  ( i * (i+3) ) / 2)
+        variances[i] = covariances[ index ]
+    return variances
+
+
 def getTrackParams(mcParticle, BField):
+    """
+    This function should only be called on an mcParticle. 
+    It will return [D0, phi0, omega, Z0, tan(Lambda)] as described at
+    http://www-flc.desy.de/lcnotes/notes/LC-DET-2006-004.pdf
+    """
     px, py, pz = getFourMomentum(mcParticle)[0:3]
     
     pt = m.sqrt(px*px + py*py)
@@ -160,10 +175,10 @@ def getTrackParams(mcParticle, BField):
     mcdca = None
     if mcParticle.getCharge()>0:
         mcdca = R - Rc
-    elif mcParticle.getCharge()<0:
-        mcdca = R + Rc
     else:
-        raise Exception("I don't understand neutral particles!")
+        mcdca = R + Rc
+    #else:
+    #    raise Exception("I don't understand neutral particles!")
 
     #azimuthal calculation of the momentum at the DCA, phi0, Calculation
     mcphi0 = np.arctan2(xc/(R-mcdca),  -yc/(R-mcdca))
@@ -176,10 +191,10 @@ def getTrackParams(mcParticle, BField):
     arclength  = (((mcCreationX - x0) * np.cos(mcphi0)) + ((mcCreationY - y0)* np.sin(mcphi0)))
     z0 = mcCreationZ - arclength * tanL
 
-    #omega = None
-    #try:
-    omega = 1. / R
-    #except ZeroDivisionError:
-    #    omega = 0
+    omega = None
+    try:
+        omega = 1. / R
+    except ZeroDivisionError:
+        omega = 0
 
     return [mcdca, mcphi0, omega, z0, tanL]

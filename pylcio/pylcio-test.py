@@ -120,28 +120,15 @@ if __name__ == "__main__":
         #inputCollectionTypeName="ReconstructedParticle"
         #print_params(event, inputCollectionName="RecoMCTruthLink")
         #print_pids(event)
-        #printCollectionNames(event)
+        printCollectionNames(event)
         #printTrackMCTruthLinkInfo(event.getCollection("TrackMCTruthLink"))
         #print "Event[" + str(i) + "]"
         #printRecoMcTruthLinkInfo(event.getCollection("RecoMCTruthLink"))
         #printRefinedJets_relInfo(event.getCollection("RefinedJets_rel"))
                 #get_jet_flavor_from_mc(event)
-        #break
+        break
         #print get_decay_product_of_interesting_mcParticle(event)
-         
-        for trackMcTruthLink in event.getCollection("TrackMCTruthLink"):
-            recoTrack = trackMcTruthLink.getFrom()
-            mcParticle = trackMcTruthLink.getTo()
-            #getTrackParams(mcParticle, 5.)
-            try:
-                if mcParticle.getCharge() !=  sign(recoTrack.getOmega()):
-                    print >> sys.stderr, "Error (mc)charge: {0} and (reco)omega {1} don't match".format(mcParticle.getCharge(), recoTrack.getOmega())
-                else:
-                    print "{0} {1} {2} {3} {4} {5}".format(recoTrack.getD0(), recoTrack.getPhi(), recoTrack.getOmega(), recoTrack.getZ0(), recoTrack.getTanLambda(),
-                                                           " ".join([str(thing) for thing in getTrackParams(mcParticle, 5.) ]))
-            except:
-                continue
-
+        
         #for track in event.getCollection("TrueTracks"):
         #    print "1"
         #    print track.getZ0()

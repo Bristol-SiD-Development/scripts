@@ -7,6 +7,10 @@ from pylciohelperfunctions import *
 
 import sys
 
+import numpy as np
+import matplotlib.colors as col
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import cm
 
 def main():
     tag = None
@@ -18,17 +22,17 @@ def main():
     
     for f in sys.argv[1:]:
         reader = IOIMPL.LCFactory.getInstance().createLCReader()
-        reader.open( f )
+        reader.open(f)
     
         for event in reader:
-            likenesses = get_b_and_c_likenesses(event)
             actual_flavour = None
             if tag:
                 actual_flavour = tag
             else:
                 actual_flavour = get_decay_product_of_interesting_mcParticle(event)
-            for likeness_dict in likenesses:
-                print str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]), str(likeness_dict["CTag"])])
+    
+            for jet in event.getCollection("RefinedJets"):
+                print "{0} {1}".format(actual_flavour, getParticleCosTheta(jet))
         reader.close()
 if __name__ == "__main__":
     main()
