@@ -2,9 +2,8 @@ Directory to put simple scripts based on the pylcio bindings
 
 In order to use pylcio you should add the flollowing to your ~/.bashrc (not that the paths are subject to change)
 
- ~/.bashrc 
- ===========
 ```bash
+# ~/.bashrc 
 #-------------------------------------------------------------
 # Environment variables to enable the lcsoft pyroot interpreter
 #-------------------------------------------------------------
