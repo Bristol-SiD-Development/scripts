@@ -6,12 +6,12 @@
 - Follow instructions
 
 <strong>For PIN, use an easy memorable passphrase</strong>
-- only used for identification, so do not need to remember
+- only used for identification, so do not need to remember beyond talking to your RA
 
 *For Bristol people:*
 - Your Institution: Bristol IS (Bristol Physics is outdated, IS = "Information Services")
-- Talk to Winnie Lacesso to have it approved
-- Paste the halves in the boxes as instructed on the webpage (including header) to generate certificate
+- Talk to [Winnie Lacesso](Winnie.lacesso@bristol.ac.uk) (or [Ian Stewart](I.Stewart@bristol.ac.uk)) to have it approved
+- Paste both halves of the certificate in the boxes as instructed on the webpage (including headers) to generate certificate
 
 ###Installing certificate on computer
 - Install [Certificate Wizard](http://www.ngs.ac.uk/ukca/certificates/certwizard) on ngs website
@@ -21,6 +21,7 @@
 ###Importing certificate into Firefox browser
 - Go to Preferences->Advanced->Certificates->View Certificates
 - Go to 'Your Certificates', and import .p12 file.
+- This will allow you to join the ILC Virtual Organisation (VO)
 
 ###Register for ILC Virtual Organisation (VO)
 - Go [here](https://grid-voms.desy.de:8443/voms/ilc/register/start.action)
