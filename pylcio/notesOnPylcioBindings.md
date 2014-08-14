@@ -14,4 +14,4 @@ for particle in collection:
     print "    BTag = " + str(pid.getParameters()[ibtag])   + " CTag = " + str(pid.getParameters()[ictag])
 ```
 
-For some reason it appears that the getMomentum() method of a reconstructed particle object returns around 160 floats rather than the three that are advertised. For this reason and others the "pylciohelperfunctions.py" module has been created to hide away some of the craziness.
+For some reason it appears that the getMomentum() method of a reconstructed particle object returns around 160 floats rather than the three that are advertised. For this reason and others the "pylciohelperfunctions.py" module has been created to hide away some of the crazy.
