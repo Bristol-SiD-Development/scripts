@@ -43,7 +43,7 @@ def main():
 
                     good_track_bins[index] += 1
 
-            for particle in event.getCollection("MCParticle"):
+            for mcParticle in event.getCollection("MCParticle"):
                 if isLongLivedAndCharged(mcParticle):
                     tanLambda = getTrackParams(mcParticle, 5.)[4]
                     theta = np.pi/2. - np.arctan(tanLambda)
@@ -52,7 +52,7 @@ def main():
                     charged_mc_bins[index] += 1
 
     for theta, good_track, charged_mc in zip(theta_bins, good_track_bins, charged_mc_bins):
-        print "{0} {1}".format(theta, charged_mc)
+        print "{0} {1} {2}".format(theta, good_track, charged_mc)
 
 if __name__ == "__main__":
     main()
