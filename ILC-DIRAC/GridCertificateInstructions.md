@@ -48,4 +48,4 @@ You must send off extra information for verification. This is specified in the t
 - Need to copy $HOME/.globus on local machine to LXplus account
 - Use eg. rsync -avz ~/.globus USERNAME@lxplus.cern.ch:~/.globus where USERNAME is your personal username
 
-<strong>You can now use ILC DIRAC as explained in ILC-DIRACSetup.md</strong>
+<strong>You can now use ILC DIRAC as explained in RunILC-DIRAC.md</strong>
