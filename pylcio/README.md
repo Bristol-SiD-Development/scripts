@@ -1,4 +1,4 @@
-Directory to put simple scripts based on the pylcio bindings
+Directory to put scripts based on the pylcio bindings
 
 In order to use pylcio you should add the flollowing to your ~/.bashrc (note that the paths are subject to change)
 
@@ -20,9 +20,9 @@ export LCIO=$ILCSOFT_PATH/lcio/v02-04-03
 export PYTHONPATH=$LCIO/src/python:$PYTHONPATH
 ```
 
-Because of the total insanity of some of what the pyLCIO methods return they are wrapped up in utility functions given in pylciohelperfunctions module 
+Because of the insanity of some of what the pyLCIO methods return they are wrapped up in utility functions given in pylciohelperfunctions module 
 
-The scripts with names like pylcio-plot-masses.py and pylcio-plot-thetas.py do roughly what you'd expect
+The scripts with names like pylcio-print-masses.py and do roughly what you'd expect
 
 Note that when it starts up pylcio prints a message about loading root dictionaries to the stdout (not the stderr!) so anytime you pipe the stdout of a script that imports these modules you should do so through the tail command:
 
