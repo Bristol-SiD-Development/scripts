@@ -7,23 +7,16 @@ Both scripts are heavily based on the 'From Zero to SiD' guide found [here](http
 ###Dodgy workaround
 1. Rather than having it passed on the command line org.lcsim takes it's detector geometry from a database described [here](https://confluence.slac.stanford.edu/display/ilc/Conditions+Database+Overview)
 2. If you are making significant changes to the detector you therefore need to point org.lcsim at the new version as described [here](https://confluence.slac.stanford.edu/display/ilc/Creating+a+New+Detector+Description)
-3. However one (possibly more) of the drivers used in the digitisation will throw a runtime error if the dector isn't called "sidloi3".
-4. The solution therefore is to call your detector "sidloi3" in it's compact.xml and detector.properties and then set up an alias in ~/.lcsim/alias.properties so you can point org.lcsim at the correct detector each time you run the chain
-5. A sample ~/.lcsim/alias.properties is below
-6. The directory pointed to by the alias should (at a minimum) contain a compact.xml and a detector.properties file
+3. A sample ~/.lcsim/alias.properties is below
+4. The directory pointed to by the alias should (at a minimum) contain a compact.xml and a detector.properties file
 
 ####Sample alias.properties:
 ```
-sidloi3: mySidLoi3
-
-trueSidloi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3           
-
 mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/sidloi3_edited
 
 ```
 
-
-###Actual solution
+###Solution to org.lcsim crashing when given a detector with name != "sidloi3"
 Not having the "TrackSubdetectorHitNumbers" driver in the lcsim_prepandora steering file is the correct solution to this problem as it is the only one which requires the detector name "sidloi3". It requires this because its method for working out in what subdetector is totally dependent on the detector geometry being exactly that of sidloi3. Furthermore the data it writes to the .slcio file seems to not be used at all.
 
 Having done this give your detector a new name!
@@ -33,6 +26,11 @@ Having done this give your detector a new name!
 2. The parameter "TrackHitOrdering" should have value "0" instead of "1"
 3. The parameter "ReadSubdetectorEnergies" should have value "0" instead of "1" (this avoids a seg fault on line 424 of the LCIOStorer.cc source file)
 4. The parameter "TrackMinTPCHits" should have value "0" (this avoids a seg fault)
+5. The following parameters should be changed to they point to the correct directory (ie change the paths to where you cloned this repo). I would have had the script do this automagically but apparently you can't override parameters if they have more than one full stop in them from the command line
+   * FlavorTag.WeightsDirectory
+   * FlavorTag.D0ProbFileName
+   * FlavorTag.Z0ProbFileName
+    
 
 Also note that the gear.xml file that is passed to marlin flavortag is a dummy containing only magnetic field information.
 
