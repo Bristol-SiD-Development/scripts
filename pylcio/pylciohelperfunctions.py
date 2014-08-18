@@ -9,6 +9,49 @@ import sys
 
 import itertools
 
+
+#Have to use these as hashing Pylcio MCParticles doesn't seem to work...
+class hashable_mc_particle(object):
+    def __init__(self, mcParticle):
+        self.momentum = mcParticle.getMomentum()[0], mcParticle.getMomentum()[1], mcParticle.getMomentum()[2]
+        self.energy = mcParticle.getMomentum()[3]
+        self.charge = mcParticle.getCharge()
+        self.spin = mcParticle.getSpin()[0], mcParticle.getSpin()[1], mcParticle.getSpin()[2]
+        self.time = mcParticle.getTime()
+        self.vertex = mcParticle.getVertex()[0],mcParticle.getVertex()[1],mcParticle.getVertex()[2], 
+        self.pdg = mcParticle.getPDG()
+
+        tanLambda = getTrackParams(mcParticle, 5.)[4]
+        self.theta = np.pi/2. - np.arctan(tanLambda)
+
+    def __hash__(self):
+        return hash((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg))
+
+    def __eq__(self, other):
+        return ((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg) == (other.momentum, other.energy, other.charge, other.spin, other.time, other.vertex, other.pdg))
+
+#see note on hashable_mc_particle
+class hashable_reco_track(object):
+    def __init__(self, recoTrack):
+        self.chi2 = recoTrack.getChi2()
+        #self.covMatrix = [element for element in recoTrack.getCovMatrix()[0:15]]
+        self.D0 = recoTrack.getD0()
+        self.dEdx = recoTrack.getdEdx()
+        self.dEdXError = recoTrack.getdEdxError()
+        self.Ndf = recoTrack.getNdf()
+        self.omega = recoTrack.getOmega()
+        self.phi = recoTrack.getPhi()
+        self.radiusInnerHit = recoTrack.getRadiusOfInnermostHit()
+        self.refPoint = recoTrack.getReferencePoint()[0], recoTrack.getReferencePoint()[1], recoTrack.getReferencePoint()[2]
+        self.tanLambda = recoTrack.getTanLambda()
+        self.Z0 = recoTrack.getZ0()
+
+    def __hash__(self):
+        return hash((self.chi2, self.D0, self.dEdx, self.dEdXError, self.omega, self.phi,self.refPoint, self.tanLambda, self.Z0))
+    def __eq__(self, other):
+        return (self.chi2, self.D0, self.dEdx, self.dEdXError, self.omega, self.phi,self.refPoint, self.tanLambda, self.Z0) == \
+            (other.chi2, other.D0, other.dEdx, other.dEdXError, other.omega, other.phi,other.refPoint, other.tanLambda, other.Z0)
+
 def sumVectors(v1, v2):
     return [x + y for x,y in zip(v1, v2)]
 
@@ -139,6 +182,10 @@ def getTrackParamsVariances(recoTrack):
         variances[i] = covariances[ index ]
     return variances
 
+def get_track_transverse_momentum(track, BField):
+    #Becuse units are annoying
+    fieldConversionFactor = 2.9979 * 10**(-4) 
+    return abs(fieldConversionFactor*BField / track.getOmega())
 
 def getTrackParams(mcParticle, BField):
     """
@@ -160,6 +207,7 @@ def getTrackParams(mcParticle, BField):
     R = mcParticle.getCharge() * pt / (fieldConversionFactor * BField)
         
     #Slope in the Dz/Ds sense, tanL Calculation
+
     tanL = pz / float(pt)
     
     mcphi = np.arctan2(py, px)
