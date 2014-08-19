@@ -32,14 +32,14 @@ def main():
         reader = IOIMPL.LCFactory.getInstance().createLCReader()
         reader.open( f )
         mcParticleCount = 0
-        for event in reader:
+        for i, event in enumerate(reader):
             foundTracks, foundMcParticles =  {}, {}
             for trackMCTruthLink in event.getCollection("TrackMCTruthLink"):
                 recoTrack = trackMCTruthLink.getFrom()
                 mcParticle = trackMCTruthLink.getTo()
 
                 if isLongLivedAndCharged(mcParticle):
-                    #hashing pyLCIO objects direcly doesn't work properly (underlying c++ may bo doing something strange)
+                    #hashing pyLCIO objects direcly doesn't work properly (underlying c++ may be doing something strange)
                     h_recoTrack = hashable_reco_track(recoTrack)
                     h_mcParticle = hashable_mc_particle(mcParticle)
                     if (not h_recoTrack in foundTracks) and (not h_mcParticle in foundMcParticles):
@@ -55,11 +55,8 @@ def main():
                         reco_theta = np.pi/2. - np.arctan(reco_tanLambda)                    
                         reco_index = np.digitize([reco_theta], theta_bins)[0]
                         good_track_reco_bins[reco_index] += 1
-
-
+            
             for track in event.getCollection("Tracks"):
-                #pt = get_track_transverse_momentum(track, 5.)
-                #if pt > 1:
                 tanLambda = track.getTanLambda()
                 theta = np.pi/2. - np.arctan(tanLambda)
                 index = np.digitize([theta], theta_bins)[0]
@@ -67,8 +64,6 @@ def main():
             
             for mcParticle in event.getCollection("MCParticlesSkimmed"):
                 if isLongLivedAndCharged(mcParticle):
-                    #pt = np.sqrt(mcParticle.getMomentum()[0]**2 + mcParticle.getMomentum()[1]**2)
-                    #if pt > 1:
                     mcParticleCount += 1
                     tanLambda = getTrackParams(mcParticle, 5.)[4]
                     theta = np.pi/2. - np.arctan(tanLambda)

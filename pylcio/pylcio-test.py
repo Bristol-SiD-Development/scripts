@@ -111,22 +111,48 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         print "Opening argv[1] = " + sys.argv[1]
         reader.open( sys.argv[1] )
+        """
+        for event in reader:
+            for collectionName, collection in event:
+                for element in collection:
+                    print type(element)
 
-        #print "Opening default = pythiaZPolebbbar_with_particle_tbl.full.slcio" 
-        #reader.open( "pythiaZPolebbbar_with_particle_tbl.10.full.slcio"  )
-        
-    for i, event in enumerate(reader):
-        
+        """            
         #inputCollectionTypeName="ReconstructedParticle"
         #print_params(event, inputCollectionName="RecoMCTruthLink")
         #print_pids(event)
-        printCollectionNames(event)
+        for event in reader:
+            print_params(event)
+        """
+        for event in reader:
+            printCollectionNames(event)
+            break
+        """
+        """
+        for i, event in enumerate(reader):
+            print i
+            mcParticles = event.getCollection("MCParticle")
+            mcParticlesSkimmed = event.getCollection("MCParticlesSkimmed")
+            trackMcTruthLinks  = event.getCollection("TrackMCTruthLink")
+
+            for trackMcTruthLink in trackMcTruthLinks:
+                if not trackMcTruthLink.getTo() in mcParticles:
+                    print "Interesting"
+                        
+        """
+        """
+        for event in reader:
+            for HelicalTrackMCRelation in event.getCollection("HelicalTrackMCRelations"):
+                print type(HelicalTrackMCRelation.getFrom())
+                print type(HelicalTrackMCRelation.getTo())
+                break
+         """
         #printTrackMCTruthLinkInfo(event.getCollection("TrackMCTruthLink"))
         #print "Event[" + str(i) + "]"
         #printRecoMcTruthLinkInfo(event.getCollection("RecoMCTruthLink"))
         #printRefinedJets_relInfo(event.getCollection("RefinedJets_rel"))
                 #get_jet_flavor_from_mc(event)
-        break
+        #break
         #print get_decay_product_of_interesting_mcParticle(event)
         
         #for track in event.getCollection("TrueTracks"):

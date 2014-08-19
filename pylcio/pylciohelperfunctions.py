@@ -21,14 +21,15 @@ class hashable_mc_particle(object):
         self.vertex = mcParticle.getVertex()[0],mcParticle.getVertex()[1],mcParticle.getVertex()[2], 
         self.pdg = mcParticle.getPDG()
 
-        tanLambda = getTrackParams(mcParticle, 5.)[4]
-        self.theta = np.pi/2. - np.arctan(tanLambda)
-
     def __hash__(self):
         return hash((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg))
 
     def __eq__(self, other):
         return ((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg) == (other.momentum, other.energy, other.charge, other.spin, other.time, other.vertex, other.pdg))
+
+    def getTanLambda(self):
+        pt = np.sqrt( self.momentum[0]**2 + self.momentum[1]**2)  
+        return  self.momentum[2] / pt
 
 #see note on hashable_mc_particle
 class hashable_reco_track(object):
@@ -146,10 +147,10 @@ def getDecayPDG(root):
     elif len(daughters) == 2 and (abs(daughters[0].getPDG()) == abs(daughters[1].getPDG())):
         return abs(daughters[0].getPDG())
     elif (len(daughters) == 3) and (root.getPDG() in [d.getPDG() for d in daughters]):
-        print >> sys.stderr, "Warning: decay {0} -> {1} {2} {3} seems unlikely. Filtering {0} from daughters.".format(root.getPDG(), 
-                                                                                                                      daughters[0].getPDG(), 
-                                                                                                                      daughters[1].getPDG(), 
-                                                                                                                      daughters[2].getPDG())
+        #print >> sys.stderr, "Warning: decay {0} -> {1} {2} {3} seems unlikely. Filtering {0} from daughters.".format(root.getPDG(), 
+        #                                                                                                              daughters[0].getPDG(), 
+        #                                                                                                              daughters[1].getPDG(), 
+        #                                                                                                              daughters[2].getPDG())
         daughters = filter(lambda p: p.getPDG() != root.getPDG(), daughters)
         if len(daughters) == 2 and (abs(daughters[0].getPDG()) == abs(daughters[1].getPDG())):
             return abs(daughters[0].getPDG())
