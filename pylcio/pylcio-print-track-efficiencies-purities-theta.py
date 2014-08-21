@@ -98,13 +98,15 @@ def main():
                 badHits = False
                 #try:
                 associated_trackerHits = track.trackerHits
-                firstHit = associated_trackerHits[0]
+                #firstHit = associated_trackerHits[0]
                 
                 if any( [ trackerHit_to_mc_particles[hit] == None for hit in associated_trackerHits ] ):
                     badHits = True
-                elif any( [trackerHit_to_mc_particles[hit] != trackerHit_to_mc_particles[firstHit] for hit in associated_trackerHits ]  ):
-                    badHits = True
-                
+                else:
+                    # note that the elements of a set are *unique* so this is just a cheaty way of getting the number of uniques...
+                    mcParticleSet = set([trackerHit_to_mc_particles[hit] for hit in associated_trackerHits])
+                    if len(mcParticleSet) > 2:
+                        badHits = True                
                     
                 if len(associated_mc_particles) == 1 and not badHits:
                     good_tracks.append(track)
