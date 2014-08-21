@@ -25,11 +25,22 @@ class hashable_mc_particle(object):
         return hash((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg))
 
     def __eq__(self, other):
-        return ((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg) == (other.momentum, other.energy, other.charge, other.spin, other.time, other.vertex, other.pdg))
+        if other == None:
+            return False
+        else:
+            return ((self.momentum, self.energy, self.charge, self.spin, self.time, self.vertex, self.pdg) == (other.momentum, other.energy, other.charge, other.spin, other.time, other.vertex, other.pdg))
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
     def getTanLambda(self):
         pt = np.sqrt( self.momentum[0]**2 + self.momentum[1]**2)  
         return  self.momentum[2] / pt
+
+    def getTheta(self):
+        pt = np.sqrt(self.momentum[0]**2 + self.momentum[1]**2)
+
+        return np.arctan2(pt, self.momentum[2])
 
 #see note on hashable_mc_particle
 class hashable_reco_track(object):
@@ -47,11 +58,41 @@ class hashable_reco_track(object):
         self.tanLambda = recoTrack.getTanLambda()
         self.Z0 = recoTrack.getZ0()
 
+        self.trackerHits = [hashable_tracker_hit(hit) for hit in  recoTrack.getTrackerHits()]
+
     def __hash__(self):
         return hash((self.chi2, self.D0, self.dEdx, self.dEdXError, self.omega, self.phi,self.refPoint, self.tanLambda, self.Z0))
     def __eq__(self, other):
-        return (self.chi2, self.D0, self.dEdx, self.dEdXError, self.omega, self.phi,self.refPoint, self.tanLambda, self.Z0) == \
-            (other.chi2, other.D0, other.dEdx, other.dEdXError, other.omega, other.phi,other.refPoint, other.tanLambda, other.Z0)
+        if other == None:
+            return False
+        else:
+            return (self.chi2, self.D0, self.dEdx, self.dEdXError, self.omega, self.phi,self.refPoint, self.tanLambda, self.Z0) == \
+                (other.chi2, other.D0, other.dEdx, other.dEdXError, other.omega, other.phi,other.refPoint, other.tanLambda, other.Z0)
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
+    def getTheta(self):
+        return np.arctan2(1,self.tanLambda)
+
+
+class hashable_tracker_hit(object):
+    def __init__(self, trackerHit):
+        self.energyDep = trackerHit.getEDep()
+        self.position = trackerHit.getPosition()[0], trackerHit.getPosition()[1], trackerHit.getPosition()[2]
+        self.quality = trackerHit.getQuality()
+        self.time = trackerHit.getTime()
+
+    def __hash__(self):
+        return hash((self.energyDep, self.position, self.quality, self.time))
+    def __eq__(self, other):
+        if other == None:
+            return False
+        else:
+            return (self.energyDep, self.position, self.quality, self.time) == (other.energyDep, other.position, other.quality, other.time)
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
 
 def sumVectors(v1, v2):
     return [x + y for x,y in zip(v1, v2)]
