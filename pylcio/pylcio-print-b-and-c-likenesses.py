@@ -35,11 +35,8 @@ def main():
                 
                     tanTheta = np.sqrt(momentum[0]**2 + momentum[1]**2)/ momentum[2]
                     theta = np.arctan(tanTheta)
-                    if 0.9 < theta < 2.3:
-                        location = 0
-                    else:
-                        location = 1
-                    print str(location) + " " + str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]), str(likeness_dict["CTag"])])
+
+                    print str(theta) + " " + str(actual_flavour) + " " + " ".join([str(likeness_dict["BTag"]), str(likeness_dict["CTag"])])
             except:
                 print >> sys.stderr, "Wat"
         reader.close()
