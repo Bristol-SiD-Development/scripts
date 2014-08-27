@@ -1,0 +1,361 @@
+<Workflow>
+<origin></origin>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<version>0.0</version>
+<type></type>
+<name>sidloi3_edited_ProcessName_fullReco</name>
+<Parameter name="JobType" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Job Type"><value><![CDATA[User]]></value></Parameter>
+<Parameter name="Priority" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="User Job Priority"><value><![CDATA[1]]></value></Parameter>
+<Parameter name="JobGroup" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="User specified job group"><value><![CDATA[sidloi3_edited_ProcessName_fullReco]]></value></Parameter>
+<Parameter name="JobName" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="User specified name"><value><![CDATA[sidloi3_edited_ProcessName_fullReco]]></value></Parameter>
+<Parameter name="SystemConfig" type="JDLReqt" linked_module="" linked_parameter="" in="True" out="False" description="User specified system configuration for job"><value><![CDATA[x86_64-slc5-gcc43-opt]]></value></Parameter>
+<Parameter name="Site" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Site Requirement"><value><![CDATA[ANY]]></value></Parameter>
+<Parameter name="Origin" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Origin of client"><value><![CDATA[DIRAC]]></value></Parameter>
+<Parameter name="StdOutput" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Standard output file"><value><![CDATA[std.out]]></value></Parameter>
+<Parameter name="StdError" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Standard error file"><value><![CDATA[std.err]]></value></Parameter>
+<Parameter name="InputData" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="List of input data specified by LFNs"><value><![CDATA[/ilc/user/m/mgaughra/pythiaZPolebbbar.stdhep]]></value></Parameter>
+<Parameter name="LogLevel" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Job Logging Level"><value><![CDATA[info]]></value></Parameter>
+<Parameter name="ParametricInputData" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Default null parametric input data value"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ParametricInputSandbox" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Default null parametric input sandbox value"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ParametricParameters" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Default null parametric input parameters value"><value><![CDATA[]]></value></Parameter>
+<Parameter name="Energy" type="float" linked_module="" linked_parameter="" in="True" out="False" description="Energy used"><value><![CDATA[1000.0]]></value></Parameter>
+<Parameter name="NbOfEvts" type="int" linked_module="" linked_parameter="" in="True" out="False" description="Number of events to process"><value><![CDATA[5]]></value></Parameter>
+<Parameter name="SoftwarePackages" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="ILC Software Packages to be installed"><value><![CDATA[slic.v3r0p3;lcsim.2.5;slicpandora.ILC_DBD;marlin.0116]]></value></Parameter>
+<Parameter name="OutputSandbox" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Output sandbox file list"><value><![CDATA[*.log;*.xml;*.lcsim;*.slcio]]></value></Parameter>
+<Parameter name="MaxCPUTime" type="JDLReqt" linked_module="" linked_parameter="" in="True" out="False" description="CPU time in secs"><value><![CDATA[100000]]></value></Parameter>
+<Parameter name="BannedSites" type="JDLReqt" linked_module="" linked_parameter="" in="True" out="False" description="List of sites excluded by user"><value><![CDATA[LCG.DESY-HH.de;LCG.KEK.jp;LCG.PNNL.us]]></value></Parameter>
+<Parameter name="TotalSteps" type="String" linked_module="" linked_parameter="" in="True" out="False" description="Total number of steps"><value><![CDATA[5]]></value></Parameter>
+<Parameter name="InputSandbox" type="JDL" linked_module="" linked_parameter="" in="True" out="False" description="Input sandbox file list"><value><![CDATA[slicMacros/default.mac;lcsimTemplates/sid_dbd_prePandora_noOverlay.xml;alias.properties;sidloi3_edited.zip;trackingStrategies/sidloi3_trackingStrategies_default.xml;pandoraSettings/sid_dbd_pandoraSettings.xml;marlinSteering/sid_dbd_vertexing.xml;gearFiles/sidloi3.gear;lcsimTemplates/sid_dbd_postPandora.xml;LFN:/ilc/prod/software/lcsim/lib.tar.gz;sidloi3_edited.zip]]></value></Parameter>
+<ModuleDefinition>
+<body><![CDATA[from ILCDIRAC.Workflow.Modules.UserJobFinalization import UserJobFinalization
+]]></body>
+<origin></origin>
+<description><![CDATA[Uploads user output data files with specific policies.]]></description>
+<descr_short></descr_short>
+<required></required>
+<version>0.0</version>
+<type>UserJobFinalization</type>
+</ModuleDefinition>
+<ModuleDefinition>
+<body><![CDATA[from ILCDIRAC.Workflow.Modules.SLICAnalysis import SLICAnalysis
+]]></body>
+<origin></origin>
+<description><![CDATA[Module to run SLIC]]></description>
+<descr_short></descr_short>
+<required></required>
+<version>0.0</version>
+<type>SLICAnalysis</type>
+<Parameter name="RandomSeed" type="int" linked_module="" linked_parameter="" in="False" out="False" description="Random seed for the generator"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="detectorModel" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Detecor model for simulation"><value><![CDATA[]]></value></Parameter>
+<Parameter name="startFrom" type="int" linked_module="" linked_parameter="" in="False" out="False" description="From how Slic start to read the input file"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleDefinition>
+<ModuleDefinition>
+<body><![CDATA[from ILCDIRAC.Workflow.Modules.MarlinAnalysis import MarlinAnalysis
+]]></body>
+<origin></origin>
+<description><![CDATA[Module to run MARLIN]]></description>
+<descr_short></descr_short>
+<required></required>
+<version>0.0</version>
+<type>MarlinAnalysis</type>
+<Parameter name="inputGEAR" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Input GEAR file"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ProcessorListToUse" type="list" linked_module="" linked_parameter="" in="False" out="False" description="List of processors to use"><value><![CDATA[[]]]></value></Parameter>
+<Parameter name="ProcessorListToExclude" type="list" linked_module="" linked_parameter="" in="False" out="False" description="List of processors to exclude"><value><![CDATA[[]]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleDefinition>
+<ModuleDefinition>
+<body><![CDATA[from ILCDIRAC.Workflow.Modules.SLICPandoraAnalysis import SLICPandoraAnalysis
+]]></body>
+<origin></origin>
+<description><![CDATA[Module to run SLICPANDORA]]></description>
+<descr_short></descr_short>
+<required></required>
+<version>0.0</version>
+<type>SLICPandoraAnalysis</type>
+<Parameter name="pandorasettings" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Pandora Settings"><value><![CDATA[]]></value></Parameter>
+<Parameter name="detectorxml" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Detector model for simulation"><value><![CDATA[]]></value></Parameter>
+<Parameter name="startFrom" type="int" linked_module="" linked_parameter="" in="False" out="False" description="From how SlicPandora start to read the input file"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleDefinition>
+<ModuleDefinition>
+<body><![CDATA[from ILCDIRAC.Workflow.Modules.LCSIMAnalysis import LCSIMAnalysis
+]]></body>
+<origin></origin>
+<description><![CDATA[Module to run LCSIM]]></description>
+<descr_short></descr_short>
+<required></required>
+<version>0.0</version>
+<type>LCSIMAnalysis</type>
+<Parameter name="extraparams" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Command line parameters to pass to java"><value><![CDATA[]]></value></Parameter>
+<Parameter name="aliasproperties" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Path to the alias.properties file name that will be used"><value><![CDATA[]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="detectorModel" type="string" linked_module="" linked_parameter="" in="False" out="False" description="detector model zip file"><value><![CDATA[]]></value></Parameter>
+<Parameter name="trackingstrategy" type="string" linked_module="" linked_parameter="" in="False" out="False" description="trackingstrategy"><value><![CDATA[]]></value></Parameter>
+</ModuleDefinition>
+<StepDefinition>
+<origin></origin>
+<version>0.0</version>
+<type>slic_step_1</type>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+<ModuleInstance>
+<type>SLICAnalysis</type>
+<name>slic_step_1</name>
+<descr_short></descr_short>
+<Parameter name="RandomSeed" type="int" linked_module="" linked_parameter="" in="False" out="False" description="Random seed for the generator"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="detectorModel" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Detecor model for simulation"><value><![CDATA[sidloi3_edited]]></value></Parameter>
+<Parameter name="startFrom" type="int" linked_module="" linked_parameter="" in="False" out="False" description="From how Slic start to read the input file"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleInstance>
+<ModuleInstance>
+<type>UserJobFinalization</type>
+<name>slic_step_1</name>
+<descr_short></descr_short>
+</ModuleInstance>
+</StepDefinition>
+<StepDefinition>
+<origin></origin>
+<version>0.0</version>
+<type>lcsim_step_2</type>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+<ModuleInstance>
+<type>LCSIMAnalysis</type>
+<name>lcsim_step_2</name>
+<descr_short></descr_short>
+<Parameter name="extraparams" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Command line parameters to pass to java"><value><![CDATA[]]></value></Parameter>
+<Parameter name="aliasproperties" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Path to the alias.properties file name that will be used"><value><![CDATA[alias.properties]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="detectorModel" type="string" linked_module="" linked_parameter="" in="False" out="False" description="detector model zip file"><value><![CDATA[sidloi3_edited.zip]]></value></Parameter>
+<Parameter name="trackingstrategy" type="string" linked_module="" linked_parameter="" in="False" out="False" description="trackingstrategy"><value><![CDATA[trackingStrategies/sidloi3_trackingStrategies_default.xml]]></value></Parameter>
+</ModuleInstance>
+<ModuleInstance>
+<type>UserJobFinalization</type>
+<name>lcsim_step_2</name>
+<descr_short></descr_short>
+</ModuleInstance>
+</StepDefinition>
+<StepDefinition>
+<origin></origin>
+<version>0.0</version>
+<type>lcsim_step_5</type>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="outputDST" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output DST File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputREC" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output REC File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+<ModuleInstance>
+<type>LCSIMAnalysis</type>
+<name>lcsim_step_5</name>
+<descr_short></descr_short>
+<Parameter name="extraparams" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Command line parameters to pass to java"><value><![CDATA[]]></value></Parameter>
+<Parameter name="aliasproperties" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Path to the alias.properties file name that will be used"><value><![CDATA[alias.properties]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="detectorModel" type="string" linked_module="" linked_parameter="" in="False" out="False" description="detector model zip file"><value><![CDATA[sidloi3_edited.zip]]></value></Parameter>
+<Parameter name="trackingstrategy" type="string" linked_module="" linked_parameter="" in="False" out="False" description="trackingstrategy"><value><![CDATA[]]></value></Parameter>
+</ModuleInstance>
+<ModuleInstance>
+<type>UserJobFinalization</type>
+<name>lcsim_step_5</name>
+<descr_short></descr_short>
+</ModuleInstance>
+</StepDefinition>
+<StepDefinition>
+<origin></origin>
+<version>0.0</version>
+<type>marlin_step_4</type>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+<ModuleInstance>
+<type>MarlinAnalysis</type>
+<name>marlin_step_4</name>
+<descr_short></descr_short>
+<Parameter name="inputGEAR" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Input GEAR file"><value><![CDATA[gearFiles/sidloi3.gear]]></value></Parameter>
+<Parameter name="ProcessorListToUse" type="list" linked_module="" linked_parameter="" in="False" out="False" description="List of processors to use"><value><![CDATA[[]]]></value></Parameter>
+<Parameter name="ProcessorListToExclude" type="list" linked_module="" linked_parameter="" in="False" out="False" description="List of processors to exclude"><value><![CDATA[[]]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleInstance>
+<ModuleInstance>
+<type>UserJobFinalization</type>
+<name>marlin_step_4</name>
+<descr_short></descr_short>
+</ModuleInstance>
+</StepDefinition>
+<StepDefinition>
+<origin></origin>
+<version>0.0</version>
+<type>slicpandora_step_3</type>
+<description><![CDATA[]]></description>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+<ModuleInstance>
+<type>SLICPandoraAnalysis</type>
+<name>slicpandora_step_3</name>
+<descr_short></descr_short>
+<Parameter name="pandorasettings" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Pandora Settings"><value><![CDATA[pandoraSettings/sid_dbd_pandoraSettings.xml]]></value></Parameter>
+<Parameter name="detectorxml" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Detector model for simulation"><value><![CDATA[sidloi3_edited]]></value></Parameter>
+<Parameter name="startFrom" type="int" linked_module="" linked_parameter="" in="False" out="False" description="From how SlicPandora start to read the input file"><value><![CDATA[0]]></value></Parameter>
+<Parameter name="debug" type="bool" linked_module="" linked_parameter="" in="False" out="False" description="debug mode"><value><![CDATA[False]]></value></Parameter>
+</ModuleInstance>
+<ModuleInstance>
+<type>UserJobFinalization</type>
+<name>slicpandora_step_3</name>
+<descr_short></descr_short>
+</ModuleInstance>
+</StepDefinition>
+<StepInstance>
+<type>slic_step_1</type>
+<name>slic_step_1</name>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[slic]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[v3r0p3]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[slicMacros/default.mac]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[slic_v3r0p3_Step_1.log]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[slic.slcio]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+</StepInstance>
+<StepInstance>
+<type>lcsim_step_2</type>
+<name>lcsim_step_2</name>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[lcsim]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[2.5]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[lcsimTemplates/sid_dbd_prePandora_noOverlay.xml]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[lcsim_2.5_Step_2.log]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="slic_step_1" linked_parameter="OutputFile" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[prePandora.slcio]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+</StepInstance>
+<StepInstance>
+<type>slicpandora_step_3</type>
+<name>slicpandora_step_3</name>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[slicpandora]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[ILC_DBD]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[slicpandora_ILC_DBD_Step_3.log]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="lcsim_step_2" linked_parameter="OutputFile" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[slicPandora.slcio]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+</StepInstance>
+<StepInstance>
+<type>marlin_step_4</type>
+<name>marlin_step_4</name>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[marlin]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[0116]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[marlinSteering/sid_dbd_vertexing.xml]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[marlin_0116_Step_4.log]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="slicpandora_step_3" linked_parameter="OutputFile" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="OutputFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output File"><value><![CDATA[fullReco_pythiaZPolebbbar.slcio]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+</StepInstance>
+<StepInstance>
+<type>lcsim_step_5</type>
+<name>lcsim_step_5</name>
+<descr_short></descr_short>
+<Parameter name="applicationName" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Name"><value><![CDATA[lcsim]]></value></Parameter>
+<Parameter name="applicationVersion" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Application Version"><value><![CDATA[2.5]]></value></Parameter>
+<Parameter name="SteeringFile" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Steering File"><value><![CDATA[lcsimTemplates/sid_dbd_postPandora.xml]]></value></Parameter>
+<Parameter name="applicationLog" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Log File"><value><![CDATA[lcsim_2.5_Step_5.log]]></value></Parameter>
+<Parameter name="ExtraCLIArguments" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Extra CLI arguments"><value><![CDATA[]]></value></Parameter>
+<Parameter name="InputFile" type="string" linked_module="marlin_step_4" linked_parameter="OutputFile" in="True" out="False" description="Input File"><value><![CDATA[]]></value></Parameter>
+<Parameter name="ForgetInput" type="boolean" linked_module="" linked_parameter="" in="False" out="False" description="Do not overwrite input steering"><value><![CDATA[False]]></value></Parameter>
+<Parameter name="outputDST" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output DST File"><value><![CDATA[fullReco_pythiaZPolebbbar_DST.slcio]]></value></Parameter>
+<Parameter name="outputREC" type="string" linked_module="" linked_parameter="" in="False" out="False" description="Output REC File"><value><![CDATA[fullReco_pythiaZPolebbbar_REC.slcio]]></value></Parameter>
+<Parameter name="OutputPath" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathREC" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output REC File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="outputPathDST" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output DST File path on the grid"><value><![CDATA[]]></value></Parameter>
+<Parameter name="OutputSE" type="string" linked_module="" linked_parameter="" in="True" out="False" description="Output File storage element"><value><![CDATA[]]></value></Parameter>
+<Parameter name="listoutput" type="list" linked_module="" linked_parameter="" in="False" out="False" description="list of output file name"><value><![CDATA[[]]]></value></Parameter>
+</StepInstance>
+</Workflow>

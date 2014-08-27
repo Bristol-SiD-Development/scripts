@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pandoraSetup>
+  <calorimeters>
+    <calorimeter type="EM_ENDCAP" innerR="200.0" innerZ="1657.0" innerPhi="0.5235987755982988" innerSymmetryOrder="12.0" outerR="1294.1" outerZ="1795.5" outerPhi="0.5235987755982988" outerSymmetryOrder="12.0" collection="EcalEndcapHits" cellSizeU="3.5" cellSizeV="3.5" mipEnergy="0.000096" mipSigma="0.000012" mipCut="0.00006" timeCut="100" digital="false">
+      <id>
+        <field name="system" length="6" start="0" signed="false" />
+        <field name="barrel" length="3" start="6" signed="false" />
+        <field name="module" length="4" start="9" signed="false" />
+        <field name="layer" length="6" start="13" signed="false" />
+        <field name="slice" length="5" start="19" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="31">
+        <layer radLen="0.00787212" intLen="0.00153933" distanceToIp="1657.16" cellThickness="1" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1660.91" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1664.66" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1668.41" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1672.16" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1675.91" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1679.66" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1683.41" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1687.16" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1690.91" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1694.66" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1698.41" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1702.16" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1705.91" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1709.66" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1713.41" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1717.16" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1720.91" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1724.66" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1728.41" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1732.16" cellThickness="3.75" samplingFraction="0.01703144" emSamplingFraction="0.01703144" hadSamplingFraction="0.01317264" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1738.41" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1744.66" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1750.91" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1757.16" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1763.41" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1769.66" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1775.91" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1782.16" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1788.41" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1794.66" cellThickness="6.25" samplingFraction="0.0085343" emSamplingFraction="0.0085343" hadSamplingFraction="0.00826491" />
+      </layers>
+    </calorimeter>
+    <calorimeter type="HAD_BARREL" innerR="1419.0" innerZ="-3018.0" innerPhi="0.5235987755982988" innerSymmetryOrder="12.0" outerR="2583.0140701231567" outerZ="3018.0" outerPhi="0.5235987755982988" outerSymmetryOrder="12.0" collection="HcalBarrelHits" cellSizeU="10.0" cellSizeV="10.0" mipEnergy="0.00085" mipSigma="0.000081" mipCut="0" timeCut="100" digital="true">
+      <id>
+        <field name="system" length="6" start="0" signed="false" />
+        <field name="barrel" length="3" start="6" signed="false" />
+        <field name="module" length="4" start="9" signed="false" />
+        <field name="layer" length="6" start="13" signed="false" />
+        <field name="slice" length="5" start="19" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="40">
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1439.6" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1466.5" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1493.4" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1520.3" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1547.2" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1574.1" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1601" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1627.9" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1654.8" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1681.7" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1708.6" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1735.5" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1762.4" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1789.3" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1816.2" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1843.1" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1870" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1896.9" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1923.8" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1950.7" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1977.6" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2004.5" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2031.4" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2058.3" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2085.2" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2112.1" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2139" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2165.9" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2192.8" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2219.7" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2246.6" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2273.5" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2300.4" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2327.3" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2354.2" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2381.1" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2408" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2434.9" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2461.8" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2488.7" cellThickness="26.9" samplingFraction="8.72661975" emSamplingFraction="11.77405652" hadSamplingFraction="8.72661975" />
+      </layers>
+    </calorimeter>
+    <calorimeter type="MUON_BARREL" innerR="3464.0" innerZ="-2983.0" innerPhi="0.7853981633974483" innerSymmetryOrder="8.0" outerR="6606.921990584773" outerZ="2983.0" outerPhi="0.7853981633974483" outerSymmetryOrder="8.0" collection="MuonBarrelHits" cellSizeU="30.0" cellSizeV="30.0" mipEnergy="0.00085" mipSigma="0.000081" mipCut="0" timeCut="100" digital="true">
+      <id>
+        <field name="system" length="8" start="0" signed="false" />
+        <field name="barrel" length="3" start="8" signed="false" />
+        <field name="module" length="4" start="11" signed="false" />
+        <field name="layer" length="8" start="15" signed="false" />
+        <field name="slice" length="4" start="23" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="11">
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3471.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3711.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3951.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4191.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4431.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4671.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4911.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5151.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5391.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5631.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5871.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+      </layers>
+    </calorimeter>
+    <calorimeter type="HAD_ENDCAP" innerR="200.0" innerZ="1805.0" innerPhi="0.5235987755982988" innerSymmetryOrder="12.0" outerR="1458.7" outerZ="3015.5" outerPhi="0.5235987755982988" outerSymmetryOrder="12.0" collection="HcalEndcapHits" cellSizeU="10.0" cellSizeV="10.0" mipEnergy="0.00085" mipSigma="0.000081" mipCut="0" timeCut="100" digital="true">
+      <id>
+        <field name="system" length="6" start="0" signed="false" />
+        <field name="barrel" length="3" start="6" signed="false" />
+        <field name="module" length="4" start="9" signed="false" />
+        <field name="layer" length="8" start="13" signed="false" />
+        <field name="slice" length="5" start="21" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="45">
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1825.6" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1852.5" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1879.4" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1906.3" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1933.2" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1960.1" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="1987" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2013.9" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2040.8" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2067.7" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2094.6" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2121.5" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2148.4" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2175.3" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2202.2" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2229.1" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2256" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2282.9" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2309.8" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2336.7" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2363.6" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2390.5" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2417.4" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2444.3" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2471.2" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2498.1" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2525" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2551.9" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2578.8" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2605.7" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2632.6" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2659.5" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2686.4" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2713.3" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2740.2" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2767.1" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2794" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2820.9" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2847.8" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2874.7" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2901.6" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2928.5" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2955.4" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="2982.3" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+        <layer radLen="1.09731737" intLen="0.11725416" distanceToIp="3009.2" cellThickness="26.9" samplingFraction="9.15504275" emSamplingFraction="11.01387698" hadSamplingFraction="9.15504275" />
+      </layers>
+    </calorimeter>
+    <calorimeter type="MUON_ENDCAP" innerR="200.0" innerZ="3028.0" innerPhi="0.7853981633974483" innerSymmetryOrder="8.0" outerR="6498.7" outerZ="5668.0" outerPhi="0.7853981633974483" outerSymmetryOrder="8.0" collection="MuonEndcapHits" cellSizeU="30.0" cellSizeV="30.0" mipEnergy="0.00085" mipSigma="0.000081" mipCut="0" timeCut="100" digital="true">
+      <id>
+        <field name="system" length="8" start="0" signed="false" />
+        <field name="barrel" length="3" start="8" signed="false" />
+        <field name="module" length="4" start="11" signed="false" />
+        <field name="layer" length="8" start="15" signed="false" />
+        <field name="slice" length="5" start="23" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="11">
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3235.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3475.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3715.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="3955.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4195.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4435.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4675.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="4915.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5155.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5395.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="11.46520559" intLen="1.20022601" distanceToIp="5635.5" cellThickness="240" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+      </layers>
+    </calorimeter>
+    <calorimeter type="EM_BARREL" innerR="1265.0" innerZ="-1765.0" innerPhi="0.5235987755982988" innerSymmetryOrder="12.0" outerR="1453.0101192055515" outerZ="1765.0" outerPhi="0.5235987755982988" outerSymmetryOrder="12.0" collection="EcalBarrelHits" cellSizeU="3.5" cellSizeV="3.5" mipEnergy="0.000096" mipSigma="0.000012" mipCut="0.00006" timeCut="100" digital="false">
+      <id>
+        <field name="system" length="6" start="0" signed="false" />
+        <field name="barrel" length="3" start="6" signed="false" />
+        <field name="module" length="4" start="9" signed="false" />
+        <field name="layer" length="6" start="13" signed="false" />
+        <field name="slice" length="5" start="19" signed="false" />
+        <field name="x" length="16" start="32" signed="true" />
+        <field name="y" length="16" start="48" signed="true" />
+      </id>
+      <layers nlayers="31">
+        <layer radLen="0.00787212" intLen="0.00153933" distanceToIp="1265.16" cellThickness="1" samplingFraction="1" emSamplingFraction="1" hadSamplingFraction="1" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1268.91" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1272.66" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1276.41" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1280.16" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1283.91" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1287.66" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1291.41" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1295.16" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1298.91" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1302.66" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1306.41" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1310.16" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1313.91" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1317.66" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1321.41" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1325.16" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1328.91" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1332.66" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1336.41" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="0.68335411" intLen="0.02523423" distanceToIp="1340.16" cellThickness="3.75" samplingFraction="0.0166302" emSamplingFraction="0.0166302" hadSamplingFraction="0.01539977" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1346.41" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1352.66" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1358.91" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1365.16" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1371.41" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1377.66" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1383.91" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1390.16" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1396.41" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+        <layer radLen="1.35883528" intLen="0.04892878" distanceToIp="1402.66" cellThickness="6.25" samplingFraction="0.00843865" emSamplingFraction="0.00843865" hadSamplingFraction="0.01022434" />
+      </layers>
+    </calorimeter>
+  </calorimeters>
+  <detector name="sidloi3_edited" />
+  <coil radLen="0.01105381" intLen="0.0019085" innerR="2591.0" outerR="3392.0" z="1000.0" bfield="5.0" />
+  <tracking innerR="0.0" outerR="1264.0" z="1656.0" />
+</pandoraSetup>
+
