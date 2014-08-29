@@ -28,6 +28,7 @@ Owner: Leave as is
 <strong>website name SITENAME must begin with "test-" if you wish to create a test website, which prevents search engine listings and restricts outside access. The name may contain numbers, letters and hyphens (-) only </strong>
 
 - Check the box and submit. Everything is now set up!
+
 ###Uploading zip file to the web server
 - Simply copy the zip file into the folder ~/www/DIRNAME
 - Everything is now accessible through eg:
