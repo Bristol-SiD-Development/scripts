@@ -1,0 +1,121 @@
+2014-08-20 16:00:26 UTC dirac-jobexec   INFO: JobID: 11324222 
+2014-08-20 16:00:26 UTC dirac-jobexec   INFO: DIRAC JobID 11324222 is running at site LCG.UKI-LT2-IC-HEP.uk 
+Executing StepInstance slic_step_1 of type slic_step_1 ['slic_step_1', 'lcsim_step_2', 'lcsim_step_5', 'marlin_step_4', 'slicpandora_step_3']
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:27
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:26 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:27 UTC dirac-jobexec/SLICAnalysis  ERROR: Failed to unzip detector model 
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:26
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+Executing StepInstance lcsim_step_2 of type lcsim_step_2 ['slic_step_1', 'lcsim_step_2', 'lcsim_step_5', 'marlin_step_4', 'slicpandora_step_3']
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:26
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:27 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:28 UTC dirac-jobexec/LCSIMAnalysis   INFO: Input files to treat ['slic.slcio'] 
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:25
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+Executing StepInstance slicpandora_step_3 of type slicpandora_step_3 ['slic_step_1', 'lcsim_step_2', 'lcsim_step_5', 'marlin_step_4', 'slicpandora_step_3']
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:25
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:28 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:24
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+Executing StepInstance marlin_step_4 of type marlin_step_4 ['slic_step_1', 'lcsim_step_2', 'lcsim_step_5', 'marlin_step_4', 'slicpandora_step_3']
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:24
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:29 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:24
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+Executing StepInstance lcsim_step_5 of type lcsim_step_5 ['slic_step_1', 'lcsim_step_2', 'lcsim_step_5', 'marlin_step_4', 'slicpandora_step_3']
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:23
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:30 UTC dirac-jobexec/LCSIMAnalysis   INFO: Input files to treat ['fullReco_pythiaZPolebbbar.slcio'] 
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: Payload proxy information:
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO:  subject      : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy/CN=limited proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: issuer       : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran/CN=proxy/CN=proxy
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: identity     : /C=UK/O=eScience/OU=Bristol/L=IS/CN=martin gaughran
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: timeleft     : 186:12:23
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: DIRAC group  : ilc_user
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: path         : /srv/localstage/scratch/7474795.1.grid.q/tmpcZaSi9
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: username     : mgaughra
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: properties   : NormalUser
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS         : True
+2014-08-20 16:00:30 UTC dirac-jobexec/ModuleBase   INFO: VOMS fqan    : ['/ilc']
+2014-08-20 16:00:31 UTC dirac-jobexec/UserJobFinalization   INFO: Initializing $Id: $ 

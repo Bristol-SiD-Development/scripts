@@ -1,0 +1,1 @@
+python SiDChainJob.py -n 5 --process="ProcessName" --file="/ilc/user/m/mgaughra/pythiaZPolebbbar.stdhep" --detector="sidloi3" --macro="default.mac"
