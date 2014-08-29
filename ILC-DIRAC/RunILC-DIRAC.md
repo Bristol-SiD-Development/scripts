@@ -25,8 +25,9 @@ where SITENAME is the website name
 - There are three main scripts that can be run at the moment:
 
 <strong>Simple run script - SiDChainJobSimple.py</strong>
+- Definitely make this first script you see / run!
 - Here, only a single job is sent off with a specified stdhep file, number of events and possibility of output to the grid.
-- Contains useful documentation (through comments) to point out strange features of running ILC Dirac. Definitely make this first script you see / run
+- Contains useful documentation (through comments) to point out strange features of running ILC Dirac.
 - Most things hard coded, such as detector geometries and steering files
 - Use the following command to run this:
 ```
