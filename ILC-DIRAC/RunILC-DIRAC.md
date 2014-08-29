@@ -2,11 +2,11 @@
 - Make sure you are logged in, via ssh, to LXplus</strong>
 - Use the following command to set up environmental variables:
 ```
-    source /afs/cern.ch/eng/clic/software/DIRAC/bashrc
+source /afs/cern.ch/eng/clic/software/DIRAC/bashrc
 ```
 - Use the following command to obtain a valid DIRAC proxy with the correct user group:
 ```
-    dirac-proxy-init --group ilc_user
+dirac-proxy-init --group ilc_user
 ```
 ###Correctly store detector geometry files
 - Set up a detector geometry zip file in the same manner that sidloi3\_edited.zip is, as found in dirac_examples. 
@@ -16,7 +16,7 @@
 - Follow instructions in SettingUpWebStorage.md using the zip file from the previous stage
 - alias.properties can now include a line such as 
 ```
-    sidloi3_edited: http://www.cern.ch/SITENAME/sidloi3_edited.zip
+sidloi3_edited: http://www.cern.ch/SITENAME/sidloi3_edited.zip
 ```
 where SITENAME is the website name
 
@@ -30,7 +30,7 @@ where SITENAME is the website name
 - Most things hard coded, such as detector geometries and steering files
 - Use the following command to run this:
 ```
-    python SiDChainJobSimple.py -n 5 --file="/ilc/user/FILEPATH"
+python SiDChainJobSimple.py -n 5 --file="/ilc/user/FILEPATH"
 ```
 where filepath refers to a stdhep file in your personal grid storage area. See UsefulDiracCommands.md for uploading files to the grid
 
@@ -41,8 +41,13 @@ where filepath refers to a stdhep file in your personal grid storage area. See U
 <strong>Simplified multiple job script - SiDChainJobReducedMultiple.py</strong>
 - This will run a cut-down version of the original script as written by Christian Grefe. There are no background effects and potentially useful code not currently in use has been removed, as well as certain error corrections.
 - Good starting point for a complete script that has proper control flow as required
+- Run with eg:
+```
+python SiDChainJob2.py -n 5 --process="ProcessName" --file="/ilc/user/FILEPATH" --detector="sidloi3_edited" --pandoradetector="sidloi3_edited"
+```
 
 ###ILC DIRAC web portal
 - It can be found [here](https://ilcdirac.cern.ch/DIRAC/ILC-Production/ilc_user/jobs/JobMonitor/display), and requires the grid certificate to be installed on your browser
 - Go to Jobs -> Job monitor on the top left to get a view of every job currently in operation, sorted by group, date etc.
 - Can delete jobs or resend them etc. Make sure you do not edit files before resending, however!
+- Can be used to download output sandbox if < 10MB
