@@ -172,10 +172,10 @@ inputSandbox = []
 # JNI bindings for root writer
 if lcsimVer:
     #changed
-    inputSandbox.append( ['LFN:/ilc/prod/software/lcsim/lib.tar.gz', 'sidloi3_edited.tar.gz', 'sidloi3_edited.zip'] )
+    inputSandbox.append( ['LFN:/ilc/prod/software/lcsim/lib.tar.gz'] )
     #changed
 
-outputSandbox = [ "*.log", "*.xml", "*.lcsim", "*.slcio", "*.zip" ]
+outputSandbox = [ "*.log", "*.xml", "*.lcsim", "*.slcio" ]
 
 # read file with list of banned sites
 if banlistFile:
