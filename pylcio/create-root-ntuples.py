@@ -300,7 +300,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_sigma_theta_conv"][2][trackIndex] = trackHelicalTrack.errorTheta
             bucketDict["track_sigma_phi"][2][trackIndex] = trackHelicalTrack.errorPhi
             
-            bucketDict["track_mc_nHits"][2][trackIndex] = len(hitToMcpTable.allTo(recoHMcp))
+            bucketDict["track_mc_nHits"][2][trackIndex] = len(hitToMcpTable.getAllTo(recoHMcp))
             bucketDict["track_mc_d0"][2][trackIndex] = mcHelicalTrack.d0
             bucketDict["track_mc_z0"][2][trackIndex] = mcHelicalTrack.z0
             bucketDict["track_mc_dca"][2][trackIndex] = mcHelicalTrack.dca
@@ -314,8 +314,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_mc_pt"][2][trackIndex] = mcHelicalTrack.p.XYvector().Mod()
             bucketDict["track_mc_p"][2][trackIndex] = mcHelicalTrack.p.Mag()
             bucketDict["track_mc_theta"][2][trackIndex] = mcHelicalTrack.p.Theta()
-            bucketDict["track_mc_theta_conv"][2][trackIndex] = convTheta(mcHelicalTrack.p.Theta)
-            bucketDict["track_mc_phi"][2][trackIndex] = mcHelicalTrack.Phi
+            bucketDict["track_mc_theta_conv"][2][trackIndex] = convTheta(mcHelicalTrack.p.Theta())
+            bucketDict["track_mc_phi"][2][trackIndex] = mcHelicalTrack.phi
             bucketDict["track_mc_pathlength"][2][trackIndex] = sys.float_info.max #TODO fix
             bucketDict["track_mc_pathlength_los"][2][trackIndex] = sys.float_info.max #TODO fix
             bucketDict["track_mc_distance"][2][trackIndex] = mcDistance[recoHMcp]
@@ -326,7 +326,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_mc_besttrack"][2][trackIndex] = isTrackBestTrack
 
         for mcpIndex, mcp in enumerate(mcParticles):
-            hmcp = HLcioObject(mcp)
+            hMcp = HLcioObject(mcp)
 
             mcHelicalTrack = HelicalTrack(inputMcp=mcp, bField=bField)
             #Fill vectors for the mcp
@@ -338,11 +338,14 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_px"][2][mcpIndex] = mcHelicalTrack.p.X()
             bucketDict["mc_py"][2][mcpIndex] = mcHelicalTrack.p.Y()
             bucketDict["mc_pz"][2][mcpIndex] = mcHelicalTrack.p.Z()
-            bucketDict["mc_pt"][2][mcpIndex] = mcHelicalTrack.p.XYvector().Mag()
+            bucketDict["mc_pt"][2][mcpIndex] = mcHelicalTrack.p.XYvector().Mod()
             bucketDict["mc_p"][2][mcpIndex] =  mcHelicalTrack.p.Mag()
             
-            bucketDict["mc_nHits"] = len(mcParticleToTrackerHitDict.get(hmcp, []))
-            bucketDict["mc_distance"][2][mcpIndex] = mcDistance[hMcp]
+            bucketDict["mc_nHits"] = len(hitToMcpTable.getAllTo(hMcp))
+            try:
+                bucketDict["mc_distance"][2][mcpIndex] = mcDistance[hMcp]
+            except KeyError:
+                bucketDict["mc_distance"][2][mcpIndex] = 0.
             bucketDict["mc_charge"][2][mcpIndex] = mcp.getCharge()
             bucketDict["mc_pdgid"][2][mcpIndex] = mcp.getPDG()
             bucketDict["mc_signal"][2][mcpIndex] = 1 #TODO fix
@@ -356,8 +359,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_d0"][2][mcpIndex] = mcHelicalTrack.d0
             bucketDict["mc_z0"][2][mcpIndex] = mcHelicalTrack.z0
             bucketDict["mc_dca"][2][mcpIndex] = mcHelicalTrack.dca
-            bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.theta
-            bucketDict["mc_theta_conv"][2][mcpIndex] = convTheta(mcHelicalTrack.theta)
+            bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.p.Theta()
+            bucketDict["mc_theta_conv"][2][mcpIndex] = convTheta(mcHelicalTrack.p.Theta())
             bucketDict["mc_phi"][2][mcpIndex] = mcHelicalTrack.phi
             bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max
             bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max
