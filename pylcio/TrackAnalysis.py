@@ -2,7 +2,7 @@ from __future__ import division
 from HLcioObject import HLcioObject
 
 class TrackAnalysis(object):
-    def __init__(track, hitToMcRelationalTable):
+    def __init__(self, track, hitToMcRelationalTable):
         #Get the number of hits on the track
         self.nHits = len(track.getTrackerHits())
 
@@ -11,20 +11,20 @@ class TrackAnalysis(object):
 
         #get the hit counts on this track for each mc particle
         for hit in track.getTrackerHits():
-            hMcpList = hitToMcRelationalTable.allFromList(HLcioObject(hit))
+            hMcpList = hitToMcRelationalTable.getAllFrom(HLcioObject(hit))
             for hMcp in hMcpList:
                 try:
-                    mcMap[hMcp] += 1
+                    mcpMap[hMcp] += 1
                 except KeyError:
-                    mcMap[hMcp] = 1
+                    mcpMap[hMcp] = 1
                     
         # Find the MCParticle which has the most hits on the track
         nBest = 0
-        hMcBest = None
+        hMcpBest = None
         for hMcp in mcpMap:
             if mcpMap[hMcp] > nBest:
                 nBest = mcpMap[hMcp]
-                hMcBest = hMcp
+                hMcpBest = hMcp
         
         self.hMcp = hMcpBest #note that this remains None if none of the mcps has a hit
 
