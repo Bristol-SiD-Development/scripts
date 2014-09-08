@@ -150,7 +150,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
     tree = ROOT.TTree('aTree', 'stillATree')
 
     bucketDict = getBucketDict()
-    #implementedKeys = ["event", "Ntracks", "nMCPs", "mc_x", "mc_y", "mc_z", "mc_px", "mc_py", "mc_pz", "mc_pt", "mc_p", "mc_d0", "mc_z0","mc_dca", "mc_theta", "mc_phi"]
+    
     for key in bucketDict:
         if type(bucketDict[key]) == list: #The vector parameters have their buckets in lists so we can mutate them (need to create new vectors)
             tree.Branch(key, bucketDict[key][2])
@@ -161,6 +161,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
 
     for event in lcioReader:
         bucketDict["event"][1][0] = event.getEventNumber()
+        print >> sys.stderr, event.getEventNumber()
         tracks = event.getCollection(trackCollectionName)
         bucketDict["Ntracks"][1][0] = tracks.getNumberOfElements()
         mcParticles = event.getCollection(mcParticleCollectionName)
@@ -179,8 +180,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 else:
                     raise Exception("WTF is this shit?!")
 
-                bucketDict[key][2] = ROOT.vector(bucketDict[key][0])()
-                bucketDict[key][2].resize(length)
+                bucketDict[key][2] = ROOT.vector(bucketDict[key][0])(length)
                 tree.SetBranchAddress(key, bucketDict[key][2])
 
         #Create a table relating hits to mcParticles and a list of all the hTrackerHits
