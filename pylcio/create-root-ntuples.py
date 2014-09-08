@@ -5,10 +5,10 @@ from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-from pylciohelperfunctions import HelicalTrack
+from pylciohelperfunctions import HelicalTrack, isLongLivedAndCharged
 
 from HLcioObject import HLcioObject
-
+from TrackAnalysis import TrackAnalysis
 from array import array
 
 import sys
@@ -43,61 +43,69 @@ class ManyToManyTable(object):
     #def getAllrelations(self):
     #    return self.relationsList
 
+class ManyToOneTable(ManyToManyTable):
+    def getFrom(self, fromObject):
+        allFromList = super.getAllFrom(self, fromObject)
+        assert(1 == len(allFromList))
+        return allFromList[0]
+
+def convTheta(theta):
+    return 90. - 180.*abs(theta/np.pi - 0.5)
 
 def getBucketDict():
-    bucketDict = {"event": ('I',  array('i', [0])),
-                  "Ntracks": ('I', array('i', [0])),
-                  "nMCPs": ('I', array('i', [0])),
-                  "track_nHits":['int', 'track'],
-                  "track_nFalseHits":['int','track'],
-                  "track_d0":['double','track'],
-                  "track_z0":['double','track'],
-                  "track_dca":['double','track'],
-                  "track_px":['double','track'],
-                  "track_py":['double','track'],
-                  "track_pz":['double','track'],
-                  "track_pt":['double','track'],
-                  "track_p":['double','track'],
-                  "track_theta":['double','track'],
-                  "track_theta_conv":['double','track'],
-                  "track_phi":['double','track'],
-                  "track_charge":['int','track'],
-                  "track_sigma_d0":['double','track'],
-                  "track_sigma_z0":['double','track'],
-                  "track_sigma_dca":['double','track'],
-                  "track_sigma_px":['double','track'],
-                  "track_sigma_py":['double','track'],
-                  "track_sigma_pz":['double','track'],
-                  "track_sigma_pt":['double','track'],
-                  "track_sigma_p":['double','track'],
-                  "track_sigma_theta":['double','track'],
-                  "track_sigma_theta_conv":['double','track'],
-                  "track_sigma_phi":['double','track'],
-                  "track_mc_nHits":['int','track'],
-                  "track_mc_d0":['double','track'],
-                  "track_mc_z0":['double','track'],
-                  "track_mc_dca":['double','track'],
-                  "track_mc_x":['double','track'],
-                  "track_mc_y":['double','track'],
-                  "track_mc_z":['double','track'],
-                  "track_mc_d_origin":['double','track'],
-                  "track_mc_px":['double','track'],
-                  "track_mc_py":['double','track'],
-                  "track_mc_pz":['double','track'],
-                  "track_mc_pt":['double','track'],
-                  "track_mc_p":['double','track'],
-                  "track_mc_theta":['double','track'],
-                  "track_mc_theta_conv":['double','track'],
-                  "track_mc_phi":['double','track'],
-                  "track_mc_pathlength":['double','track'],
-                  "track_mc_pathlength_los":['double','track'],
-                  "track_mc_distance":['double','track'],
-                  "track_mc_charge":['double','track'],
-                  "track_mc_pdgid":['int','track'],
-                  "track_mc_signal":['int','track'],
-                  "track_mc_status":['int','track'],
-                  "track_mc_findable":['int','track'],
-                  "track_mc_besttrack":['int','track'],
+    bucketDict = {"event": ('I',  array('i', [0])), #done
+                  "Ntracks": ('I', array('i', [0])), #done 
+                  "nMCPs": ('I', array('i', [0])), #done
+                  "track_nHits":['int', 'track'], #done
+                  "track_nFalseHits":['int','track'], #done
+                  "track_d0":['double','track'], #done
+                  "track_z0":['double','track'], #done
+                  "track_dca":['double','track'], #done
+                  "track_px":['double','track'], #done
+                  "track_py":['double','track'], #done
+                  "track_pz":['double','track'], #done
+                  "track_pt":['double','track'], #done
+                  "track_p":['double','track'], #done
+                  "track_theta":['double','track'], #done
+                  "track_theta_conv":['double','track'], #done
+                  "track_phi":['double','track'], #done
+                  "track_charge":['int','track'], #done
+                  "track_sigma_d0":['double','track'], #done
+                  "track_sigma_z0":['double','track'], #done
+                  "track_sigma_dca":['double','track'], #done
+                  "track_sigma_px":['double','track'], #done
+                  "track_sigma_py":['double','track'], #done
+                  "track_sigma_pz":['double','track'], #done
+                  "track_sigma_pt":['double','track'], #done
+                  "track_sigma_p":['double','track'], #done
+                  "track_sigma_theta":['double','track'], #done
+                  "track_sigma_theta_conv":['double','track'], #done
+                  "track_sigma_phi":['double','track'], #done
+                  "track_mc_nHits":['int','track'], #done 
+                  "track_mc_d0":['double','track'], #done
+                  "track_mc_z0":['double','track'], #done
+                  "track_mc_dca":['double','track'], #done
+                  "track_mc_x":['double','track'], #done
+                  "track_mc_y":['double','track'], #done
+                  "track_mc_z":['double','track'], #done
+                  "track_mc_d_origin":['double','track'], #done
+                  "track_mc_px":['double','track'], #done
+                  "track_mc_py":['double','track'], #done
+                  "track_mc_pz":['double','track'], #done
+                  "track_mc_pt":['double','track'], #done
+                  "track_mc_p":['double','track'], #done
+                  "track_mc_theta":['double','track'], #done
+                  "track_mc_theta_conv":['double','track'], #done
+                  "track_mc_phi":['double','track'], #done
+                  "track_mc_pathlength":['double','track'], #done (ish)
+                  "track_mc_pathlength_los":['double','track'], #done (ish)
+                  "track_mc_distance":['double','track'], #done
+                  "track_mc_charge":['double','track'], #done
+                  "track_mc_pdgid":['int','track'], #done
+                  "track_mc_signal":['int','track'], #done (ish)
+                  "track_mc_status":['int','track'], #done (ish)
+                  "track_mc_findable":['int','track'], #done (isn)
+                  "track_mc_besttrack":['int','track'], #done
                   "mc_nHits":['int', "mcp"], #done
                   "mc_d0":['double', "mcp"], #done
                   "mc_z0":['double', "mcp"], #done
@@ -105,7 +113,7 @@ def getBucketDict():
                   "mc_x":['double', "mcp"], #done
                   "mc_y":['double', "mcp"], #done
                   "mc_z":['double', "mcp"], #done
-                  "mc_d_origin":['double', "mcp"],
+                  "mc_d_origin":['double', "mcp"], #done
                   "mc_px":['double', "mcp"], #done
                   "mc_py":['double', "mcp"], #done
                   "mc_pz":['double', "mcp"], #done
@@ -114,15 +122,15 @@ def getBucketDict():
                   "mc_theta":['double', "mcp"], #done
                   "mc_theta_conv":['double', "mcp"], #done
                   "mc_phi":['double', "mcp"], #done
-                  "mc_pathlength":['double', "mcp"],
-                  "mc_pathlength_los":['double', "mcp"],
-                  "mc_distance":['double', "mcp"],
+                  "mc_pathlength":['double', "mcp"], #done (ish)
+                  "mc_pathlength_los":['double', "mcp"], #done (ish)
+                  "mc_distance":['double', "mcp"], #done
                   "mc_charge":['double', "mcp"], #done
                   "mc_pdgid":['int', "mcp"], #done
-                  "mc_signal":['int', "mcp"],
+                  "mc_signal":['int', "mcp"], #done (ish)
                   "mc_status":['int', "mcp"], #done
-                  "mc_findable":['int', "mcp"],
-                  "mc_reconstructed":['int', "mcp"]}
+                  "mc_findable":['int', "mcp"], #done (ish)
+                  "mc_reconstructed":['int', "mcp"]} #done
     #TODO come up with a good way of distinguishing scalar and vector params
     for key in bucketDict:
         if type(bucketDict[key]) == list:
@@ -175,45 +183,184 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 bucketDict[key][2].resize(length)
                 tree.SetBranchAddress(key, bucketDict[key][2])
 
-        #Create a dictionary relating mcParticles to the hits they've caused
-        mcParticleToTrackerHitDict = {}
+        #Create a table relating hits to mcParticles and a list of all the hTrackerHits
+        hitToMcpTable = ManyToManyTable()
+        hTrackerHits = []
         for hitMcpRelation in hitMcpRelations:
-            hit = HLcioObject(hitMcpRelation.getFrom())
-            mcp = HLcioObject(hitMcpRelation.getTo())
-            try:
-                mcParticleToTrackerHitDict[mcp].append(hit)
-            except KeyError:
-                mcParticleToTrackerHitDict[mcp] = [hit]
+            hHit = HLcioObject(hitMcpRelation.getFrom())
+            hMcp = HLcioObject(hitMcpRelation.getTo())
             
-        trackToMcpTable = ManyToManyTable()
+            hitToMcpTable.addRelation(hHit, hMcp)
+
+            if not hHit in hTrackerHits:
+                hTrackerHits.append(hHit)
+                
+        #build a map of track to (best) MCParticle
+        #Note that the same MCParticle can be best for many tracks
+        trackToMcpTable = ManyToOneTable()
+        trackToGoodHits = {}
+        trackToFalseHits = {}
         for trackMcpRelation in trackMcpRelations:
-            trackToMcpTable.addRelation(trackMcpRelation.getFrom(), trackMcpRelation.getTo())
+            hTrack = HLcioObject(trackMcpRelation.getFrom())
+            trackAnalysis = TrackAnalysis(hTrack, hitToMcpTable)
+
+            trackToMcpTable.addRelation(hTrack, trackAnalysis.hMcp)
+
+            trackToGoodHits[hTrack] = trackAnalysis.nGoodHits
+            trackToFalseHits[hTrack] = trackAnalysis.nBadHits
+
+        
+        # For each hit find the distance to the nearest other hit
+        distanceToNearestHit = {}
+        for hHit in hTrackerHits:
+            for otherHHit in hTrackerHits:
+                if hHit != otherHHit:
+                    hitPos = hHit.getPositionVec()
+                    otherHitPos = otherHHit.getPositionVec()
+                    distance = (hitPos - otherHitPos).Mag()
+
+                    try:
+                        if distance < distanceToNearestHit[hHit]:
+                            distanceToNearestHit[hHit] = distance
+                    except KeyError:
+                        distanceToNearestHit[hHit] = distance
+
+
+        #Create a list of all the long lived and charged MCParticles
+        longLivedAndChargedHMcParticles = []
+        for mcp in mcParticles:
+            if isLongLivedAndCharged(mcp):
+                longLivedAndChargedHMcParticles.append(HLcioObject(mcp))
+
+        
+        #For each MCParticle find the shortest distance between any of its hits and any other hit
+        mcDistance = {}
+        for mcp in mcParticles:
+            hMcp = HLcioObject(mcp)
+            hHits = hitToMcpTable.allTo(hMcp)
+            
+            for hHit in hHits:
+                minDistance = sys.float_info.max
+                if hHit in distanceToNearestHit:
+                    minDistance = distanceToNearestHit[hHit]
+                try:
+                    if minDistance < mcDistance[hMcp]:
+                        mcDistance[hMcp] = minDistance
+                except KeyError:
+                    mcDistance[hMcp] = minDistance
+                
+
+        reconstructedMcps = [] 
+        for trackIndex, track in enumerate(tracks):
+            hTrack = HLcioObject(track)
+            recoHMcp = trackToMcpTable.getFrom(hTrack)
+            
+            reconstructedMcps.append(recoHMcp)
+            
+            #check if this is the best track for our reco MCP
+            bestTrack = None
+            nHitsBestTrack = -1
+            
+            for mcHTrack in trackToMcpTable.getAllTo(recoHMcp):
+                goodHits = trackToGoodHits[mcHTrack]
+                if goodHits > nHitsBestTrack:
+                    nHitsBestTrack = goodHits
+                    bestTrack = mcHTrack
+                    
+            isTrackBestTrack = 0 #False
+            if bestTrack == track:
+                isTrackBestTrack = 1 #True
+                
+            #Fill vectors for the track
+            trackHelicalTrack = HelicalTrack(track) #computes the physical params and their errors from the reco data and vice-versa
+            mcHelicalTrack = HelicalTrack(recoHMcp) #computes the physical params and their errors from the reco data and vice-versa
+            bucketDict["track_nHits"][2][trackIndex] = len(track.getTrackerHits)
+            bucketDict["track_nFalseHits"][2][trackIndex] = trackToFalseHits[hTrack]
+            bucketDict["track_d0"][2][trackIndex] = trackHelicalTrack.d0
+            bucketDict["track_z0"][2][trackIndex] = trackHelicalTrack.z0
+            bucketDict["track_dca"][2][trackIndex] = trackHelicalTrack.dca
+            bucketDict["track_px"][2][trackIndex] = trackHelicalTrack.p.X()
+            bucketDict["track_py"][2][trackIndex] = trackHelicalTrack.p.Y()
+            bucketDict["track_pz"][2][trackIndex] = trackHelicalTrack.p.Z()
+            bucketDict["track_pt"][2][trackIndex] = trackHelicalTrack.p.XYvector().Mag()
+            bucketDict["track_p"][2][trackIndex] = trackHelicalTrack.p.Mag()
+            bucketDict["track_theta"][2][trackIndex] = trackHelicalTrack.p.Theta()
+            bucketDict["track_theta_conv"][2][trackIndex] = convTheta(trackHelicalTrack.p.Theta())
+            bucketDict["track_phi"][2][trackIndex] = trackHelicalTrack.phi 
+            bucketDict["track_charge"][2][trackIndex] = trackHelicalTrack.charge
+            bucketDict["track_sigma_d0"][2][trackIndex] = trackHelicalTrack.errorD0
+            bucketDict["track_sigma_z0"][2][trackIndex] = trackHelicalTrack.errorZ0
+            bucketDict["track_sigma_dca"][2][trackIndex] = trackHelicalTrack.errorDca
+            bucketDict["track_sigma_px"][2][trackIndex] = trackHelicalTrack.errorPx
+            bucketDict["track_sigma_py"][2][trackIndex] = trackHelicalTrack.errorPy
+            bucketDict["track_sigma_pz"][2][trackIndex] = trackHelicalTrack.errorPz
+            bucketDict["track_sigma_pt"][2][trackIndex] = trackHelicalTrack.errorPt
+            bucketDict["track_sigma_p"][2][trackIndex] = trackHelicalTrack.errorP
+            bucketDict["track_sigma_theta"][2][trackIndex] = trackHelicalTrack.errorTheta
+            bucketDict["track_sigma_theta_conv"][2][trackIndex] = trackHelicalTrack.errorTheta
+            bucketDict["track_sigma_phi"][2][trackIndex] = trackHelicalTrack.errorPhi
+            
+            bucketDict["track_mc_nHits"][2][trackIndex] = len(hitToMcpTable.allTo(recoHMcp))
+            bucketDict["track_mc_d0"][2][trackIndex] = mcHelicalTrack.d0
+            bucketDict["track_mc_z0"][2][trackIndex] = mcHelicalTrack.z0
+            bucketDict["track_mc_dca"][2][trackIndex] = mcHelicalTrack.dca
+            bucketDict["track_mc_x"][2][trackIndex] = mcHelicalTrack.origin.X()
+            bucketDict["track_mc_y"][2][trackIndex] = mcHelicalTrack.origin.Y()
+            bucketDict["track_mc_z"][2][trackIndex] = mcHelicalTrack.origin.Z()
+            bucketDict["track_mc_d_origin"][2][trackIndex] = mcHelicalTrack.origin.Mag()
+            bucketDict["track_mc_px"][2][trackIndex] = mcHelicalTrack.p.X()
+            bucketDict["track_mc_py"][2][trackIndex] = mcHelicalTrack.p.Y()
+            bucketDict["track_mc_pz"][2][trackIndex] = mcHelicalTrack.p.Z()
+            bucketDict["track_mc_pt"][2][trackIndex] = mcHelicalTrack.p.XYvector().Mag()
+            bucketDict["track_mc_p"][2][trackIndex] = mcHelicalTrack.p.Mag()
+            bucketDict["track_mc_theta"][2][trackIndex] = mcHelicalTrack.p.Theta()
+            bucketDict["track_mc_theta_conv"][2][trackIndex] = convTheta(mcHelicalTrack.p.Theta)
+            bucketDict["track_mc_phi"][2][trackIndex] = mcHelicalTrack.Phi
+            bucketDict["track_mc_pathlength"][2][trackIndex] = sys.float_info.max #TODO fix
+            bucketDict["track_mc_pathlength_los"][2][trackIndex] = sys.float_info.max #TODO fix
+            bucketDict["track_mc_distance"][2][trackIndex] = mcDistance[recoHMcp]
+            bucketDict["track_mc_charge"][2][trackIndex] = mcHelicalTrack.charge
+            bucketDict["track_mc_pdgid"][2][trackIndex] = recoHMcp.getPDG()
+            bucketDict["track_mc_signal"][2][trackIndex] = 1 #TODO fix
+            bucketDict["track_mc_findable"][2][trackIndex] = 1 #TODO fix
+            bucketDict["track_mc_besttrack"][2][trackIndex] = isTrackBestTrack
 
         for mcpIndex, mcp in enumerate(mcParticles):
             hmcp = HLcioObject(mcp)
-            bucketDict["mc_x"][2][mcpIndex] = mcp.getVertex()[0]
-            bucketDict["mc_y"][2][mcpIndex] = mcp.getVertex()[1]
-            bucketDict["mc_z"][2][mcpIndex] = mcp.getVertex()[2]
-                              
-            bucketDict["mc_px"][2][mcpIndex] = mcp.getMomentum()[0]
-            bucketDict["mc_py"][2][mcpIndex] = mcp.getMomentum()[1]
-            bucketDict["mc_pz"][2][mcpIndex] = mcp.getMomentum()[2]
-            bucketDict["mc_pt"][2][mcpIndex] = np.sqrt( mcp.getMomentum()[0]**2 + mcp.getMomentum()[1]**2)
-            bucketDict["mc_p"][2][mcpIndex] = np.sqrt( mcp.getMomentum()[0]**2 + mcp.getMomentum()[1]**2 + mcp.getMomentum()[2]**2 )
-            
-            bucketDict["mc_nHits"] = len(mcParticleToTrackerHitDict.get(hmcp, []))
-            bucketDict["charge"][2][mcpIndex] = mcp.getCharge()
-            bucketDict["mc_pdgid"][2][mcpIndex] = mcp.getPDG()
-            bucketDict["mc_status"][2][mcpIndex] = mcp.getGeneratorStatus()
 
             mcHelicalTrack = HelicalTrack(mcp, bField)
+            #Fill vectors for the mcp
+            bucketDict["mc_x"][2][mcpIndex] = mcHelicalTrack.origin.X() 
+            bucketDict["mc_y"][2][mcpIndex] = mcHelicalTrack.origin..Y()
+            bucketDict["mc_z"][2][mcpIndex] = mcHelicalTrack.origin.Z()
+            bucketDict["mc_d_origin"][2][mcpIndex] = mcHelicalTrack.origin.Mag()
+                              
+            bucketDict["mc_px"][2][mcpIndex] = mcHelicalTrack.p.X()
+            bucketDict["mc_py"][2][mcpIndex] = mcHelicalTrack.p.Y()
+            bucketDict["mc_pz"][2][mcpIndex] = mcHelicalTrack.p.Z()
+            bucketDict["mc_pt"][2][mcpIndex] = mcHelicalTrack.p.XYvector().Mag()
+            bucketDict["mc_p"][2][mcpIndex] =  mcHelicalTrack.p.Mag()
             
-            bucketDict["mc_d0"][2][mcpIndex] = mcHelicalTrack.getD0()
-            bucketDict["mc_z0"][2][mcpIndex] = mcHelicalTrack.getZ0()
-            bucketDict["mc_dca"][2][mcpIndex] = np.sqrt(mcHelicalTrack.getD0()**2 + mcHelicalTrack.getZ0**2)
-            bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.getTheta()
-            bucketDict["mc_theta_conv"][2][mcpIndex] = mcHelicalTrack.getThetaConv()
-            bucketDict["mc_phi"][2][mcpIndex] = mcHelicalTrack.getPhi()
+            bucketDict["mc_nHits"] = len(mcParticleToTrackerHitDict.get(hmcp, []))
+            bucketDict["mc_distance"][2][mcpIndex] = mcDistance[hMcp]
+            bucketDict["mc_charge"][2][mcpIndex] = mcp.getCharge()
+            bucketDict["mc_pdgid"][2][mcpIndex] = mcp.getPDG()
+            bucketDict["mc_signal"][2][mcpIndex] = 1 #TODO fix
+            bucketDict["mc_status"][2][mcpIndex] = mcp.getGeneratorStatus()
+            bucketDict["mc_findable"][2][mcpIndex] = 1 #TODO fix
+            if hMcp in reconstructedMcps:
+                bucketDict["mc_reconstructed"][2][mcpIndex] = 1
+            else:
+                bucketDict["mc_reconstructed"][2][mcpIndex] = 0
+
+            bucketDict["mc_d0"][2][mcpIndex] = mcHelicalTrack.D0
+            bucketDict["mc_z0"][2][mcpIndex] = mcHelicalTrack.Z0
+            bucketDict["mc_dca"][2][mcpIndex] = mcHelicalTrack.dca
+            bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.theta
+            bucketDict["mc_theta_conv"][2][mcpIndex] = convTheta(mcHelicalTrack.theta)
+            bucketDict["mc_phi"][2][mcpIndex] = mcHelicalTrack.phi
+            bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max
+            bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max
             
         tree.Fill()
 
