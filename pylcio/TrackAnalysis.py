@@ -1,6 +1,5 @@
-from HLcioObject import HLcioObject
 from __future__ import division
-
+from HLcioObject import HLcioObject
 
 class TrackAnalysis(object):
     def __init__(track, hitToMcRelationalTable):

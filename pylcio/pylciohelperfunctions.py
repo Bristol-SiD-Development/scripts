@@ -1,3 +1,4 @@
+from __future__ import division
 from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
@@ -9,7 +10,7 @@ import sys
 
 import itertools
 
-from __future__ import division
+
 
 #Have to use these as hashing Pylcio MCParticles doesn't seem to work...
 class hashable_mc_particle(object):
