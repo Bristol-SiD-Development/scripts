@@ -140,7 +140,7 @@ def getBucketDict():
 
 def createRootFile(inputLcioFile, rootOutputFile, bField=5., 
                    trackCollectionName="Tracks", 
-                   mcParticleCollectionName="MCParticlesSkimmed", 
+                   mcParticleCollectionName="MCParticle", 
                    hitMcpRelationCollectionName="HelicalTrackMCRelations",
                    trackMcpRelationCollectionName="TrackMCTruthLink"):
     lcioReader = IOIMPL.LCFactory.getInstance().createLCReader()
@@ -150,7 +150,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
     tree = ROOT.TTree('aTree', 'stillATree')
 
     bucketDict = getBucketDict()
-    
+    #branches = []
     for key in bucketDict:
         if type(bucketDict[key]) == list: #The vector parameters have their buckets in lists so we can mutate them (need to create new vectors)
             tree.Branch(key, bucketDict[key][2])
@@ -179,8 +179,9 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                     length = mcParticles.getNumberOfElements()
                 else:
                     raise Exception("WTF is this shit?!")
-
+                #ROOT.SetOwnership(bucketDict[key][2], False)
                 bucketDict[key][2] = ROOT.vector(bucketDict[key][0])(length)
+                #ROOT.SetOwnership(bucketDict[key][2], True)
                 tree.SetBranchAddress(key, bucketDict[key][2])
 
         #Create a table relating hits to mcParticles and a list of all the hTrackerHits
@@ -249,7 +250,6 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 except KeyError:
                     mcDistance[hMcp] = minDistance
                 
-
         reconstructedMcps = [] 
         for trackIndex, track in enumerate(tracks):
             hTrack = HLcioObject(track)
@@ -319,6 +319,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_mc_pathlength"][2][trackIndex] = sys.float_info.max #TODO fix
             bucketDict["track_mc_pathlength_los"][2][trackIndex] = sys.float_info.max #TODO fix
             bucketDict["track_mc_distance"][2][trackIndex] = mcDistance[recoHMcp]
+                
             bucketDict["track_mc_charge"][2][trackIndex] = mcHelicalTrack.charge
             bucketDict["track_mc_pdgid"][2][trackIndex] = recoHMcp.getPDG()
             bucketDict["track_mc_signal"][2][trackIndex] = 1 #TODO fix
@@ -341,7 +342,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_pt"][2][mcpIndex] = mcHelicalTrack.p.XYvector().Mod()
             bucketDict["mc_p"][2][mcpIndex] =  mcHelicalTrack.p.Mag()
             
-            bucketDict["mc_nHits"] = len(hitToMcpTable.getAllTo(hMcp))
+            bucketDict["mc_nHits"][2][mcpIndex] = len(hitToMcpTable.getAllTo(hMcp))
             try:
                 bucketDict["mc_distance"][2][mcpIndex] = mcDistance[hMcp]
             except KeyError:
@@ -362,11 +363,13 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.p.Theta()
             bucketDict["mc_theta_conv"][2][mcpIndex] = convTheta(mcHelicalTrack.p.Theta())
             bucketDict["mc_phi"][2][mcpIndex] = mcHelicalTrack.phi
-            bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max
-            bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max
-            
-        tree.Fill()
-
+            bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max #TODO fix
+            bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max #TODO fix
+        """
+        for name, branch in branches:
+            print name
+            branch.Fill()
+        """
     """
     for i, event in enumerate(reader):
         chargedMcParticles = []
@@ -396,12 +399,16 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
 
         ntuple.Write()
     """
+    """
+    for branch in branches:
+        print branch
+    """
     f.Write()
     f.Close()
 
 def main():
     for fileName in sys.argv[1:]:
-        createRootFile(fileName, fileName.replace(".slcio", ".root"))
+        createRootFile(fileName, "test.root")
 
 
 if __name__ == "__main__":
