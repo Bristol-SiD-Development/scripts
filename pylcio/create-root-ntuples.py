@@ -21,10 +21,10 @@ class ManyToManyTable(object):
         self.fromDict = {}
         #self.relationList = []
     def addFrom(self, fromObject):
-        if not fromObject in self.fromList:
+        if not fromObject in self.fromDict:
             self.fromDict[fromObject] = []
     def addTo(self, toObject):
-        if not toObject in self.toList:
+        if not toObject in self.toDict:
             self.toDict[toObject] = []
 
     def addRelation(self, fromObject, toObject):
@@ -45,7 +45,7 @@ class ManyToManyTable(object):
 
 class ManyToOneTable(ManyToManyTable):
     def getFrom(self, fromObject):
-        allFromList = super.getAllFrom(self, fromObject)
+        allFromList = super(ManyToOneTable, self).getAllFrom(fromObject)
         assert(1 == len(allFromList))
         return allFromList[0]
 
@@ -150,8 +150,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
     tree = ROOT.TTree('aTree', 'stillATree')
 
     bucketDict = getBucketDict()
-    implementedKeys = ["event", "Ntracks", "nMCPs", "mc_x", "mc_y", "mc_z", "mc_px", "mc_py", "mc_pz", "mc_pt", "mc_p", "mc_d0", "mc_z0","mc_dca", "mc_theta", "mc_phi"]
-    for key in implementedKeys:
+    #implementedKeys = ["event", "Ntracks", "nMCPs", "mc_x", "mc_y", "mc_z", "mc_px", "mc_py", "mc_pz", "mc_pt", "mc_p", "mc_d0", "mc_z0","mc_dca", "mc_theta", "mc_phi"]
+    for key in bucketDict:
         if type(bucketDict[key]) == list: #The vector parameters have their buckets in lists so we can mutate them (need to create new vectors)
             tree.Branch(key, bucketDict[key][2])
         elif type(bucketDict[key]) == tuple: #The scalars (length one arrays) go in tuples as we don't need to mutate the array only the contents
@@ -169,7 +169,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
         hitMcpRelations = event.getCollection(hitMcpRelationCollectionName)
         trackMcpRelations = event.getCollection(trackMcpRelationCollectionName)
 
-        for key in implementedKeys:
+        for key in bucketDict:
             if type(bucketDict[key]) == list:
                 length = None
                 if bucketDict[key][1] == "track":
@@ -237,7 +237,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
         mcDistance = {}
         for mcp in mcParticles:
             hMcp = HLcioObject(mcp)
-            hHits = hitToMcpTable.allTo(hMcp)
+            hHits = hitToMcpTable.getAllTo(hMcp)
             
             for hHit in hHits:
                 minDistance = sys.float_info.max
@@ -272,9 +272,9 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 isTrackBestTrack = 1 #True
                 
             #Fill vectors for the track
-            trackHelicalTrack = HelicalTrack(track) #computes the physical params and their errors from the reco data and vice-versa
-            mcHelicalTrack = HelicalTrack(recoHMcp) #computes the physical params and their errors from the reco data and vice-versa
-            bucketDict["track_nHits"][2][trackIndex] = len(track.getTrackerHits)
+            trackHelicalTrack = HelicalTrack(inputTrack=track, bField=bField) #computes the physical params and their errors from the reco data and vice-versa
+            mcHelicalTrack = HelicalTrack(inputMcp=recoHMcp, bField=bField) #computes the physical params and their errors from the reco data and vice-versa
+            bucketDict["track_nHits"][2][trackIndex] = len(track.getTrackerHits())
             bucketDict["track_nFalseHits"][2][trackIndex] = trackToFalseHits[hTrack]
             bucketDict["track_d0"][2][trackIndex] = trackHelicalTrack.d0
             bucketDict["track_z0"][2][trackIndex] = trackHelicalTrack.z0
@@ -282,7 +282,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_px"][2][trackIndex] = trackHelicalTrack.p.X()
             bucketDict["track_py"][2][trackIndex] = trackHelicalTrack.p.Y()
             bucketDict["track_pz"][2][trackIndex] = trackHelicalTrack.p.Z()
-            bucketDict["track_pt"][2][trackIndex] = trackHelicalTrack.p.XYvector().Mag()
+            bucketDict["track_pt"][2][trackIndex] = trackHelicalTrack.p.XYvector().Mod()
             bucketDict["track_p"][2][trackIndex] = trackHelicalTrack.p.Mag()
             bucketDict["track_theta"][2][trackIndex] = trackHelicalTrack.p.Theta()
             bucketDict["track_theta_conv"][2][trackIndex] = convTheta(trackHelicalTrack.p.Theta())
@@ -311,7 +311,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_mc_px"][2][trackIndex] = mcHelicalTrack.p.X()
             bucketDict["track_mc_py"][2][trackIndex] = mcHelicalTrack.p.Y()
             bucketDict["track_mc_pz"][2][trackIndex] = mcHelicalTrack.p.Z()
-            bucketDict["track_mc_pt"][2][trackIndex] = mcHelicalTrack.p.XYvector().Mag()
+            bucketDict["track_mc_pt"][2][trackIndex] = mcHelicalTrack.p.XYvector().Mod()
             bucketDict["track_mc_p"][2][trackIndex] = mcHelicalTrack.p.Mag()
             bucketDict["track_mc_theta"][2][trackIndex] = mcHelicalTrack.p.Theta()
             bucketDict["track_mc_theta_conv"][2][trackIndex] = convTheta(mcHelicalTrack.p.Theta)
@@ -328,10 +328,10 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
         for mcpIndex, mcp in enumerate(mcParticles):
             hmcp = HLcioObject(mcp)
 
-            mcHelicalTrack = HelicalTrack(mcp, bField)
+            mcHelicalTrack = HelicalTrack(inputMcp=mcp, bField=bField)
             #Fill vectors for the mcp
             bucketDict["mc_x"][2][mcpIndex] = mcHelicalTrack.origin.X() 
-            bucketDict["mc_y"][2][mcpIndex] = mcHelicalTrack.origin..Y()
+            bucketDict["mc_y"][2][mcpIndex] = mcHelicalTrack.origin.Y()
             bucketDict["mc_z"][2][mcpIndex] = mcHelicalTrack.origin.Z()
             bucketDict["mc_d_origin"][2][mcpIndex] = mcHelicalTrack.origin.Mag()
                               
@@ -353,8 +353,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             else:
                 bucketDict["mc_reconstructed"][2][mcpIndex] = 0
 
-            bucketDict["mc_d0"][2][mcpIndex] = mcHelicalTrack.D0
-            bucketDict["mc_z0"][2][mcpIndex] = mcHelicalTrack.Z0
+            bucketDict["mc_d0"][2][mcpIndex] = mcHelicalTrack.d0
+            bucketDict["mc_z0"][2][mcpIndex] = mcHelicalTrack.z0
             bucketDict["mc_dca"][2][mcpIndex] = mcHelicalTrack.dca
             bucketDict["mc_theta"][2][mcpIndex] = mcHelicalTrack.theta
             bucketDict["mc_theta_conv"][2][mcpIndex] = convTheta(mcHelicalTrack.theta)
