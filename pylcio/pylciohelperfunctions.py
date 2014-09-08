@@ -363,8 +363,11 @@ class HelicalTrack(object):
             #Calculate Radius of the Helix
         R = mcParticle.getCharge() * pt / (HelicalTrack.fieldConversionFactor * bField)
         
-            #Slope in the Dz/Ds sense, tanL Calculation
-        self.tanL = pz / float(pt)
+        #Slope in the Dz/Ds sense, tanL Calculation
+        try:
+            self.tanL = pz / float(pt)
+        except ZeroDivisionError:
+            self.tanL = sys.float_info.max
     
         self.phi = np.arctan2(py, px)
     
