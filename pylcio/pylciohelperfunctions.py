@@ -10,6 +10,7 @@ import sys
 
 import itertools
 
+import ROOT
 
 
 #Have to use these as hashing Pylcio MCParticles doesn't seem to work...
@@ -360,43 +361,43 @@ class HelicalTrack(object):
         self.Theta = m.acos(cth)
 
             #Calculate Radius of the Helix
-        R = mcParticle.getCharge() * pt / (HelicalTrack.fieldConversionFactor * BField)
+        R = mcParticle.getCharge() * pt / (HelicalTrack.fieldConversionFactor * bField)
         
             #Slope in the Dz/Ds sense, tanL Calculation
         self.tanL = pz / float(pt)
     
-        self.Phi = np.arctan2(py, px)
+        self.phi = np.arctan2(py, px)
     
         mcCreationX, mcCreationY, mcCreationZ = mcParticle.getVertex()[0], mcParticle.getVertex()[1], mcParticle.getVertex()[2]
 
             #Distance of closest approach Calculation
-        xc = mcCreationX + R * np.sin(self.Phi)
-        yc = mcCreationY - R * np.cos(self.Phi)
+        xc = mcCreationX + R * np.sin(self.phi)
+        yc = mcCreationY - R * np.cos(self.phi)
 
         Rc = m.sqrt(xc*xc + yc*yc)
 
-        self.D0 = None
+        self.d0 = None
         if mcParticle.getCharge()>0:
-            self.D0 = R - Rc
+            self.d0 = R - Rc
         else:
-            self.D0 = R + Rc
+            self.d0 = R + Rc
 
         #azimuthal calculation of the momentum at the DCA, phi0, Calculation
-        phi0 = np.arctan2(xc/(R-self.D0),  -yc/(R-self.D0))
+        phi0 = np.arctan2(xc/(R-self.d0),  -yc/(R-self.d0))
         while phi0 < 0:
             phi0 += 2*m.pi
         while phi0 > 2*np.pi:
             phi0 -= 2*m.pi
            
         #z0 Calculation, z position of the particle at dca
-        x0 = -self.D0 * np.sin(mcphi0)
-        y0 = self.D0 * np.cos(mcphi0)
-        arclength  = (((mcCreationX - x0) * np.cos(mcphi0)) + ((mcCreationY - y0)* np.sin(mcphi0)))
-        self.Z0 = mcCreationZ - arclength * tanL
+        x0 = -self.d0 * np.sin(phi0)
+        y0 = self.d0 * np.cos(phi0)
+        arclength  = (((mcCreationX - x0) * np.cos(phi0)) + ((mcCreationY - y0)* np.sin(phi0)))
+        self.z0 = mcCreationZ - arclength * self.tanL
 
-        self.dca = np.sqrt(self.d0*selfd0 + self.z0*self.z0)
+        self.dca = np.sqrt(self.d0*self.d0 + self.z0*self.z0)
             
-        omega = None
+        self.omega = None
         try:
             self.omega = 1. / R
         except ZeroDivisionError:
@@ -406,7 +407,7 @@ class HelicalTrack(object):
         #Track params
         self.d0 = track.getD0()
         self.z0 = track.getZ0()
-        self.tanL = track.getTanL()
+        self.tanL = track.getTanLambda()
         self.omega = track.getOmega()
         self.phi = track.getPhi()
 
@@ -421,16 +422,16 @@ class HelicalTrack(object):
         self.errorTanL = np.sqrt(covariances[14])        
 
         #Physical params
-        pt = abs(HelicalTrack.fieldConversionFactor*BField / track.getOmega())
-        px = pt * np.cos(self.Phi)
-        py = pt * np.sin(self.Phi)
-        pz = pt * self.TanL
+        pt = abs(HelicalTrack.fieldConversionFactor*bField / track.getOmega())
+        px = pt * np.cos(self.phi)
+        py = pt * np.sin(self.phi)
+        pz = pt * self.tanL
         self.p = ROOT.TVector3(px, py, pz)
 
         referencePoint = track.getReferencePointVec()
-        x = referencePoint.X() - self.D0 * np.sin(self.Phi)
-        y = referencePoint.Y() + self.D0 * np.cos(self.Phi)
-        z = referencePoint.Z() + self.Z0
+        x = referencePoint.X() - self.d0 * np.sin(self.phi)
+        y = referencePoint.Y() + self.d0 * np.cos(self.phi)
+        z = referencePoint.Z() + self.z0
         
         
         self.origin = ROOT.TVector3(x, y, z)
@@ -440,7 +441,7 @@ class HelicalTrack(object):
             self.charge = -1
         
         # Physical params errors (see: https://svnweb.cern.ch/cern/wsvn/clicdet/trunk/analysis/src/contrib/cgrefe/tracking/TrackUncertainties.java)
-        self.errorPt = self.errorOmega * bField * HelicalTrack.fieldConversionFactor / (self.Omega**2)
+        self.errorPt = self.errorOmega * bField * HelicalTrack.fieldConversionFactor / (self.omega**2)
 
         #Px and Py
         sigA2 = covariances[5] #omega, omega
