@@ -368,6 +368,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max #TODO fix
             bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max #TODO fix
 
+        tree.Fill()
     f.Write()
     f.Close()
 
