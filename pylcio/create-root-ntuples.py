@@ -7,13 +7,20 @@ from pyLCIO import EVENT
 
 from pylciohelperfunctions import HelicalTrack, isLongLivedAndCharged
 
-from HLcioObject import HLcioObject
+from HLcioObject import HLcioObject, FastHashableHit
 from TrackAnalysis import TrackAnalysis
 from array import array
 
+import cProfile
+
 import sys
 
+from itertools import product
+
 import numpy as np
+import math
+
+from scipy import spatial
 
 class ManyToManyTable(object):
     def __init__(self):
@@ -160,12 +167,16 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             raise Exception("My hovercraft is full of eels")
 
     for event in lcioReader:
+        if event.getEventNumber() > 99:
+            break
         bucketDict["event"][1][0] = event.getEventNumber()
         print >> sys.stderr, event.getEventNumber()
         tracks = event.getCollection(trackCollectionName)
         bucketDict["Ntracks"][1][0] = tracks.getNumberOfElements()
         mcParticles = event.getCollection(mcParticleCollectionName)
+        hMcParticles = map(HLcioObject, mcParticles)
         bucketDict["nMCPs"][1][0] = mcParticles.getNumberOfElements()
+
 
         hitMcpRelations = event.getCollection(hitMcpRelationCollectionName)
         trackMcpRelations = event.getCollection(trackMcpRelationCollectionName)
@@ -187,15 +198,16 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
         #Create a table relating hits to mcParticles and a list of all the hTrackerHits
         hitToMcpTable = ManyToManyTable()
         hTrackerHits = []
+        nHits = 0
         for hitMcpRelation in hitMcpRelations:
-            hHit = HLcioObject(hitMcpRelation.getFrom())
+            hHit = FastHashableHit(hitMcpRelation.getFrom())
             hMcp = HLcioObject(hitMcpRelation.getTo())
             
             hitToMcpTable.addRelation(hHit, hMcp)
 
             if not hHit in hTrackerHits:
                 hTrackerHits.append(hHit)
-                
+                nHits += 1
         #build a map of track to (best) MCParticle
         #Note that the same MCParticle can be best for many tracks
         trackToMcpTable = ManyToOneTable()
@@ -212,32 +224,24 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
 
         
         # For each hit find the distance to the nearest other hit
+        # Horrendous O(nHits^2) loop (no longer required)
         distanceToNearestHit = {}
-        for hHit in hTrackerHits:
-            for otherHHit in hTrackerHits:
-                if hHit != otherHHit:
-                    hitPos = hHit.getPositionVec()
-                    otherHitPos = otherHHit.getPositionVec()
-                    distance = (hitPos - otherHitPos).Mag()
+        hitPosMatrix = np.array([[hHit.x, hHit.y, hHit.z] for hHit in hTrackerHits]).reshape(nHits, 3)
+        hitDistancesMatrix = spatial.distance.squareform(spatial.distance.pdist(hitPosMatrix, 'seuclidean'))
 
-                    try:
-                        if distance < distanceToNearestHit[hHit]:
-                            distanceToNearestHit[hHit] = distance
-                    except KeyError:
-                        distanceToNearestHit[hHit] = distance
-
-
+        for distances, hHit in zip(hitDistancesMatrix, hTrackerHits):
+            distanceToNearestHit[hHit] = math.sqrt(min(np.flatnonzero(distances)))
+            
         #Create a list of all the long lived and charged MCParticles
         longLivedAndChargedHMcParticles = []
-        for mcp in mcParticles:
-            if isLongLivedAndCharged(mcp):
-                longLivedAndChargedHMcParticles.append(HLcioObject(mcp))
+        for hMcp in hMcParticles:
+            if isLongLivedAndCharged(hMcp):
+                longLivedAndChargedHMcParticles.append(hMcp)
 
         
         #For each MCParticle find the shortest distance between any of its hits and any other hit
         mcDistance = {}
-        for mcp in mcParticles:
-            hMcp = HLcioObject(mcp)
+        for hMcp in hMcParticles:
             hHits = hitToMcpTable.getAllTo(hMcp)
             
             for hHit in hHits:
@@ -251,8 +255,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                     mcDistance[hMcp] = minDistance
                 
         reconstructedMcps = [] 
-        for trackIndex, track in enumerate(tracks):
-            hTrack = HLcioObject(track)
+        hTracks = map(HLcioObject, tracks)
+        for trackIndex, hTrack in enumerate(hTracks):
             recoHMcp = trackToMcpTable.getFrom(hTrack)
             
             reconstructedMcps.append(recoHMcp)
@@ -265,16 +269,16 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 goodHits = trackToGoodHits[mcHTrack]
                 if goodHits > nHitsBestTrack:
                     nHitsBestTrack = goodHits
-                    bestTrack = mcHTrack
+                    bestHTrack = mcHTrack
                     
             isTrackBestTrack = 0 #False
-            if bestTrack == track:
+            if bestHTrack == hTrack:
                 isTrackBestTrack = 1 #True
                 
             #Fill vectors for the track
-            trackHelicalTrack = HelicalTrack(inputTrack=track, bField=bField) #computes the physical params and their errors from the reco data and vice-versa
+            trackHelicalTrack = HelicalTrack(inputTrack=hTrack, bField=bField) #computes the physical params and their errors from the reco data and vice-versa
             mcHelicalTrack = HelicalTrack(inputMcp=recoHMcp, bField=bField) #computes the physical params and their errors from the reco data and vice-versa
-            bucketDict["track_nHits"][2][trackIndex] = len(track.getTrackerHits())
+            bucketDict["track_nHits"][2][trackIndex] = len(hTrack.getTrackerHits())
             bucketDict["track_nFalseHits"][2][trackIndex] = trackToFalseHits[hTrack]
             bucketDict["track_d0"][2][trackIndex] = trackHelicalTrack.d0
             bucketDict["track_z0"][2][trackIndex] = trackHelicalTrack.z0
@@ -326,10 +330,8 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["track_mc_findable"][2][trackIndex] = 1 #TODO fix
             bucketDict["track_mc_besttrack"][2][trackIndex] = isTrackBestTrack
 
-        for mcpIndex, mcp in enumerate(mcParticles):
-            hMcp = HLcioObject(mcp)
-
-            mcHelicalTrack = HelicalTrack(inputMcp=mcp, bField=bField)
+        for mcpIndex, hMcp in enumerate(hMcParticles):
+            mcHelicalTrack = HelicalTrack(inputMcp=hMcp, bField=bField)
             #Fill vectors for the mcp
             bucketDict["mc_x"][2][mcpIndex] = mcHelicalTrack.origin.X() 
             bucketDict["mc_y"][2][mcpIndex] = mcHelicalTrack.origin.Y()
@@ -347,10 +349,10 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
                 bucketDict["mc_distance"][2][mcpIndex] = mcDistance[hMcp]
             except KeyError:
                 bucketDict["mc_distance"][2][mcpIndex] = 0.
-            bucketDict["mc_charge"][2][mcpIndex] = mcp.getCharge()
-            bucketDict["mc_pdgid"][2][mcpIndex] = mcp.getPDG()
+            bucketDict["mc_charge"][2][mcpIndex] = hMcp.getCharge()
+            bucketDict["mc_pdgid"][2][mcpIndex] = hMcp.getPDG()
             bucketDict["mc_signal"][2][mcpIndex] = 1 #TODO fix
-            bucketDict["mc_status"][2][mcpIndex] = mcp.getGeneratorStatus()
+            bucketDict["mc_status"][2][mcpIndex] = hMcp.getGeneratorStatus()
             bucketDict["mc_findable"][2][mcpIndex] = 1 #TODO fix
             if hMcp in reconstructedMcps:
                 bucketDict["mc_reconstructed"][2][mcpIndex] = 1
@@ -365,51 +367,14 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5.,
             bucketDict["mc_phi"][2][mcpIndex] = mcHelicalTrack.phi
             bucketDict["mc_pathlength"][2][mcpIndex] = sys.float_info.max #TODO fix
             bucketDict["mc_pathlength_los"][2][mcpIndex] = sys.float_info.max #TODO fix
-        """
-        for name, branch in branches:
-            print name
-            branch.Fill()
-        """
-    """
-    for i, event in enumerate(reader):
-        chargedMcParticles = []
-        for mcp in event.getCollection(MCParticleCollection):
-            if isLongLivedAndCharged(mcp):
-                chargedMcParticles.append(mcp)
 
-        signalMcParticles = chargedMcParticles[:] #TOTO differentiate from background
-
-        for mcp in chargedMcParticles:
-            if mcp in signalMcParticles or len(signalMcParticles) == 0:
-                mc_signal.append(1)
-            else:
-                if keepOnlySignalMcParticles:
-                    continue
-                mc_signal.append(0)
-
-                
-    
-        print >> sys.stderr, i
-        ntuple = ROOT.TNtuple("ntuple", "event ntuple {0}".format(i), "pdg:px:py:pz")
-        if i > 9:
-            break
-        for mcp in event.getCollection("MCParticlesSkimmed"):
-            p = mcp.getMomentum()
-            ntuple.Fill(mcp.getPDG(),p[0], p[1], p[2])
-
-        ntuple.Write()
-    """
-    """
-    for branch in branches:
-        print branch
-    """
     f.Write()
     f.Close()
 
 def main():
-    for fileName in sys.argv[1:]:
-        createRootFile(fileName, "test.root")
-
+    #for fileName in sys.argv[1:]:
+    #cProfile.run("createRootFile({0}, {1})".format("parallel-reco-jobs/sidloi3_new_driver/z_bb/job_0/pythiaZPolebbbar_lcsimFull.slcio", "test.root"))
+    createRootFile("parallel-reco-jobs/sidloi3_new_driver/z_bb/job_0/pythiaZPolebbbar_lcsimFull.slcio", "test.root")
 
 if __name__ == "__main__":
     main()
