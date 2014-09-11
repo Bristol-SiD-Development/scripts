@@ -6,7 +6,7 @@ from pyLCIO import UTIL
 from pyLCIO import EVENT
 
 from HelicalTrack import HelicalTrack
-from HashableObjects import FastHashableHit, FastHashableMcp, FastHashableTrack
+from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
 from TrackAnalysis import TrackAnalysis
 from array import array
 
