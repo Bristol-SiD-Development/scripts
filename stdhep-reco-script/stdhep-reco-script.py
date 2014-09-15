@@ -33,7 +33,7 @@ def parse_args(steering_files, geometry_files):
     parser.add_argument("-r", "--runs",
                         help="Number of events to run",
                         default=10)
-    parser.add_argument("-f", "--final-output-name",
+    parser.add_argument("-f", "--final-output-file",
                         help="If given forces the output name of the final output file (marlin flavourtagging output)",
                         default=None)
     parser.add_argument("-S", "--skip-num",
@@ -42,6 +42,10 @@ def parse_args(steering_files, geometry_files):
     parser.add_argument("-d" ,"--delete-intermediate-files",
                         help="Deletes intermediate (all except the last) files as they become useless to save on disk usage. Defaults to False (as the intermediate files may be useful)",
                         action='store_true')
+    parser.add_argument("--no-full-file" ,
+                        help="Supresses the creation of the full (rec) file to save on disk usage. Defaults to False (as the full file may be useful)",
+                        action='store_true')
+
     return parser.parse_args()
 
 def setup_steering_dict():
@@ -61,15 +65,13 @@ def setup_geom_dict():
 
     return geometry_files
 def setup_binary_dict(ilcsoft_dir):
-    #slic_binary="/afs/cern.ch/eng/clic/software/slic/2.9.8/rhel5_i686_gcc/packages/slic/v2r9p8/bin/Linux-g++/slic" 
-    #slic_binary=os.path.join(ilcsoft_dir,"slic/v03-01-03/build/bin/slic")
     slic_binary="/afs/cern.ch/eng/clic/software/slic/2.9.8/rhel5_i686_gcc/scripts/slic.sh"
     pandora_binary=os.path.join(ilcsoft_dir, "slicPandora/v01-00-00/build/bin/PandoraFrontend")
     marlin_binary=os.path.join(ilcsoft_dir,"Marlin/v01-05/bin/Marlin")
     anajob_binary=os.path.join(ilcsoft_dir,"lcio/v02-04-03/bin/anajob")
 
     lcsim_jar="/afs/cern.ch/eng/clic/software/lcsim/lcsim-2_5/target/lcsim-2.5-bin.jar"
-
+    #lcsim_jar="/afs/cern.ch/user/o/oreardon/public/ilc/lcsim/bin/lcsim-distribution-3.1-20140127.215727-1-bin.jar"
     binaries = {"slic": slic_binary,
                 "lcsim": lcsim_jar,
                 "pandora": pandora_binary,
@@ -93,6 +95,7 @@ def setup_output_dicts(input_file, extension, output_dir):
     pandora_output           = os.path.join(output_dir, input_file_no_ext + "_pandora" + slcio_ext)
     marlin_vertexing_output  = os.path.join(output_dir, input_file_no_ext + "_marlinVertexing" + slcio_ext)
     lcsim_dst_output         = os.path.join(output_dir, input_file_no_ext + "_lcsimDst" + slcio_ext)
+    
     lcsim_full_output        = os.path.join(output_dir, input_file_no_ext + "_lcsimFull" + slcio_ext)
     marlin_flavortag_output  = os.path.join(output_dir, input_file_no_ext + "_lcfiPlusFlavourTag" + slcio_ext)
 
@@ -108,7 +111,7 @@ def setup_output_dicts(input_file, extension, output_dir):
     output_names_dict = {}
     for key in output_paths_dict:
         output_dir, output_name = os.path.split(output_paths_dict[key])
-        output_names_dict[key] = output_name
+        output_names_dict[key] = output_name        
 
     return output_names_dict, output_paths_dict
 
@@ -153,18 +156,18 @@ def main():
 
     output_names_dict, output_paths_dict = setup_output_dicts(args.stdhep_input, ".slcio", args.output_dir) #we need names for slic as it doesn't seem to able to take in a single full path
 
-    if args.final_output_name != None:
-        output_names_dict["marlin_flav"] = args.final_output_name
-        output_paths_dict["marlin_flav"] = os.path.join(args.output_dir, output_names_dict)
-
+    if args.final_output_file != None:
+        output_names_dict["marlin_flav"] = args.final_output_file
+        output_paths_dict["marlin_flav"] = os.path.join(args.output_dir, output_names_dict["marlin_flav"])
+        
     print "[^]Running CLIC's version of slic (through their bash script)..."
     check_call([binaries["slic"], 
                 "-g", geometry_files["slic"],
                 "-i", args.stdhep_input,
                 "-o", output_names_dict["slic"],
-                " --skip-events", args.skip_num,
+                " --skip-events", str(args.skip_num),
                 "-p", args.output_dir[:-1], #remove the trailing '/' so it doesn't break because slic does filepaths like a concussed puppy (this is probably not a portable solution...)
-                "-r", args.runs
+                "-r", str(args.runs)
                 ])
 
     if not os.path.isfile(output_paths_dict["slic"]):
@@ -179,9 +182,10 @@ def main():
                 steering_files["lcsim_digi"],
                 "-DinputFile=" +  output_paths_dict["slic"],
                 "-DoutputFile=" + output_paths_dict["lcsim_digi"],
-                "-DtrackingStrategies=" + steering_files["lcsim_track_strat"]
+                "-DtrackingStrategies=" + steering_files["lcsim_track_strat"],
+                "-v"
                 ])
-    
+
     if not os.path.isfile(output_paths_dict["lcsim_digi"]):
         print "[^] Error! lcsim digitisation doesn't seem to have created its output file. Aborting..."
         return -1
@@ -243,6 +247,10 @@ def main():
     if args.delete_intermediate_files:
         print "[^] Warning! Deleting marlin vertexing output file..."
         os.remove(output_paths_dict["marlin_vert"])
+
+    if args.no_full_file:
+        print "[^] Warning! Deleting lcsim full output file..."
+        os.remove(output_paths_dict["lcsim_full"])
 
     print "[^] Running marlin flavortagging..."
     check_call( [binaries["marlin"], 

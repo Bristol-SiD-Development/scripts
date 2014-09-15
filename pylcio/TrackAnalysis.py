@@ -1,16 +1,18 @@
 from __future__ import division
-from HLcioObject import HLcioObject, FastHashableHit
+from FastHashableObject import FastHashableHit
 
 class TrackAnalysis(object):
     def __init__(self, track, hitToMcRelationalTable):
+
+        hits = track.getTrackerHits()
         #Get the number of hits on the track
-        self.nHits = len(track.getTrackerHits())
+        self.nHits = len(hits)
 
         # Create a map containing the number of hits for each MCParticle associated with the track
         mcpMap = {}
 
         #get the hit counts on this track for each mc particle
-        for hit in track.getTrackerHits():
+        for hit in hits:
             hMcpList = hitToMcRelationalTable.getAllFrom(FastHashableHit(hit))
             for hMcp in hMcpList:
                 try:

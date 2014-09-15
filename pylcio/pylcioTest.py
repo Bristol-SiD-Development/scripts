@@ -1,15 +1,29 @@
 #! /bin/env python
 
+import sys
+import itertools
+
+from HLcioObject import HLcioObject
+
+#stdout = sys.stdout
+#null = open('/dev/null', 'w')
+
+#importing these modules prints annoying stuff to the stdout...
+
+#sys.stdout = null
+
 from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-import sys
 
 from pylciohelperfunctions import *
 
-import itertools
- 
+import ROOT
+
+#and put the stdout back where we found it... 
+#sys.stdout = stdout
+#null.close()
 # create a reader and open an LCIO file
 
 def print_params(event, inputCollectionTypeName=None, inputCollectionName=None):
@@ -121,13 +135,49 @@ if __name__ == "__main__":
         #inputCollectionTypeName="ReconstructedParticle"
         #print_params(event, inputCollectionName="RecoMCTruthLink")
         #print_pids(event)
-        for event in reader:
-            print_params(event)
+        #for event in reader:
+        #    print_params(event)
+        
         """
-        for event in reader:
-            printCollectionNames(event)
-            break
+        for event in  reader:
+            trackDict = {}
+            for trackMcTruthLink in event.getCollection("TrackMCTruthLink"):
+                htrack = HLcioObject(trackMcTruthLink.getFrom())
+                try:
+                    trackDict[htrack] += 1
+                except KeyError:
+                    trackDict[htrack] = 1
+
+            for key in trackDict:
+                if trackDict[key] != 1:
+                    print trackDict[key]
+                
         """
+
+        event = reader.readNextEvent()
+        mcps = event.getCollection("MCParticlesSkimmed")
+        mcp = mcps.getElementAt(0)
+        
+
+        hmcp2 = HLcioObject(mcp)
+        hmcp1 = HLcioObject(mcp)
+
+        print hash(hmcp1) == hash(hmcp2)
+        print hmcp1 == hmcp2
+        print hmcp1 != hmcp2
+
+        hmcp2 = HLcioObject(mcps.getElementAt(3))
+
+        print hash(hmcp1) == hash(hmcp2)
+        print hmcp1 == hmcp2
+        print hmcp1 != hmcp2
+
+        d = {hmcp1: 0, hmcp2: 1}
+
+        for hmcpI in [hmcp1, hmcp2]:
+            print d[hmcpI]
+            
+            
         """
         for i, event in enumerate(reader):
             print i

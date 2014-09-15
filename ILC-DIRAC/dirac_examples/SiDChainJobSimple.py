@@ -1,4 +1,4 @@
-#!/bin/python
+#!/bin/env python
 
 ###
 #  Basic job run with only a few input options. Based on a script written by Christian Grefe,

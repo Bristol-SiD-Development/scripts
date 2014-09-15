@@ -5,6 +5,9 @@ from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
+import pyximport
+pyximport.install()
+
 from HelicalTrack import HelicalTrack
 from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
 from TrackAnalysis import TrackAnalysis
@@ -381,7 +384,7 @@ def createRootFile(inputLcioFile, rootOutputFile, bField=5., numEvents=None,
 def main():
     #for fileName in sys.argv[1:]:
     #cProfile.run("createRootFile({0}, {1})".format("parallel-reco-jobs/sidloi3_new_driver/z_bb/job_0/pythiaZPolebbbar_lcsimFull.slcio", "test.root"))
-    createRootFile("parallel-reco-jobs/sidloi3_new_driver/z_bb/job_0/pythiaZPolebbbar_lcsimFull.slcio", "test.root", numEvents=100)
+    createRootFile("/afs/cern.ch/user/o/oreardon/public/ilc/scripts_again/scripts/parallel-reco-jobs/sidloi3_new_driver/z_bb/job_0/pythiaZPolebbbar_lcsimFull.slcio", "test.root", numEvents=100)
 
 if __name__ == "__main__":
     main()

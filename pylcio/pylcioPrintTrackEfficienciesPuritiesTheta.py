@@ -4,16 +4,8 @@ from pyLCIO import UTIL
 from pyLCIO import EVENT
 
 from pylciohelperfunctions import *
-
+import math
 import sys
-
-def isLongLivedAndCharged(mcParticle):
-    pdg =  mcParticle.getPDG() 
-    if  (mcParticle.getGeneratorStatus() == 1) and ((abs(pdg) == 11) or (abs(pdg) == 13) or (abs(pdg) == 321) or (abs(pdg) == 211) or (abs(pdg) == 2212)):
-        return True
-    else:
-        #print >> sys.stderr, "{0} {1}".format(pdg, mcParticle.getGeneratorStatus())
-        return False
 
 def main():
     tag = None
@@ -21,7 +13,7 @@ def main():
         print >> stderr, "Error: script requires a slcio file as input!"
         return -1
 
-    theta_bins = np.linspace(-0.1, np.pi + 0.1, 100)
+    theta_bins = np.linspace(-0.1, np.pi/2. + 0.1, 40)
     good_track_bins = np.zeros_like(theta_bins)
     fake_track_bins = np.zeros_like(theta_bins)
     charged_mc_bins = np.zeros_like(theta_bins)
@@ -117,17 +109,17 @@ def main():
 
 
             for track in good_tracks:
-                theta = track.getTheta()
+                theta = math.pi/2. - math.fabs(math.pi/2. - track.getTheta())
                 index = np.digitize([theta], theta_bins)
                 good_track_bins[index] += 1
 
             for track in fake_tracks:
-                theta = track.getTheta()
+                theta = math.pi/2. - math.fabs(math.pi/2. - track.getTheta())
                 index = np.digitize([theta], theta_bins)
                 fake_track_bins[index] += 1
 
             for mcParticle in mcParticle_to_associated_tracks:
-                theta = mcParticle.getTheta()
+                theta = math.pi/2. - math.fabs(math.pi/2. - track.getTheta())
                 index = np.digitize([theta], theta_bins)
                 charged_mc_bins[index] += 1
                 

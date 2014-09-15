@@ -67,12 +67,12 @@
     <parameter name="FlavorTag.JetCollectionName" type="string" value="RefinedJets" />
     <parameter name="MakeNtuple.AuxiliaryInfo" type="int" value="-1" />
 
-    <parameter name="FlavorTag.WeightsDirectory" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/weightFiles/qq91" />
+    <parameter name="FlavorTag.WeightsDirectory" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts_again/scripts/stdhep-reco-script/weightFiles/qq91" />
     <parameter name="FlavorTag.WeightsPrefix" type="string" value="qq91_v02_p01" />
     <parameter name="FlavorTag.BookName" type="string" value="bdt" />
     <parameter name="FlavorTag.PIDAlgo" type="string" value="lcfiplus" />
-    <parameter name="FlavorTag.D0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/vtxprobFiles/d0prob_zpole.root"/>
-    <parameter name="FlavorTag.Z0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/vtxprobFiles/z0prob_zpole.root"/>
+    <parameter name="FlavorTag.D0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts_again/scripts/stdhep-reco-script/vtxprobFiles/d0prob_zpole.root"/>
+    <parameter name="FlavorTag.Z0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/scripts_again/scripts/stdhep-reco-script/vtxprobFiles/z0prob_zpole.root"/>
     <!--
        <parameter name="FlavorTag.WeightsDirectory" type="string" value="lcfiweights" />
        <parameter name="FlavorTag.WeightsPrefix" type="string" value="qq91_v01" />

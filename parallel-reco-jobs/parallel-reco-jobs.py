@@ -10,7 +10,7 @@ def parse_args(steering_files, geometry_files):
     current_directory = os.getcwd()
     
     default_steering_dir = os.path.join("/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/", "steering_files")
-    default_geometry_dir = os.path.join("/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/", "geometry_files")
+    default_geometry_dir = os.path.join("/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/", "sidloi3_edited")
 
     parser = argparse.ArgumentParser("Run the SiD reco chain")
 
@@ -37,10 +37,16 @@ def parse_args(steering_files, geometry_files):
                         help="Number of jobs to run",
                         default=1,
                         type=int)
+    parser.add_argument("-S", "--skip-num",
+                        help="Number of events to skip (useful so you don't overlap with previous runs)",
+                        default=1,
+                        type=int)
 
-    parser.add_argument("-d" ,"--delete-intermediate-files",
+    """parser.add_argument("-d" ,"--delete-intermediate-files",
                         help="Deletes intermediate (all except the last) files as they become useless to save on disk usage. Defaults to False (as the intermediate files may be useful)",
                         action='store_true')
+    
+                        """
     return parser.parse_args()
 
 
@@ -121,7 +127,7 @@ ilcsoft_root=/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6 \n\
 ilcsoft_root_dir=$ilcsoft_root/$ilcsoft_version \n\
 echo "Sourcing init_ilcsoft.sh..." \n\
 source $ilcsoft_root_dir/init_ilcsoft.sh \n\
-/afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-script/stdhep-reco-script.py \\\n\
+/afs/cern.ch/user/o/oreardon/public/ilc/scripts_again/scripts/stdhep-reco-script/stdhep-reco-script.py \\\n\
 -o {2}/ \\\n\
 -r {3} \\\n\
 -d \\\n\
@@ -129,7 +135,7 @@ source $ilcsoft_root_dir/init_ilcsoft.sh \n\
 -s {5} \\\n\
 -g {6} \\\n\
 --final-output-file {7} \\\n\
-{8}'.format(script_time_str, job_index, job_output_dirs[job_index], args.runs, job_index*int(args.runs), args.steering_dir, args.geometry_dir, job_final_output_paths[job_index],  args.stdhep_input)
+{8}'.format(script_time_str, job_index, job_output_dirs[job_index], args.runs, args.skip_num + job_index*int(args.runs), args.steering_dir, args.geometry_dir, job_final_output_paths[job_index],  args.stdhep_input)
 
         #write it to disk
         script_file = open(script_paths[job_index], "wb")
@@ -145,7 +151,7 @@ source $ilcsoft_root_dir/init_ilcsoft.sh \n\
                     script_paths[job_index],
                     "-J", str(job_index)]) 
         
-    lcfiPlus_files_file = open("output_files_{0}.txt".format(script_time_str),"w")
+    lcfiPlus_files_file = open(os.path.join(args.output_dir, "job_output_files_{0}.txt".format(script_time_str)),"w")
     for job_final_output_path in job_final_output_paths:
         print >> lcfiPlus_files_file, job_final_output_path
     lcfiPlus_files_file.close()
