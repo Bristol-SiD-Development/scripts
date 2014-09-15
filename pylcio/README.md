@@ -34,4 +34,6 @@ tail -n +2
 
 Using tail like this will simply write it's stdin to it's stdout starting from the second line
 
-Currently it is impossible to use the pylcio classes in hashmap (or dictionary) structures. I wrote up some wrapper classes in FastHashableObjects.py. If yo subclass FastHashableObject for your class you should end up with a thin wrapper class which can be hashed as expected.
+Currently it is impossible to use the pylcio classes in hashmap (or dictionary) structures. I wrote up some wrapper classes in FastHashableObjects.py. If you subclass FastHashableObject for your class you should end up with a thin wrapper class which can be hashed as expected.
+
+The createRootNtuples module is currently not hugely useful but if the pathlength parameters are implemented (see here for an example http://svn.cern.ch/reps/clicdet/trunk/analysis/src/contrib/cgrefe/tracking/TrackingEfficiency.java) then it could be used in conjunction with Christain Greffe's plotting code to do tracking studies.  
