@@ -1,7 +1,7 @@
 Directory to put scripts based on the pylcio bindings
 
 #Prerequisites
-In order to use pylcio you should add the flollowing to your ~/.bashrc (note that the paths are subject to change)
+In order to use pylcio on an lxplus node you should add the flollowing to your ~/.bashrc (note that the paths are subject to change)
 
 ```bash
 # ~/.bashrc 
