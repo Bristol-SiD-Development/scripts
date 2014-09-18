@@ -1,5 +1,5 @@
 #Overall
-To run either script you must have access to afs as they depend heavily on things in /afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/ and lightly on files in my public directory (for flavortagging).
+To run either script you must have access to afs as they depend heavily on things in /afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/ it should be possible to recreate the AFS installation using the [ILCSoft package](http://ilcsoft.desy.de/portal/) but its probably more trouble than its worth. If you're going to do this then the[ DevToolSet](http://linux.web.cern.ch/linux/devtoolset/) package provided by CERN may be helpful.
 
 Both scripts are heavily based on the 'From Zero to SiD' guide found [here](https://confluence.slac.stanford.edu/display/~stanitz/From+Zero+to+SiD+-+Running+Sim+Reco) some things  must be changed in the sample xml files provided [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/) to make them compatable with the sidloi3 detector files. 
 
@@ -50,3 +50,7 @@ The python version is a bit nicer as most things can be set from the command lin
 	<parameter name="FlavorTag.D0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/data/vtxprobFiles/d0prob_zpole.root"/>
 	<parameter name="FlavorTag.Z0ProbFileName" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/data/vtxprobFiles/z0prob_zpole.root"/>
 ```
+
+If you're running over more than a few events then you're going to want to use the submit-stdhep-reco-script.sh wrapper to submit the job to the LXBatch system.
+
+If you're running over more than a few hundred you're going to want to use the parallel-reco-jobs.py script to submit many jobs in parallel.
