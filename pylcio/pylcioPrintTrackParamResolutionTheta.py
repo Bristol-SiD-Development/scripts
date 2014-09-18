@@ -16,57 +16,107 @@ import numpy as np
 
 import pickle
 
-#from scipy.optimize import curve_fit
 
-def gauss(x, *p):
-    A, mu, sigma = p
-    return A*np.exp(-(x-mu)**2/(2.*sigma**2))
-
-
-def main():
+def createD0ResolutionDataList(inputFileNames, num_theta_bins=100, startEvent=0):
     lcioReader = IOIMPL.LCFactory.getInstance().createLCReader()
-    
-    num_theta_bins = 100
 
     theta_bins = np.linspace(0, np.pi, num_theta_bins)
     d0_resolution_data = [[] for _ in xrange(num_theta_bins)]
 
-    outputFileName = sys.argv[1]
-    for fileName in sys.argv[2:]:
+    for fileName in inputFileNames:
         lcioReader.open(fileName)
+        
         for i, event in enumerate(lcioReader):
+            if i > 4999 + startEvent:
+                break
+            if i < startEvent:
+                continue
             print >> sys.stderr, i
-            #if i > 1000:
-            #    break
-            for trackMcTruthLink in event.getCollection("TrackMCTruthLink"):
-                track = trackMcTruthLink.getFrom()
-                mcParticle = trackMcTruthLink.getTo()
-                mcHelicalTrack = HelicalTrack(inputMcp=mcParticle, bField=5.)
+            
 
-                index = np.digitize([mcParticle.getMomentumVec().Theta()], theta_bins)[0]
+            hitToMcpTable, hTrackerHits = createHitToMcpTable(event.getCollection("HelicalTrackMCRelations"))
+            
+            hTracks = map(FastHashableTrack, event.getCollection("Tracks"))
 
-                d0_resolution_data[index].append( mcHelicalTrack.d0 - track.getD0()  )
+            trackToMcpTable, trackToGoodHits, trackToFalseHits = createTrackToMcpTable(hTracks , hitToMcpTable)
+            
+            
+            
+            for hMcp in trackToMcpTable.toDict:
+                #for each mcp in the table find its best track
+                #bestTrack = None
+                #nHitsBestTrack = 0
+                #for hTrack in trackToMcpTable.getAllTo(hMcp):
+                #    goodHits = trackToGoodHits[hTrack]
+                #    if goodHits > nHitsBestTrack:
+                #        nHitsBestTrack = goodHits
+                #        bestHTrack = hTrack
+
+                tracks = trackToMcpTable.getAllTo(hMcp)
+                if len(tracks) == 1:
+                    hTrack = tracks[0]
+                    # Now get the resolution and put it in the list
+                    mcHelicalTrack = HelicalTrack(inputMcp=hMcp, bField=5.)        
+                    index = np.digitize([hMcp.getMomentumVec().Theta()], theta_bins)[0]
+                    d0_resolution_data[index].append( mcHelicalTrack.d0 - hTrack.getD0())
+
             
         lcioReader.close()
-                 
+    return theta_bins, d0_resolution_data
+
+def createThetaHistogramBinList(theta_bins, d0_resolution_data):
     theta_histogram_bins_list = []
     for  theta, d0_resolution_datum in zip(theta_bins, d0_resolution_data ):
-        if len(d0_resolution_datum) > 30:
-            hist, bins = np.histogram(d0_resolution_datum, 10)
+        if len(d0_resolution_datum) > 60:
+            hist, bins = np.histogram(d0_resolution_datum, int(len(d0_resolution_datum)/60.))
+            max_value = max(hist)
+            max_index = hist.tolist().index(max_value)
+            change = 1
+            while change > 0:
+                oldLen = len(d0_resolution_datum)
+                left_cut = 0
+                right_cut = -1
+            
+                try:
+                    left_cut = hist[max_index:0].index(0, max_index, 0)
+                except:
+                    pass
+            
+                try:
+                    right_cut = hist[max_index:].index(0, max_index)
+                except:
+                    pass
 
+                hist, bins = np.histogram(filter(lambda x : bins[left_cut] < x < bins[right_cut], d0_resolution_datum), int(len(d0_resolution_datum)/60.))
+                change = len(d0_resolution_datum) - oldLen
             theta_histogram_bins_list.append((theta, hist, bins))
+        else:
+            print len(d0_resolution_datum)
+    return theta_histogram_bins_list
 
-        """
-        width = (bins[1] - bins[0])
-        center = (bins[:-1] + bins[1:]) / 2.
-        
-        p0 = [1., 0., 1.]
-        coeff, var_matrix = curve_fit(gauss, center, hist, p0=p0)
+def main():
+    #startEvent = int(sys.argv[1])
+    outputFileName = sys.argv[1]
+    #inputFileName = sys.argv[3]
+    #theta_bins, d0_resolution_data = createD0ResolutionDataList([inputFileName], num_theta_bins=100, startEvent=startEvent)
+    #pickle.dump((theta_bins, d0_resolution_data), open(outputFileName, "wb"))
+    
+    #theta_bins, d0_resolution_data = pickle.load(open(inputFileName, "rb"))
 
-        print "Theta={0}: A={1} mu={2} sigma={3}".format(theta,*coeff)
-        """
 
-    pickle.dump(theta_histogram_bins_list, open( outputFileName, "wb" ))
+    input_file_names = sys.argv[2:]
+    theta_bins, d0_resolution_data = pickle.load(open(input_file_names[0], "rb"))
+
+    for name in input_file_names[1:]:
+        for d0_resolution_datum, new_d0_resolution_datum in zip( d0_resolution_data, pickle.load(open(name, "rb"))[1]):
+            d0_resolution_datum.extend(new_d0_resolution_datum)
+
+    thetaHistogramBinList = createThetaHistogramBinList(theta_bins,d0_resolution_data)
+    #print thetaHistogramBinList
+    pickle.dump(thetaHistogramBinList, open(outputFileName, "wb"))
+
+
+
 
 if __name__ == "__main__":
     main()
