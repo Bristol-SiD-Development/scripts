@@ -19,7 +19,7 @@ import numpy as np
 import pickle
 
 
-def createD0ResolutionDataList(inputFileNames, num_theta_bins=100, startEvent=0):
+def createD0ResolutionDataList(inputFileNames, num_theta_bins=100, startEvent=0, endEvent=None):
     lcioReader = IOIMPL.LCFactory.getInstance().createLCReader()
 
     theta_bins = np.linspace(0, np.pi, num_theta_bins)
@@ -29,7 +29,7 @@ def createD0ResolutionDataList(inputFileNames, num_theta_bins=100, startEvent=0)
         lcioReader.open(fileName)
         
         for i, event in enumerate(lcioReader):
-            if i > 4999 + startEvent:
+            if endEvent and i > endEvent:
                 break
             if i < startEvent:
                 continue
@@ -41,9 +41,7 @@ def createD0ResolutionDataList(inputFileNames, num_theta_bins=100, startEvent=0)
             hTracks = map(FastHashableTrack, event.getCollection("Tracks"))
 
             trackToMcpTable, trackToGoodHits, trackToFalseHits = createTrackToMcpTable(hTracks , hitToMcpTable)
-            
-            
-            
+                        
             for hMcp in trackToMcpTable.toDict:
                 #for each mcp in the table find its best track
                 #bestTrack = None
@@ -96,20 +94,23 @@ def createThetaHistogramBinList(theta_bins, d0_resolution_data):
             print len(d0_resolution_datum)
     return theta_histogram_bins_list
 
-def main():
-    #startEvent = int(sys.argv[1])
+def firstMode():
+    startEvent = int(sys.argv[1])
+    endEvent = int(sys.argv[2])
+    outputFileName = sys.argv[3]
+    inputFileNames = sys.argv[4:]
+
+    theta_bins, d0_resolution_data = createD0ResolutionDataList(inputFileNames, num_theta_bins=100m startEvent=startEvent, endEvent=endEvent)
+    pickle.dump((theta_bins, d0_resolution_data), open(outputFileName, "wb"))
+
+
+def secondMode():
     outputFileName = sys.argv[1]
-    #inputFileName = sys.argv[3]
-    #theta_bins, d0_resolution_data = createD0ResolutionDataList([inputFileName], num_theta_bins=100, startEvent=startEvent)
-    #pickle.dump((theta_bins, d0_resolution_data), open(outputFileName, "wb"))
     
-    #theta_bins, d0_resolution_data = pickle.load(open(inputFileName, "rb"))
-
-
     input_file_names = sys.argv[2:]
     theta_bins, d0_resolution_data = pickle.load(open(input_file_names[0], "rb"))
 
-    for name in input_file_names[1:]:
+    for name in input_file_names[3:]:
         for d0_resolution_datum, new_d0_resolution_datum in zip( d0_resolution_data, pickle.load(open(name, "rb"))[1]):
             d0_resolution_datum.extend(new_d0_resolution_datum)
 
@@ -118,6 +119,9 @@ def main():
     pickle.dump(thetaHistogramBinList, open(outputFileName, "wb"))
 
 
+def main():
+    #firstMode()
+    secondMode()
 
 
 if __name__ == "__main__":
