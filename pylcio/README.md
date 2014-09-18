@@ -39,10 +39,9 @@ Alternatively you can do dodgy things like redefine sys.stdout to be a file poin
 ##Hashing LCIO objects
 
 Currently it is (I think) impossible to use the pylcio classes in hashmap (or dictionary) structures. I wrote up some wrapper classes in FastHashableObjects.py. If you subclass FastHashableObject for your class you should end up with a thin wrapper class which can be hashed as expected.
-
 ##ROOT TTree output
 
-See createRootNtuples to get an idea of how *ugly* it is working with root TTrees in python. To put primitive python types (int, float etc.) in the TTree you (apparently) need to use the array module to simulate c style (unchecked) pointers. This neatly gets around all of the safety of working in python. If you do the wrong things then the python interpreter will seg-fault. Usually it does this some way from where the error occoured (often then you call TTree.Fill() or TBranch.Fill()). 
+See createRootNtuples to get an idea of how *ugly* it is working with root TTrees in python. To put primitive python types (int, float etc.) in the TTree you (apparently) need to use the array module to simulate c style (unchecked) pointers. This neatly gets around all of the safety of working in python. If you do the wrong things then the python interpreter will seg-fault. Usually it does this some way from where the error occoured (often when you call TTree.Fill() or TBranch.Fill()). 
 
 The createRootNtuples module is currently not hugely useful but if the pathlength parameters are implemented (see here for an example http://svn.cern.ch/reps/clicdet/trunk/analysis/src/contrib/cgrefe/tracking/TrackingEfficiency.java) then it could be used in conjunction with Christain Greffe's plotting code to do tracking studies.  
 
@@ -50,7 +49,7 @@ The createRootNtuples module is currently not hugely useful but if the pathlengt
 ## General pattern
 Most of my scripts take one or more lcio filenames and iterate over them printing out information to stdout (remember to pipe it through tail). For example pylcioPrintBCLikenesses.py iterates over the input files and for each one loops over every event. For every event it attempts to find a Z->qq event and it prints out the theta angle, the actual (MC) PID and the b and c likeness of each one.
 
-Most were never intended to be public to ignore (or fix :)) any bad practice. Pull requests are always welcome! A good start would probably be to replace the rampant abuse of sys.argv with the argparse module
+Most were never intended to be public so ignore (or fix :)) any bad practice. Pull requests are always welcome! A good start would probably be to replace the rampant abuse of sys.argv with the argparse module
 
 ## Specific Scripts
 
