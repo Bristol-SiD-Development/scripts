@@ -4,7 +4,6 @@ To run either script you must have access to afs as they depend heavily on thing
 Both scripts are heavily based on the 'From Zero to SiD' guide found [here](https://confluence.slac.stanford.edu/display/~stanitz/From+Zero+to+SiD+-+Running+Sim+Reco) some things  must be changed in the sample xml files provided [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/) to make them compatable with the sidloi3 detector files. 
 
 ##Notes on org.lcsim:
-###Dodgy workaround
 1. Rather than having it passed on the command line org.lcsim takes it's detector geometry from a database described [here](https://confluence.slac.stanford.edu/display/ilc/Conditions+Database+Overview)
 2. If you are making significant changes to the detector you therefore need to point org.lcsim at the new version as described [here](https://confluence.slac.stanford.edu/display/ilc/Creating+a+New+Detector+Description)
 3. A sample ~/.lcsim/alias.properties is below
@@ -17,9 +16,7 @@ mySidLoi3: file:///afs/cern.ch/user/o/oreardon/public/ilc/scripts/stdhep-reco-sc
 ```
 
 ###Solution to org.lcsim crashing when given a detector with name != "sidloi3"
-Not having the "TrackSubdetectorHitNumbers" driver in the lcsim_prepandora steering file is the correct solution to this problem as it is the only one which requires the detector name "sidloi3". It requires this because its method for working out in what subdetector is totally dependent on the detector geometry being exactly that of sidloi3. Furthermore the data it writes to the .slcio file seems to not be used at all.
-
-Having done this give your detector a new name!
+Uptate your org.lcsim installation to use the improved TrackSubdetectorHitsDriver I wrote (I believe its in versions > 3.0.5) or use the version in the lcsimDrivers/src/ directory of this repository. The old version was totally broken on detectors that were not SiD and partially broken even on sidloi3 and so should not be used.
 
 ##Changes in marlin flavortag steering file:
 1. The parameter "PFOCollection" should have value "PandoraPFOCollection" instead of "PandoraPFOs"
