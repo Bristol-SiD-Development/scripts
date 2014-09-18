@@ -47,7 +47,7 @@ The createRootNtuples module is currently not hugely useful but if the pathlengt
 
 # My scripts
 ## General pattern
-Most of my scripts take one or more lcio filenames and iterate over them printing out information to stdout (remember to pipe it through tail). For example pylcioPrintBCLikenesses.py iterates over the input files and for each one loops over every event. For every event it attempts to find a Z->qq event and it prints out the theta angle, the actual (MC) PID and the b and c likeness of each one.
+Most of my scripts take one or more lcio filenames and iterate over them printing out information to stdout (remember to pipe it through tail). For example pylcioPrintBCLikenesses.py iterates over the input files and for each one loops over every event. For every event it attempts to find a Z->qq decay and it prints out the theta angle, the actual (MC) PID and the b and c likeness of each one.
 
 Most were never intended to be public so ignore (or fix :)) any bad practice. Pull requests are always welcome! A good start would probably be to replace the rampant abuse of sys.argv with the argparse module
 
