@@ -127,7 +127,7 @@ def main():
                     if len(mcParticleSet) > 2:
                         badHits = True                
                     
-c                if len(associated_mc_particles) == 1 and not badHits:
+                if len(associated_mc_particles) == 1 and not badHits:
                     good_tracks.append(track)
                 elif len(associated_mc_particles) > 0:
                     fake_tracks.append(track)
