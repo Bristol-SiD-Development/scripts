@@ -5,15 +5,14 @@ from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-import pyximport
-pyximport.install()
-
 from HelicalTrack import HelicalTrack
 from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
 from TrackAnalysis import TrackAnalysis
-from array import array
 
-import cProfile
+from RelationalTables import ManyToManyTable ManyToOneTable
+
+
+from array import array #needed to simulate pointers for ROOT
 
 import sys
 
@@ -22,34 +21,7 @@ from itertools import product
 import numpy as np
 import math
 
-from scipy import spatial
-
-class ManyToManyTable(object):
-    def __init__(self):
-        self.toDict = {}
-        self.fromDict = {}
-
-    def addRelation(self, fromObject, toObject):    
-        try:
-            self.toDict[toObject].append(fromObject)
-        except KeyError:
-            self.toDict[toObject] = [fromObject]
-        try:
-            self.fromDict[fromObject].append(toObject)
-        except KeyError:
-            self.fromDict[fromObject] = [toObject]
-
-    def getAllFrom(self, fromObject):
-        return self.fromDict.get(fromObject, [])
-
-    def getAllTo(self, toObject):
-        return self.toDict.get(toObject, [])
-
-class ManyToOneTable(ManyToManyTable):
-    def getFrom(self, fromObject):
-        allFromList = super(ManyToOneTable, self).getAllFrom(fromObject)
-        assert(1 == len(allFromList))
-        return allFromList[0]
+from scipy import spatial #used to calculate the closest distances between pairs of hits *fast*
 
 def convTheta(theta):
     return 90. - 180.*math.fabs(theta/math.pi - 0.5)

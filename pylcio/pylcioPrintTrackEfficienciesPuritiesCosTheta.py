@@ -2,19 +2,12 @@
 from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
-
-#from pylciohelperfunctions import *
-
-from HelicalTrack import HelicalTrack
-from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
-from TrackAnalysis import TrackAnalysis
-
-from RelationalTables import ManyToManyTable, ManyToOneTable
-from createRootNtuples import isLongLivedAndCharged, createHitToMcpTable, createTrackToMcpTable
 import numpy as np
+
+from FastHashableObject import FastHashableHit, FastHashableTrack, FastHashableMcp
+
 import sys
 import math
-
 
 def isLongLivedAndCharged(mcParticle):
     pdg =  mcParticle.getPDG() 
@@ -25,31 +18,22 @@ def isLongLivedAndCharged(mcParticle):
         return False
 
 def main():
-    startEvent=int(sys.argv[1])
-    endEvent=int(sys.argv[2])
+    tag = None
+    if len(sys.argv) < 2:
+        print >> stderr, "Error: script requires a slcio file as input!"
+        return -1
 
-    for inputFile in sys.argv[3:]:
-        lcioReader = IOIMPL.LCFactory.getInstance().createLCReader()
-        lcioReader.open(inputFile)
+    cosTheta_bins = np.linspace(-0.1-1, 1 + 0.1, 100)
+    good_track_bins = np.zeros_like(cosTheta_bins)
+    fake_track_bins = np.zeros_like(cosTheta_bins)
+    charged_mc_bins = np.zeros_like(cosTheta_bins)
 
-        theta_bins = np.linspace(0, np.pi, 100)
-        good_track_bins = np.zeros_like(theta_bins)
-        fake_track_bins = np.zeros_like(theta_bins)
-
-        trackCollectionName="Tracks"
-        mcParticleCollectionName="MCParticlesSkimmed"
-        hitMcpRelationCollectionName="HelicalTrackMCRelations"
-        trackMcpRelationCollectionName="TrackMCTruthLink"
-        lcioReader.skipNEvents(startEvent)
-        i  = startEvent
-        for event in lcioReader:
-            i += 1
-            if i > endEvent:
-                break
-            if not (startEvent < i < endEvent):
-                continue
-        
-            print >> sys.stderr, "Event: {0}".format(event.getEventNumber())
+    for f in sys.argv[1:]:
+        reader = IOIMPL.LCFactory.getInstance().createLCReader()
+        reader.open( f )
+        mcParticleCount = 0
+        for i, event in enumerate(reader):
+            print >> sys.stderr, i
 
             foundTracks, foundMcParticles =  {}, {}
             track_to_associated_mc_particles = {}
@@ -115,7 +99,6 @@ def main():
                 
                 badHits = False
                 #try:
-
                 associated_trackerHits = map(FastHashableHit, track.getTrackerHits())
                 #firstHit = associated_trackerHits[0]
                 
@@ -126,8 +109,8 @@ def main():
                     mcParticleSet = set([trackerHit_to_mc_particles[hit] for hit in associated_trackerHits])
                     if len(mcParticleSet) > 2:
                         badHits = True                
-                    
-c                if len(associated_mc_particles) == 1 and not badHits:
+                
+                if len(associated_mc_particles) == 1 and not badHits:
                     good_tracks.append(track)
                 elif len(associated_mc_particles) > 0:
                     fake_tracks.append(track)
@@ -135,24 +118,24 @@ c                if len(associated_mc_particles) == 1 and not badHits:
                 #    print >> sys.stderr, "Warning a track had no hits. Skipping..."
 
 
-            for hTrack in good_tracks:
-                theta = math.atan2(1., hTrack.getTanLambda())
-                index = np.digitize([theta], theta_bins)
+            for track in good_tracks:
+                cosTheta = math.cos(math.atan2(1, track.getTanLambda()))
+                index = np.digitize([cosTheta], cosTheta_bins)
                 good_track_bins[index] += 1
 
-            for hTrack in fake_tracks:
-                theta = math.atan2(1., hTrack.getTanLambda())
-                index = np.digitize([theta], theta_bins)
+            for track in fake_tracks:
+                cosTheta = math.cos(math.atan2(1, track.getTanLambda()))
+                index = np.digitize([cosTheta], cosTheta_bins)
                 fake_track_bins[index] += 1
 
-            #for mcParticle in mcParticle_to_associated_tracks:
-            #    theta = math.atan2(1., HelicalTrack(inputMcp=mcParticle,bField=5.).tanL)
-            #    index = np.digitize([theta], theta_bins)
-            #    charged_mc_bins[index] += 1
+            for mcParticle in mcParticle_to_associated_tracks:
+                cosTheta = mcParticle.getMomentumVec().CosTheta()
+                index = np.digitize([cosTheta], cosTheta_bins)
+                charged_mc_bins[index] += 1
                 
 
-    for theta_bin, good_track_bin, fake_track_bin in zip(theta_bins, good_track_bins, fake_track_bins):
-        print "{0} {1} {2} {3}".format(theta_bin, good_track_bin, fake_track_bin,good_track_bin + fake_track_bin )
+    for cosTheta_bin, good_track_bin, fake_track_bin, charged_mc_bin in zip(cosTheta_bins, good_track_bins, fake_track_bins, charged_mc_bins):
+        print "{0} {1} {2} {3}".format(cosTheta_bin, good_track_bin, fake_track_bin, charged_mc_bin)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,9 @@ from HelicalTrack import HelicalTrack
 from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
 from TrackAnalysis import TrackAnalysis
 
-from createRootNtuples import ManyToManyTable, ManyToOneTable, isLongLivedAndCharged, createHitToMcpTable, createTrackToMcpTable
+from createRootNtuples import isLongLivedAndCharged, createHitToMcpTable, createTrackToMcpTable
+
+from RelationalTables import ManyToManyTable, ManyToOneTable
 
 import sys
 import math
