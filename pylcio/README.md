@@ -98,4 +98,4 @@ Horrendous mess of scratch space used to test various ideas about how pylcio wor
 
 ### pylciohelperfunctions.py
 
-A horrendous mess of many unrelated functions and classes. 
+A horrendous mess of many unrelated functions and classes. I've attempted to decouple all the other scripts from this as far as I can.
