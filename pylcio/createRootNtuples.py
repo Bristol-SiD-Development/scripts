@@ -9,8 +9,7 @@ from HelicalTrack import HelicalTrack
 from FastHashableObject import FastHashableHit, FastHashableMcp, FastHashableTrack
 from TrackAnalysis import TrackAnalysis
 
-from RelationalTables import ManyToManyTable ManyToOneTable
-
+from RelationalTables import ManyToManyTable, ManyToOneTable
 
 from array import array #needed to simulate pointers for ROOT
 
