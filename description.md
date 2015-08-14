@@ -1,11 +1,11 @@
-####ILC SiD, Simulation, Reconstruction and Plotting
+##ILC SiD, Simulation, Reconstruction and Plotting
 
 WORK IN PROGRESS :(
 
 ###The SIM/RECO chain
 
-##SLIC
-SLIC takes an input .stdhep file, this contains a number of events to run through the simulation. The nature of these events are usually known, with all events in an .stdhep file being Z->bbar for example. A good source of .stdhep input files is the SLAC mass storage server described [here](https://confluence.slac.stanford.edu/display/ilc/Standard+Model+Data+Samples). You can browse all the files [here](ftp://ftp-lcd.slac.stanford.edu/lcd/ILC).
+####SLIC
+SLIC takes an input .stdhep file, this contains a number of events to run through the simulation. The nature of these events are usually known, with all events in an .stdhep file being Z->bbar for example. A good source of .stdhep input files is the SLAC mass storage server described [here](https://confluence.slac.stanford.edu/display/ilc/Standard+Model+Data+Samples). You can browse all the files at, ftp://ftp-lcd.slac.stanford.edu/lcd/ILC.
 
 SLIC also requires a detector geometry description in the .lcdd format, this is a detailed description and can be generated from the simple compact.xml format using geomConverter, scripts for which are in the geomConverter folder. All detector descriptions that can be used simply (without setting up an alias) can be found on the lcsim detector page [here](http://www.lcsim.org/detectors/).
 
@@ -24,15 +24,15 @@ SLIC usage...
 
 SLIC outputs a .slcio file. This is an LCIO file used by all the different stages of the SIM/RECO.
 
-##lcsim (digitization and tracking)
+####lcsim (digitization and tracking)
 
-##slicPandora
+####slicPandora
 
-##Marlin (LCFIPlus vertexing)
+####Marlin (LCFIPlus vertexing)
 
-##lcsim (DST production)
+####lcsim (DST production)
 
-##Marlin (LCFIPlus flavortagging)
+####Marlin (LCFIPlus flavortagging)
 
 ###Versions, locations, enviroment variables
 
@@ -42,8 +42,8 @@ SLIC outputs a .slcio file. This is an LCIO file used by all the different stage
 
 ###LCIO
 
-##Data Structure
+####Data Structure
 
-##API
+####API
 
 ###pyROOT/pyLCIO
