@@ -25,6 +25,37 @@ SLIC usage...
 SLIC outputs a .slcio file. This is an LCIO file used by all the different stages of the SIM/RECO.
 
 ####lcsim (digitization and tracking)
+This first stage of lcsim (a java based framework for event reconstruction and analysis) takes the output .slcio file produced by the previous SLIC(GEANT4) simulation step. It then runs the digitization and tracking of each event through the defined detector.
+
+lcsim contains the detector descriptions that can be easily used, particularly in ILC-DIRAC as they can be simply named, i.e "sidloi3", rather than defining an alias and pointing to the relevant files.
+
+lcsim works via calling a series of drivers defined in a .xml steering file. Each driver is called along with the variables associated with it, for example...
+
+```
+    <driver name="VertexDigi"
+            type="org.lcsim.recon.tracking.digitization.sisim.config.PixelDigiSetupDriver">
+      <subdetectorNames>SiVertexBarrel SiVertexEndcap SiTrackerForward</subdetectorNames>
+      <rawHitsCollectionName>VXD_RawTrackerHits</rawHitsCollectionName>
+      <trackerHitsCollectionName>VXD_TrackerHits</trackerHitsCollectionName>
+      <maxClusterSize>10</maxClusterSize>
+      <noiseIntercept>0.</noiseIntercept>
+      <noiseSlope>0.</noiseSlope>
+      <noiseThreshold>100.</noiseThreshold>
+      <readoutNeighborThreshold>100.</readoutNeighborThreshold>
+      <seedThreshold>100.</seedThreshold>
+      <neighborThreshold>100.</neighborThreshold>
+      <oneClusterErr>0.288675135</oneClusterErr>
+      <twoClusterErr>0.2</twoClusterErr>
+      <threeClusterErr>0.333333333</threeClusterErr>
+      <fourClusterErr>0.5</fourClusterErr>
+      <fiveClusterErr>1.0</fiveClusterErr>
+    </driver>
+```
+This lcsim step also requires a tracking strategies .xml file. lcsim usage...
+
+```
+	java -jar path_to_lcsim_jar/lcsim.jar steeringFile.xml -DinputFile=outputFromSlic.slcio -DtrackingStrategies=trackingStrategies.xml -DoutputFile=lcsimOutput.slcio
+```
 
 ####slicPandora
 
