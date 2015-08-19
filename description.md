@@ -1,6 +1,6 @@
 ##ILC SiD, Simulation, Reconstruction and Plotting
 
-WORK IN PROGRESS :(
+WORK IN PROGRESS :)
 
 ###The SIM/RECO chain
 
