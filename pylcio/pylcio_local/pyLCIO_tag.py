@@ -33,6 +33,31 @@ def args_parse():
 
 	return parser.parse_args()
 
+def event_type(event):
+	jetCounter = 0
+	mcParticlesSkimmed = event.getCollection("MCParticlesSkimmed")
+	for particle in mcParticlesSkimmed:
+		if particle.getGeneratorStatus()==3:
+			if particle.getPDG() = 1 or particle.getPDG() = -1:
+				eventType = "d_tags"
+				jetCounter += 1
+			if particle.getPDG() = 2 or particle.getPDG() = -2:
+				eventType = "u_tags"
+				jetCounter += 1
+			if particle.getPDG() = 3 or particle.getPDG() = -3:
+				eventType = "s_tags"
+				jetCounter += 1
+			if particle.getPDG() = 4 or particle.getPDG() = -4:
+				eventType = "c_tags"
+				jetCounter += 1
+			if particle.getPDG() = 5 or particle.getPDG() = -5:	
+				eventType = "b_tags"
+				jetCounter += 1
+	if jetCounter > 2:
+		print "WARNING!!! WE GOT A MULTI JET"
+
+	return eventType
+
 def get_tag(event):
 	# Gets the tagging infro from the input .slcio files, contained within the 'RefinedJets' collection.
 	refinedJetCollection = event.getCollection('RefinedJets')
@@ -129,15 +154,25 @@ def main():
 
 	f = ROOT.TFile(outputFile, "RECREATE")
 	f.cd()
-	tntuple = ROOT.TNtuple("tags","tags","batg:ctag")
+
+	# tntuple = ROOT.TNtuple("tags","tags","batg:ctag")
+
+	dtuple = ROOT.TNtuple("d_tags", "d_tags", "btag:ctag")
+	utuple = ROOT.TNtuple("u_tags", "u_tags", "btag:ctag")
+	stuple = ROOT.TNtuple("s_tags", "s_tags", "btag:ctag")
+	ctuple = ROOT.TNtuple("c_tags", "c_tags", "btag:ctag")
+	btuple = ROOT.TNtuple("b_tags", "b_tags", "btag:ctag")
 
 	list1 = []
 	list2 = []
+
+	dCount = uCount = sCount = cCount = bCount = 0
 	file_counter = 0
+
 	print "\nProcessing File->"
 
 	for filename in inputFiles:
-		file_counter = file_counter + 1
+		file_counter += 1
 		print str(file_counter) + "..."
 
 		reader = IOIMPL.LCFactory.getInstance().createLCReader()
@@ -147,13 +182,40 @@ def main():
 			tag_b, tag_c = get_tag(event)
 			list1 = [tag_b[0], tag_c[0]]
 			list2 = [tag_b[1], tag_c[1]]
-			tntuple.Fill(array.array("f", list1))
-			tntuple.Fill(array.array("f", list2))
+
+			if event_type(event) = "d_tags":
+				dCount += 1
+				dtuple.Fill(array.array("f", list1))
+				dtuple.Fill(array.array("f", list2))
+			if event_type(event) = "u_tags":
+				uCount += 1
+				utuple.Fill(array.array("f", list1))
+				utuple.Fill(array.array("f", list2))
+			if event_type(event) = "s_tags":
+				sCount += 1
+				stuple.Fill(array.array("f", list1))
+				stuple.Fill(array.array("f", list2))
+			if event_type(event) = "c_tags":
+				cCount += 1
+				ctuple.Fill(array.array("f", list1))
+				ctuple.Fill(array.array("f", list2))
+			if event_type(event) = "b_tags":
+				bCount += 1
+				btuple.Fill(array.array("f", list1))
+				btuple.Fill(array.array("f", list2))
+
 		reader.close()
 
 	f.cd()
 	tntuple.Write()
-	print "[DONE]"
+	print "\nProcessed " + str(file_counter) " files."
+	print "Containing a total of..."
+	print str(dCount) + " ddbar events."
+	print str(uCount) + " uubar events."
+	print str(sCount) + " ssbar events."
+	print str(cCount) + " ccbar events."
+	print str(bCount) + " bbbar events."
+	print "Outputted to - " + outputFile
 
 if __name__=='__main__':
 	main()
