@@ -59,15 +59,76 @@ This lcsim step also requires a tracking strategies .xml file. lcsim usage...
 
 ####slicPandora
 
+slicPandora runs the Pandora Particle Flow Algorithm and produces Particle Flow objects which appear as an extra collection in the LCIO files, "PandoraPFOCollection". slicPandora requires both a settings file (.xml format) and a specific form of the detector geometry (.xml format). The detector geometry is a simple version and can be produced from the compact.xml description using the GeomConverter. The settings file contains variables that determine how the algorithm is run. 
+
+slicPandora requires shared libraries, therefore it is very key that you source "init_ilcsoft.sh" when attempting to use it, or go to its file within the directory and source "build_env.sh", however, this can sometimes not allow marlin to run in the following step when it attempts to load its shared libraries. 
+
+slicPandora usage...
+
+```
+  path_to_slicPandora/PandoraFrontend -g pandoraGeometry.xml -c PandoraSettings.xml -i outputFromLcsim.slcio -o pandoraOutput.slcio
+```
+
 ####Marlin (LCFIPlus vertexing)
+
+Once the Particle Flow Algorithm has been run, LCFIPlus can use the "PandoraPFOCollection" to conduct vertex finding, jet finding and flavor tagging. Marlin takes a steering file (.xml format) which defines a series of processors and associated variables. The general layout is given by...
+
+```
+  <marlin>
+  <execute>
+    <processor name="myprocessor"/>
+  </execute>
+  <global>
+    # Global Parameters
+  </global>
+  <processor name="myprocessor" type="LcfiplusProcessor">
+    # Prosessor specific parameters
+  </processor>
+  </marlin>
+```
+
+Example steering files for all LCFIplus processes are availiable [here](https://svnsrv.desy.de/viewvc/marlinreco/ILDConfig/trunk/LCFIPlusConfig/steer/). I recommend reading the README as it explains how LCFIPlus can be used. A gear file (.gear, but same as .xml format) is also required, but a very simple version just containing magnetic field infomation can be linked to within the steering file. Initially Marlin is used to run the "PrimaryVertexFinder" and "BuildUpVertex" processors. The input and output files can either be defined in the steering file or can be defined when calling Marlin, usage...
+
+```
+  path_to_marlin/Marlin vertexing.xml --global.LCIOInputFiles=slicPandoraOutput.slcio --global.LCIOOutputProcessor.LCIOOutputFile=vertexingOutput.slcio
+```
 
 ####lcsim (DST production)
 
+The large .slcio file is then converted into DST format (still .slcio extension), which removes the majority of the no longer needed collections within the LCIO file. This employs lcsim again, with a deifferent steering file to call different drivers. Usage...
+
+```
+  java -jar path_to_lcsim_jar/lcsim.jar steeringFile.xml -DinputFile=outputFromVertexing.slcio -DrecFile=outputThatContainsAllCollections.slcio -DdstFile=DSTOutput.slcio
+```
+
 ####Marlin (LCFIPlus flavortagging)
+
+We can now run the flavortagging processors from LCFIPlus, "JetClustering", "JetVertexRefiner", "FlavorTag" and "ReadMVA". In addition to the steering file, weights files and vtxprobfiles are required by the flavortagging, these contain variables described [here](http://arxiv.org/pdf/1506.08371v1.pdf). These files depend on the energy of the beam used and the detector geometry (NEED TO WRITE SCRIPT TO MAKE THESE). The location of these files is defined in the steering.xml file. This stage adds the "RefinedJets" collection to the DST .slcio file produced in the previous stage, this contains the btag and ctag data for each jet (proves more difficult to get out of .slcio files than most things).
+
+Marlin, LCFIPlus Flavortagging usage...
+
+```
+  path_to_marlin/Marlin flavortagging.xml --global.LCIOInputFiles=DST.slcio --global.LCIOOutputProcessor.LCIOOutputFile=flavortagOutput.slcio
+```
 
 ###Versions, locations, enviroment variables
 
+####v01-17-05
+
+####v01-17-07
+
 ###Required Files summary
+
+-SLIC Geometry
+-lcsim Geometry
+-Pandora Geometry
+-lcsim pre pandora steering
+-lcsim tracking strategies
+-pandora settings
+-LCFIPlus vertexing steering
+-Gear file
+-lcsim post pandora(DST creation) steering
+-LCFIPlus flavortagging steering
 
 ###ILC-DIRAC
 

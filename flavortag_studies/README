@@ -1,0 +1,14 @@
+# Flavortagging Studies
+
+LCFIplus provides jet analysis and is an improvement on LCFIVertex. Once events have been fully simulated and reconstructed, LCFIPlus provides vertex finding, jet clustering and flavortagging of jets. 
+
+In order to study how LCFIPlus performs, you need an LCIO file, with a PFO collection, i.e. it needs to have been run through slicPandora. LCFIplus requires weights files that vary depending on the detector geometry
+
+### "flavortag.py"
+
+### "env.sh"
+
+### "pyLCIO_tag.py"
+
+### "pyROOT_tag.py"
+
