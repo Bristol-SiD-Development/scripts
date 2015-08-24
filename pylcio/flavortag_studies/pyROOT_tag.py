@@ -19,15 +19,15 @@ def parse_args():
 						help='BaseName for output plots',
 						default='default')
 
-	parser.add_argument('-hist', '--basicHistograms',
+	parser.add_argument('--hist',
 						help='Include to produce basic histograms for btag and ctag data.',
 						action='store_true', default = False)
 
-	parser.add_argument('-back', '--backgroundPlots',
+	parser.add_argument('--back',
 						help='Include to produce Fake rate vs efficiency plots for both btag and ctag data.',
 						action='store_true', default = False)
 
-	parser.add_argument('-pur', '--purityPlot',
+	parser.add_argument('--pur',
 						help='Include to produce purity plot comparing btag and ctag data.',
 						action='store_true', default = False)
 
@@ -120,7 +120,7 @@ def histsBranchCorrected(f, totalEvents, bins):
 	hists[11].Add(hists[10],hists[5])
 	return hists
 
-def draw_histograms(hist1,hist2,hist3,output):
+def draw_histograms(hist1, hist2, hist3, output):
 	# Draws the basic histograms, given the appropriate hists by main().
 	c = TCanvas()
 	c.SetLogy()
@@ -128,12 +128,16 @@ def draw_histograms(hist1,hist2,hist3,output):
 	hist2.SetLineColor(kGreen)
 	hist3.SetLineColor(kRed)
 	hist3.SetMinimum(10)
+	hist1.SetStats(0)
+	hist2.SetStats(0)
+	hist3.SetStats(0)
 	hist3.Draw("same")
 	hist2.Draw("same")
 	hist1.Draw("same")
 	img = ROOT.TImage.Create()
 	img.FromPad(c)
 	img.WriteImage(output)
+
 	del c, hist1, hist2, hist3, img
 
 def draw_backgroundPlots(hist1, hist2, hist3, bins, output):
@@ -174,7 +178,7 @@ def draw_backgroundPlots(hist1, hist2, hist3, bins, output):
 	heavyBack_graph.SetMaximum(1)
 	heavyBack_graph.SetMinimum(pow(10,-4))
 	udsBack_graph = ROOT.TGraph(bins, eff_array, udsBack_array)
-	udsBack_graph.SetLineColor(2)
+	udsBack_graph.SetMarkerColor(2)
 	heavyBack_graph.Draw("A*")
 	udsBack_graph.Draw("*")
 	img = ROOT.TImage.Create()
@@ -183,30 +187,55 @@ def draw_backgroundPlots(hist1, hist2, hist3, bins, output):
 	del c, img, heavyBack_graph, udsBack_graph, eff_array, heavyBack_array, udsBack_array
 	del efficiency, heavyBack, udsBack
 
-def draw_purityPlot(hist1, hist2, hist3, bins, output):
+def draw_purityPlot(bhist1, bhist2, bhist3, chist1, chist2, chist3, bins, output):
 	# Draws purity plot and saves to folder.
-	purity = []
-	efficiency = []
-	binCont1 = binCont2 = binCont3 = 0
+	bPurity = []
+	cPurity = []
+	bEfficiency = []
+	cEfficiency = []
+	bBinCont1=bBinCont2=bBinCont3=cBinCont1=cBinCont2=cBinCont3=0
 	i = bins
 	while i > 0:
-		binCont1 = binCont1 + hist1.GetBinContent(i)
-		binCont2 = binCont2 + hist2.GetBinContent(i)
-		binCont3 = binCont3 + hist3.GetBinContent(i)
-		purity.append((binCont1)/((binCont1)+((binCont2)+(binCont3))))
-		efficiency.append(binCont1)
+		bBinCont1 = bBinCont1 + bhist1.GetBinContent(i)
+		bBinCont2 = bBinCont2 + bhist2.GetBinContent(i)
+		bBinCont3 = bBinCont3 + bhist3.GetBinContent(i)
+		cBinCont1 = cBinCont1 + chist1.GetBinContent(i)
+		cBinCont2 = cBinCont2 + chist2.GetBinContent(i)
+		cBinCont3 = cBinCont3 + chist3.GetBinContent(i)
+		bPurity.append((bBinCont1)/((bBinCont1)+((bBinCont2)+(bBinCont3))))
+		cPurity.append((cBinCont1)/((cBinCont1)+((cBinCont2)+(cBinCont3))))
+		bEfficiency.append(bBinCont1)
+		cEfficiency.append(cBinCont1)
 		i = i - 1
+	
 	i=0
 	while i < bins:
-		efficiency[i] = efficiency[i] / binCont1
+		bEfficiency[i] = bEfficiency[i] / bBinCont1
+		cEfficiency[i] = cEfficiency[i] / cBinCont1
 		i += 1
 
-	purity_array = array.array("f", purity)
-	eff_array = array.array("f", efficiency)
+	b_purity_array = array.array("f", bPurity)
+	c_purity_array = array.array("f", cPurity)
+	b_eff_array = array.array("f", bEfficiency)
+	c_eff_array = array.array("f", cEfficiency)
+
 	c = TCanvas()
-	purity_graph = ROOT.TGraph(bins, eff_array, purity_array)
-	purity_graph.GetXaxis.SetTitle("Efficiency")
-	purity_graph.GetYaxis.SetTitle("Purity")
+	b_purity_graph = ROOT.TGraph(bins, b_eff_array, b_purity_array)
+	b_purity_graph.GetXaxis().SetTitle("Efficiency")
+	b_purity_graph.GetYaxis().SetTitle("Purity")
+	b_purity_graph.SetMaximum(1.1)
+	b_purity_graph.SetMinimum(0.2)
+	c_purity_graph = ROOT.TGraph(bins, c_eff_array, c_purity_array)
+	b_purity_graph.SetMarkerColor(kBlue)
+	c_purity_graph.SetMarkerColor(kGreen)
+	b_purity_graph.Draw("A*")
+	c_purity_graph.Draw("*")
+	img = ROOT.TImage.Create()
+	img.FromPad(c)
+	img.WriteImage(output)
+
+	del c, bhist1,bhist2,bhist3,chist1,chist2,chist3,b_purity_array,c_purity_array
+	del b_eff_array,c_eff_array
 
 
 def main():
@@ -229,15 +258,21 @@ def main():
 
 	hists = histsBranchCorrected(f, totalEvents, args.numberOfBins)
 
-	if args.basicHistograms:
+	if args.hist:
 		draw_histograms(hists[8],hists[6],hists[10],outputPlots[0])
-		draw_histograms(hists[7],hists[9],hists[11],outputPlots[1])
+		draw_histograms(hists[9],hists[7],hists[11],outputPlots[1])
+		print "Histograms created and saved as " + outputPlots[0] + " and " + outputPlots[1]
 
-	if args.backgroundPlots:
+	if args.back:
 		draw_backgroundPlots(hists[8],hists[6],hists[10],args.numberOfBins,outputPlots[2])
-		draw_backgroundPlots(hists[7],hists[9],hists[11],args.numberOfBins,outputPlots[3])		
+		draw_backgroundPlots(hists[7],hists[9],hists[11],args.numberOfBins,outputPlots[3])	
+		print "Background plots created and saved as " + outputPlots[2] + " and " + outputPlots[3]
 
-	print "done"
+	if args.pur:
+		draw_purityPlot(hists[8],hists[6],hists[10],hists[7],hists[9],hists[11],args.numberOfBins, outputPlots[4])	
+		print "Purity plot created and saved as " + outputPlots[4]
+
+	print "[DONE]"
 
 if __name__=='__main__':
 	main()
