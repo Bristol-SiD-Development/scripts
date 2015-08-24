@@ -119,16 +119,16 @@ Marlin, LCFIPlus Flavortagging usage...
 
 ###Required Files summary
 
--SLIC Geometry
--lcsim Geometry
--Pandora Geometry
--lcsim pre pandora steering
--lcsim tracking strategies
--pandora settings
--LCFIPlus vertexing steering
--Gear file
--lcsim post pandora(DST creation) steering
--LCFIPlus flavortagging steering
+*SLIC Geometry
+*lcsim Geometry
+*Pandora Geometry
+*lcsim pre pandora steering
+*lcsim tracking strategies
+*pandora settings
+*LCFIPlus vertexing steering
+*Gear file
+*lcsim post pandora(DST creation) steering
+*LCFIPlus flavortagging steering
 
 ###ILC-DIRAC
 

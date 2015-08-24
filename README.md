@@ -9,6 +9,9 @@ If necessary please email jt12194@my.bristol.ac.uk or or1426@my.bristol.ac.uk(no
 
 I recommend you read description.md for full overview of the ILC SiD SIM/RECO chain.
 
+###flavortag_studies
+Contains scripts to run LCFIPlus flavortagging, then use pyLCIO to get tag data, then use root to make various plots. Specific to what was required at the time, needs improvement so that it can be used more generically.
+
 ###GeomConverter
 Contains scripts to convert compact geometry descriptions (.xml) into the other forms...
 - .lcdd, detailed and large detector description used by SLIC (GEANT4).
@@ -23,13 +26,7 @@ Contains everything needed to run the SIM/RECO chain on ILC-DIRAC...
 
 Currently the flavortaging step is not included in the main chain as this requires weights files whose location is specified within the steering.xml file. Can't get this to work with ILC-DIRAC but shall look for solution to incorporate this stage.
 
-###lcsimDrivers
-Test lcsim driver along with build instructions and samle steering file.
-
-###Parallel-reco-jobs
-A script to run the stdhep-reco-chain in multiple LXBatch jobs, unnecessary if ILC-DIRAC can be used.
-
-###pylcio
+###pylcio_scripts
 Scripts to pull the data from the resulting .slcio files at the end of the SIM/RECO, a bit messy, requires reorganisation, and detailed documentation on how ROOT/pyROOT/LCIO/pyLCIO work etc...
 
 ###stdhep-reco-script
@@ -42,5 +39,4 @@ The simple stdhep-reco-chain, calls each of the seperate parts of the chain from
 5. lcsim to produce DST's
 6. LCFIPlus to do the flavortaging.
 
-###root-lcio-setup-script.sh
-script to setup the enviroment variables in order to use pyROOT with LCIO, not the paths may need updating.
+
