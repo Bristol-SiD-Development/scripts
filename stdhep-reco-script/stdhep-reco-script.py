@@ -58,7 +58,7 @@ def setup_steering_dict():
     return steering_files
 
 def setup_geom_dict():
-    geometry_files = {"slic":"geom_slic.lcdd"
+    geometry_files = {"slic":"geom_slic.lcdd",
                       "pandora":"geom_pandora.xml",
                       "marlin":"geom_marlin_gear.xml"}
 
