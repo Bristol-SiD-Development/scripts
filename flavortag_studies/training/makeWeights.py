@@ -6,12 +6,17 @@ def parse_args():
 
 	parser = argparse.ArgumentParser("Produce weights files for LCFIPlus flavortagging...")
 	
-	parser.add_argument("-b", "--bbbarSample", help="path to bbbarSample.slcio or sample folder, DST input")
-	parser.add_argument("-c", "--ccbarSample", help="path to ccbarSample.slcio or sample folder, DST input")
-	parser.add_argument("-q", "--qqbarSample", help="path to qqbarSample.slcio or sample folder, DST input")
+	parser.add_argument("-b", "--bbbarSample", help="path to bbbarSample.slcio or sample folder, DST input",
+						default="input/pythiaZPole_sidloi3_2_DST.slcio")
+
+	parser.add_argument("-c", "--ccbarSample", help="path to ccbarSample.slcio or sample folder, DST input",
+						default="input/pythiaZPoleccbar_sidloi3_0_DST.slcio")
+
+	parser.add_argument("-q", "--qqbarSample", help="path to qqbarSample.slcio or sample folder, DST input",
+						default="input/pythiaZPoleuds_sidloi3_0_DST.slcio")
 
 	parser.add_argument("-g", "--gearFile", help="Input gear file",
-						default="/afs/cern.ch/user/j/jtingey/ILC_DBD/steeringFiles/sidloi3.gear")
+						default="input/sidloi3.gear")
 
 	return parser.parse_args()
 
@@ -64,7 +69,7 @@ def makentuple(input_file, marlin, gearFile):
 	check_call([marlin, 
 		   "--global.LCIOInputFiles=" + input_file,
 		   "--global.GearXMLFile=" + gearFile,
-		   "makentuple.xml"])
+		   "steeringFiles/makentuple2.xml"])
 	os.rename("ntuple.root", outputName + ".root")
 	return outputName + ".root"
 
@@ -77,7 +82,7 @@ def combine(hadd, output, rootlist):
 def train(marlin, gearFile):
 	check_call([marlin, 
 			"--global.GearXMLFile=" + gearFile,
-			"train.xml"])
+			"steeringFiles/train2.xml"])
 
 def clean(bOutput, cOutput, uOutput):
 	for rootFile in bOutput:
@@ -91,8 +96,14 @@ def clean(bOutput, cOutput, uOutput):
 	os.remove("uu.root")
 
 def main():
-	marlin = "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/Marlin/v01-05/bin/Marlin"
-	hadd = "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/root/5.34.10/bin/hadd"
+	# marlin = "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/Marlin/v01-05/bin/Marlin"
+	# hadd = "/afs/desy.de/project/ilcsoft/sw/x86_64_gcc44_sl6/v01-17-05/root/5.34.10/bin/hadd"
+
+	# marlin = "/cvmfs/ilc.desy.de/sw/x86_64_gcc44_sl6/v01-17-08/Marlin/v01-07/bin/Marlin"
+	# hadd = "/cvmfs/ilc.desy.de/sw/x86_64_gcc44_sl6/v01-17-08/root/5.34.30/bin/hadd"
+
+	marlin = "Marlin"
+	hadd = "hadd"
 
 	args = parse_args()
 

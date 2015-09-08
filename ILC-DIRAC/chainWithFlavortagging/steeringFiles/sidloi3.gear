@@ -1,7 +1,7 @@
 <gear>
 
      <!--Example XML file for GEAR describing the LDC detector -->
- 
+  <global detectorName="sidloi3" />
   <BField type="ConstantBField" x="0.0" y="0.0" z="5.0"/>
 
   <detectors> 

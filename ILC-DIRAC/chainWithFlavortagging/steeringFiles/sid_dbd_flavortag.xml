@@ -6,11 +6,11 @@
   </execute>
 
   <global>
-    <parameter name="LCIOInputFiles" type="string" value="/afs/cern.ch/user/o/oreardon/public/ilc/simulation/pythiaZPolebbbar_slic-3.1.3_geant4-v9r6p1_QGSP_BERT_sidloi3_dst.slcio" />
+    <parameter name="LCIOInputFiles"> testPandora.slcio </parameter>
     <parameter name="MaxRecordNumber" value="0" />
     <parameter name="SkipNEvents" value="0" />
     <parameter name="SupressCheck" value="false" />
-    <parameter name="GearXMLFile" value="/afs/cern.ch/user/j/jtingey/scripts/stdhep-reco-script/gearFiles/myGear.xml" />
+    <parameter name="GearXMLFile"> clic_sid.gear </parameter>
     <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT">WARNING</parameter>
   </global>
 
@@ -66,29 +66,15 @@
     <parameter name="PrimaryVertexCollectionName" type="string" value="PrimaryVertex" />
     <parameter name="FlavorTag.JetCollectionName" type="string" value="RefinedJets" />
     <parameter name="MakeNtuple.AuxiliaryInfo" type="int" value="-1" />
-    <!--
-    <parameter name="FlavorTag.WeightsDirectory" type="string" value="/afs/cern.ch/user/j/jtingey/scripts/stdhep-reco-script/weightFiles/qq91" />
-    <parameter name="FlavorTag.WeightsPrefix" type="string" value="qq91_v02_p01" />
-    <parameter name="FlavorTag.BookName" type="string" value="bdt" />
-    <parameter name="FlavorTag.PIDAlgo" type="string" value="lcfiplus" />
-    <parameter name="FlavorTag.D0ProbFileName" type="string" value="/afs/cern.ch/user/j/jtingey/scripts/stdhep-reco-script/vtxprobFiles/d0prob_zpole.root"/>
-    <parameter name="FlavorTag.Z0ProbFileName" type="string" value="/afs/cern.ch/user/j/jtingey/scripts/stdhep-reco-script/vtxprobFiles/z0prob_zpole.root"/>
-    -->
-    <parameter name="FlavorTag.WeightsDirectory" type="string" value="/afs/cern.ch/user/j/jtingey/ILC_DBD/lcfiweights" />
+
+    <parameter name="FlavorTag.WeightsDirectory">$(PWD)</parameter>
+    <!--<parameter name="FlavorTag.WeightsDirectory" type="string" value="lcfiweights" />-->
     <parameter name="FlavorTag.WeightsPrefix" type="string" value="zpole_v00" />
     <parameter name="FlavorTag.BookName" type="string" value="bdt" />
     <parameter name="FlavorTag.PIDAlgo" type="string" value="lcfiplus" />
-    <parameter name="FlavorTag.D0ProbFileName" type="string" value="/afs/cern.ch/user/j/jtingey/ILC_DBD/vtxprob/d0prob_zpole.root"/>
-    <parameter name="FlavorTag.Z0ProbFileName" type="string" value="/afs/cern.ch/user/j/jtingey/ILC_DBD/vtxprob/z0prob_zpole.root"/>
+    <parameter name="FlavorTag.D0ProbFileName" type="string" value="vtxprob/d0prob_zpole.root"/>
+    <parameter name="FlavorTag.Z0ProbFileName" type="string" value="vtxprob/z0prob_zpole.root"/>
     
-    <!--
-       <parameter name="FlavorTag.WeightsDirectory" type="string" value="lcfiweights" />
-       <parameter name="FlavorTag.WeightsPrefix" type="string" value="qq91_v01" />
-       <parameter name="FlavorTag.BookName" type="string" value="bdt" />
-       <parameter name="FlavorTag.PIDAlgo" type="string" value="lcfiplus" />
-       <parameter name="FlavorTag.D0ProbFileName" type="string" value= "vtxprob/d0prob_zpole.root"/>
-       <parameter name="FlavorTag.Z0ProbFileName" type="string" value="vtxprob/z0prob_zpole.root"/>
-       -->
     <parameter name="FlavorTag.CategoryDefinition1" type="string">nvtx==0</parameter>
     <parameter name="FlavorTag.CategoryPreselection1" type="string">trk1d0sig!=0</parameter>
     <parameter name="FlavorTag.CategoryVariables1" type="stringVec">
@@ -99,7 +85,7 @@
       aux nvtx
     </parameter>
 
-    <parameter name="FlavorTag.CategoryDefinition2" type="string">nvtx==1&&nvtxall==1</parameter>
+    <parameter name="FlavorTag.CategoryDefinition2" type="string">nvtx==1&amp;&amp;nvtxall==1</parameter>
     <parameter name="FlavorTag.CategoryPreselection2" type="string">trk1d0sig!=0</parameter>
     <parameter name="FlavorTag.CategoryVariables2" type="stringVec">
       trk1d0sig trk2d0sig trk1z0sig trk2z0sig trk1pt_jete trk2pt_jete jprobr jprobz
@@ -111,7 +97,7 @@
       aux nvtx
     </parameter>
 
-    <parameter name="FlavorTag.CategoryDefinition3" type="string">nvtx==1&&nvtxall==2</parameter>
+    <parameter name="FlavorTag.CategoryDefinition3" type="string">nvtx==1&amp;&amp;nvtxall==2</parameter>
     <parameter name="FlavorTag.CategoryPreselection3" type="string">trk1d0sig!=0</parameter>
     <parameter name="FlavorTag.CategoryVariables3" type="stringVec">
       trk1d0sig trk2d0sig trk1z0sig trk2z0sig trk1pt_jete trk2pt_jete jprobr jprobz
