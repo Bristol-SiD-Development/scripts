@@ -2,9 +2,11 @@ import os, sys, argparse, os.path
 import ROOT
 import array
 
+# Import all of the ROOT stuff for ease of use.
 from ROOT import *
 
 def parse_args():
+	# Takes in arguments from the command line when script is called and returns them to main().
 	currentDir = os.getcwd()
 	parser = argparse.ArgumentParser(description='Processes .root file containing tag data from pyLCIO_tag.py'
 						  ,epilog='In case of questions or problems, contact jt12194@my.bristol.ac.uk')
@@ -40,8 +42,10 @@ def parse_args():
 def input_output(inputFile, outputDirectory, outputName):
 	# Checks input file and returns the path/names of the output plots.
 	outputPlots = []
+	# Names of the plots, these are hardcoded at the moment.
 	plotName = ["btag.png","ctag.png","btagback.png","ctagback.png","purity.png"]
 	inputName, inputExtension = os.path.splitext(inputFile)
+	# Check that the input file is a .root file.
 	if not os.path.exists(inputFile) or inputExtension not in [".root"]:
 		print "ERROR: Input file '" + inputFile + "' is not valid!"
 		return False, outputPlots
@@ -95,8 +99,10 @@ def histsBranchCorrected(f, totalEvents, bins):
 		# hists[9] = b_tags_ctag
 		# hists[10] = uds_tags_btag
 		# hists[11] = uds_tags_ctag
+	# This is messy, but need lots of histograms so effective.
 		  
 	histTypes=["d_tags","u_tags","s_tags","c_tags","b_tags"]
+	# Branching ratios again hardcoded.
 	ratios = [0.2263,0.1596,0.2263,0.1719,0.2160]
 	hists = []
 	index = 0

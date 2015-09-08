@@ -13,7 +13,7 @@ def parse_args():
 
 	parser.add_argument("-s", "--steering_file",
 						help="Path to the JetClustering and Flavortag steeringfile.xml",
-						default="/afs/cern.ch/user/j/jtingey/ILC_DBD/steeringFiles/marlinFlavortag.xml")
+						default="sid_dbd_flavortag.xml")
 
 	parser.add_argument("-g", "--gear_file",
 						help="Path to the gear file for the detector used",
@@ -50,7 +50,7 @@ def check_paths(input_file,steering_file,gear_file,output_directory,marlin):
 def output_file(input_file,output_directory):
 	input_dir, input_file_ext = os.path.splitext(input_file)
 	input_name = path.basename(input_dir)
-	output_name = input_name.replace("_DST","_flavortag.slcio")
+	output_name = input_name.replace(".slcio","_flavortag.slcio")
 	output = os.path.join(output_directory,output_name) 
 	print "Output = " +output
 	return output
@@ -59,7 +59,7 @@ def main():
 	args = parse_args()
 
 	print "\n####################"
-	print "## Running Marlin ##"
+	print "##  Run LCFIPLUS  ##"
 	print "##  Flavortagging ##"
 	print "####################"
 
