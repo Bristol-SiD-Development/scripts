@@ -1,0 +1,28 @@
+<lcsim xmlns:lcsim="http://www.lcsim.org/schemas/lcsim/1.0"
+xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd"> 
+
+<inputFiles> 
+  <file>slicOutput.slcio</file> 
+</inputFiles> 
+<control> 
+  <skipEvents>0</skipEvents> 
+  <numberOfEvents>-1</numberOfEvents>  <!-- put -1 if all the events should be merged -->
+  <verbose>false</verbose> 
+  <printDriverStatistics>true</printDriverStatistics> 
+  <printDriversDetailed>true</printDriversDetailed> 
+</control> 
+<execute> 
+  <driver name="MergeEvents"/>
+</execute> 
+
+<drivers> 
+<!-- Driver to give some feedback on progress --> 
+<driver name="MergeEvents" 
+        type="org.lcsim.util.MergeEventsDriver"> 
+  <numberOfEvents>-1</numberOfEvents> 
+  <outputFile>mergeOutput.slcio</outputFile> 
+</driver> 
+</drivers> 
+
+</lcsim>
