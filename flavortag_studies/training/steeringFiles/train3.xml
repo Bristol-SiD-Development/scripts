@@ -1,5 +1,7 @@
 <marlin>
 
+<!--  Only differance to V2 is this use of jprobr2 and jprobz2 instead of jprobr and jprobz -->
+
 <execute>
 	<processor name="MyLcfiplusProcessor"/>
 </execute>

@@ -3,14 +3,12 @@
 <execute>
 	<processor name="JetClustering"/>
 	<!--	<processor name="TrackNtuple"/> -->
-	<processor name="MyLCIOOutputProcessor"/>
+	<!--    <processor name="MyLCIOOutputProcessor"/> -->
 </execute>
 
 <global>
-	<parameter name="LCIOInputFiles">
-	  input.slcio
-	</parameter>
-	<parameter name="GearXMLFile"> GearOutput.xml </parameter>  
+	<parameter name="LCIOInputFiles"> input/pythiaZPoleuds_sidloi3_0_v3r0p3_HEAD_ILC_DBD_0116_DST.slcio </parameter>
+	<parameter name="GearXMLFile"> input/sidloi3.gear </parameter>  
 	<parameter name="MaxRecordNumber" value="0" />  
 	<parameter name="SkipNEvents" value="0" />  
 	<parameter name="SupressCheck" value="false" />  
@@ -52,9 +50,11 @@
 	<parameter name="TrackNtuple.RootFileName" type="string" value="tracks.root" />
 </processor>
 
+<!--
 <processor name="MyLCIOOutputProcessor" type="LCIOOutputProcessor">
 	<parameter name="LCIOOutputFile" type="string"> ADD NAME OF OUTPUT FILE HERE </parameter>
 	<parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
 </processor>
+-->
 
 </marlin>
