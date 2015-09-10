@@ -10,7 +10,9 @@ All is based on the page [here](https://wikis.bris.ac.uk/display/sid/Simulation+
 
 ####pairsSimulation.py
 
-This script run the simulation chain for pairs.dat files for me. Some of the paths will need changing in order for it to be used again. Aswell as your own versions of the GuineaPig Converter ([here](https://github.com/Schuea/GuineaPigConverter/tree/master/GuineaPig_conversion)) and an lcsim-bin.jar (can get from [here](http://srs.slac.stanford.edu/nexus/index.html#nexus-search;quick~lcsim distribution)). Note that you need to source "init_ilcsoft.sh" for whichever version of slic you are using for it to work.
+This script run the simulation chain for pairs.dat files for me. Some of the paths will need changing in order for it to be used again. Aswell as your own versions of the GuineaPig Converter ([here](https://github.com/Schuea/GuineaPigConverter/tree/master/GuineaPig_conversion)) and an lcsim-bin.jar (can get from [here](http://srs.slac.stanford.edu/nexus/index.html#nexus-search;quick~lcsim distribution)). Note that you need to source "init_ilcsoft.sh" for whichever version of ilcsoft including slic you are using.
+
+Note that the simulation of the events takes a while. For a file of ~200K MCparticles from a pairs.dat file, this will take a few hours. Therefore moving this to the grid would help!
 
 ####merge.xml
 

@@ -57,20 +57,28 @@ def parse_args():
 	return parser.parse_args()
 
 def check_events_arguments(events, split_size):
-	checkEvents = events > 0 
-	checkSplit = split_size > 0
+	checkEvents = int(events) > 0 
+	checkSplit = int(split_size) > 0
+
 	if not checkEvents:
 		print 'Error: The number of events must be specified with (--events) when calling script'
 		return False
-	elif checkEvents and checkSplit and split_size > events:
+
+	elif checkEvents and checkSplit and int(split_size) > int(events):
 		print 'Error: The total number of events (--runs) must be greater than the output size (--split)'
 		return False
+
 	elif checkEvents and not checkSplit:
 		print 'Total number of events to run = ', events, '. NO SPLIT'
 		return True
-	elif checkEvents and checkSplit and events > split_size:
+
+	elif checkEvents and checkSplit and int(events) > int(split_size):
 		print 'Total number of events to run = ', events, '. SPLIT, into files of size = ', split_size, ' events.'
 		return True
+
+	else: 
+		print "No Idea whats going on!!!!"
+		return False
 
 def check_input_LFN(input_lfn):
 	lfn, extension = os.path.splitext(input_lfn) 
@@ -80,16 +88,6 @@ def check_input_LFN(input_lfn):
 	else:
 		print 'Input LFN = ', input_lfn
 		return True, input_lfn
-
-#def setup_steering_dict():
-#	steering_files = {'xmlPrePandora':'steeringFiles/sid_dbd_prePandora_noOverlay.xml',
-#					  'xmlPostPandora':'steeringFiles/sid_dbd_postPandora.xml',
-#					  'trackingStrategies':'steeringFiles/sidloi3_trackingStrategies_default.xml',
-#					  'lcsimGeometry':'geometryFiles/sidloi3.zip',
-#					  'pandoraSettings':'steeringFiles/sid_dbd_pandoraSettings.xml',
-#					  'marlinVertexing':'steeringFiles/sid_dbd_vertexing.xml',
-#					  'marlinGearFile':'steeringFiles/sidloi3.gear'}
-#	return steering_files
 
 def setup_output_dict(input_lfn, detector, fileNumber, outputPath, softVersions):
 	lfn, extension = os.path.splitext(input_lfn)
@@ -115,7 +113,9 @@ def setup_repository_name(input_lfn, detector):
 	lfn, extension = os.path.splitext(input_lfn) 
 	return path.basename(lfn) + '_' + detector + '_repository.cfg'
 
-def setup_sandboxes(macFile, flavortag): # CAN ADD THINGS IN HERE IF THINGS DONT SEEM TO BE WORKING,
+def setup_sandboxes(macFile, flavortag): # CAN ADD THINGS IN HERE IF THINGS DONT SEEM TO BE WORKING!
+
+	# Need to have the pandoraSettings.xml on the grid or slicPandora fails for some reason, need to upload to grid and change this path!
 	inputSandbox = ["LFN:/ilc/user/j/jtingey/pandoraSettings/pandoraSettings.xml"]
 	outputSandbox = ['*.log', '*.xml'] # WOULD BE COOL TO HAVE THIS DEPENDANT ON INPUT
 	
@@ -148,8 +148,10 @@ def main():
 		print 'Invalid Arguments'
 		sys.exit(1)
 
-	# SOFTWARE VERSIONS!!!!
-	softVersions = ["v3r0p3", "HEAD", "ILC_DBD", "0116"]
+#### Software Versions ####
+	softVersions = ["v3r0p3", "HEAD", "ILC_DBD", "0116"] # Working (recommended)
+	# softVersions = ["v3r0p3", "2.5", "ILC_DBD", "0116"] # Working 
+	# softVersions = ["v3r0p3", "HEAD", "ILC_DBD", "ILCSoft-01-17-07"] # Working
 
 	# Check the --runs and --split arguments to make sure they are compatible, if not exit... 
 	if not check_events_arguments(args.events, args.split):
@@ -163,8 +165,11 @@ def main():
 	# Call when you begin ILC-DIRAC jobs, the true indicates a repository file is included...
 	dirac = DiracILC(True, setup_repository_name(args.stdhepInput, args.detector))
 
+	# Prepares the input and output sandboxes, if -f, then adds the files required for flavortagging,
+	# into the input sandbox
 	inputSandbox, outputSandbox = setup_sandboxes(args.macFile, args.flavortag)
 
+	# Prepares values for the job loop...
 	if args.split < 0:
 		nInputEvents = int(args.events)
 		nOutputEvents = int(args.events)
@@ -172,6 +177,7 @@ def main():
 		nInputEvents = int(args.events)
 		nOutputEvents = int(args.split)
 
+	# Loop that runs through the required number of jobs to be executed...
 	for startEvent in range(0, nInputEvents, nOutputEvents):
 
 ################## Job Initialise ########################################		
@@ -204,14 +210,13 @@ def main():
 		#print slic.listAttributes()
 		result = job.append(slic)
 		if not result['OK']:
-			# job.append will return an error message if your application object is not properly initialised
 			print result['Message']
 			sys.exit(2)
 
 ################## lcsim (digitization and tracking) #####################
 		lcsim = LCSIM()
 		lcsim.setVersion(softVersions[1])
-		lcsim.setSteeringFile('steeringFiles/sid_dbd_prePandora_noOverlay.xml')
+		lcsim.setSteeringFile('steeringFiles/sid_dbd_prePandora_noOverlay_v22.xml') # Another version is included in /steeringFiles
 		lcsim.getInputFromApp(slic)
 		lcsim.setTrackingStrategy('steeringFiles/sidloi3_trackingStrategies_default.xml')
 		# lcsim.setAliasProperties('alias.properties')
@@ -284,10 +289,17 @@ def main():
 				sys.exit(2)
 
 ################## Job Finalise ##########################################
-		job.setBannedSites(['LCG.IN2P3-CC.fr', 'LCG.RAL-LCG2.uk', 'LCG.DESY-HH.de', 'LCG.DESYZN.de', 'LCG.KEK.jp'])
+
+		# List of banned sites that the job shall not be sent too. These are sites that jobs tend to fail on,
+		# This list is likely to change.
+		job.setBannedSites(['LCG.IN2P3-CC.fr', 'LCG.RAL-LCG2.uk', 'LCG.DESY-HH.de', 'LCG.DESYZN.de', 'LCG.KEK.jp',
+							'OSG.PNNL.us',])
+
 		job.setCPUTime(50000)
 		job.setPlatform('x86_64-slc5-gcc43-opt')
 
+		# Sets the output data file according to if -f is selcted, ships ouput to your /ilc/user/a/aPerson/
+		# directory on the grid.
 		if args.flavortag:
 			job.setOutputData(flavortagOutput, diracOutput, args.SE)
 
@@ -299,6 +311,7 @@ def main():
 
 		if args.dontPromptMe:
 			job.dontPromptMe()
+		# Submits Job!!!
 		job.submit()
 
 	return 0;

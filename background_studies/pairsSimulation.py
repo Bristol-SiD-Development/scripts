@@ -4,6 +4,7 @@ import argparse
 import os
 
 def parse_args():
+	# Takes in arguments from the command line!!!
 	current_directory = os.getcwd()
 
 	parser = argparse.ArgumentParser("Run the SiD reco chain")
@@ -49,7 +50,7 @@ def run_slic(slic, geometry, number, macro, tbl):
 					"-i", "converterOutput.stdhep",
 					"-o", "slicOutput.slcio",
 					"-m", macro, 
-					"-r", "200000",
+					"-r", "500000",
 					"-P", tbl])
 
 	print "#### Done"
@@ -63,6 +64,8 @@ def merge_events(lcsim, steeringFile):
 
 def main():
 	args = parse_args()
+
+	# List of all the things needed. This needs to be personalised by you.
 	converter="/afs/cern.ch/user/j/jtingey/GP/GuineaPig_conversion"
 	slic="/cvmfs/ilc.desy.de/sw/x86_64_gcc44_sl6/v01-17-08/slic/ilcsoft-v01-17-07/bin/slic"
 	lcsim="/afs/cern.ch/user/j/jtingey/GP/merge_events/lcsim-distribution-3.1.3-bin.jar"
@@ -71,12 +74,22 @@ def main():
 	tbl="/cvmfs/ilc.desy.de/sw/x86_64_gcc44_sl6/v01-17-08/slic/ilcsoft-v01-17-07/data/particle.tbl"
 	merge="merge.xml"
 
+	# Run the conversion of pairs.dat file to stdhep.
 	run_conversion(converter, args.pairsInput, args.numberOfParticles)
+
+	# Run SLIC on this stdhep file.
 	run_slic(slic, geometry, args.numberOfParticles, macro, tbl)
+
+	# Cleanup of the converter output file
 	os.remove("converterOutput.stdhep")
+
+	# Merge the events in the SLIC output file into one event. 
 	merge_events(lcsim, merge)
+
+	# Cleanup only leaving the final output file
 	os.remove("slicOutput.slcio")
 	os.rename("mergeOutput.slcio", args.output_name)
+	
 	print "#### FINISHED ####"
 
 if __name__=="__main__":
