@@ -85,6 +85,7 @@ def make_graph( a, b, c, d, e, f, g, h, i, j, k, l, m, output ):
 
 	c1 = TCanvas() # Creates the canvas to draw the bar chart to.
 	c1.SetGrid() # Adds grid lines to canvas.
+	c1.SetLogy(1)
 
 	hithist  = ROOT.TH1F( "hithist", "hits per sub detector", 13, 0, 0) # Creates the histogram with 13 bins.
 	hithist.SetFillColor(38) 			# Makes bars blue
