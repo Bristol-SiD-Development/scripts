@@ -1,15 +1,26 @@
-# Modified hitCounts script that creates a histogram of all the transvarse momenta.
-# Author Miles Toon , 07/09/15
+# Modified xyzbin that gets the x y positions of beam cal cell
+# Author Miles Toon , 18/09/15 
+
+# UNFINISHED
 
 import os, sys, argparse, os.path
 import ROOT
 import array
 
 from pyLCIO import IOIMPL
+
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TGraph2D, TTree, TH3F, TMath
+from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TLegend
+from collections import Counter
+from ctypes import c_longlong as ll
+
+
+from pyLCIO.io.LcioReader import LcioReader
+
+def beep():
+    print "\a\a\a"
 
 def args_parse():
 	# Takes in arguments from the command line, using argparse allows for --help interface.
@@ -35,39 +46,51 @@ def args_parse():
 
 	return parser.parse_args()
 
-def get_mom(event): # Each detector is a 'collection', the No. of Elements are the hits.
+def get_pos(event): # start position of each particle
 
-	n = TH1F("n", "Transverse Momenta", 100, 0, 2) # creates 1d histogram
-	mcpart = event.getCollection("MCParticle") 
-	for ding in mcpart: 							# for every entry in the collection
-		if ding.getPDG() == 11 or ding.getPDG() == -11: # only if it is electron or positron
-			mom = ding.getMomentum()
+	# get a hit collection
+	BCAL = event.getCollection("BeamCalHits")
 
-			x = mom[0] # assigns value to variable
-			y = mom[1]
-			
-			t = TMath.Sqrt((x*x)+(y*y)) # calculates the transverse momentum using Pythagoras
-			n.Fill(t, 1) # fills the histogram
-			
-	return n
+	# get the cell ID encoding string from the collection parameters
+	cellIdEncoding = BCAL.getParameters().getStringVal( EVENT.LCIO.CellIDEncoding )
 
-def make_graph(n, output):
+	# define a cell ID decoder for the collection
+	idDecoder = UTIL.BitField64( cellIdEncoding )
+	for calhit in BCAL:
+		
+		# combine the two 32 bit cell IDs of the hit into one 64 bit integer
+		cellID = long( calhit.getCellID0() & 0xffffffff ) | ( long( calhit.getCellID1() ) << 32 )
+
+		 # set up the ID decoder for this cell ID
+        idDecoder.setValue( cellID )
+       
+        # access the field information using a valid field from the cell ID encoding string
+        print 'x:', idDecoder['x'].value()
+        print 'y:', idDecoder['y'].value()
+        # can put 'barrel' , 'layer' instead of 'x' and 'y' to get those values
+       
+	a = TNtuple("a", "cell", "layer")
+
+def make_graph( a, output ): # currently doesnt draw
 	
 
-	c1 = TCanvas() # Creates the canvas to draw the bar chart to.
+	c1 = TCanvas("c1","c1", 1000, 1000) # Creates the canvas to draw the bar chart to.
 	c1.SetGrid() # Adds grid lines to canvas.
-	c1.cd()
-	c1.SetLogy(1)
 
-	n.Draw("BAR1") 				# Draws the histogram to the canvas.
-	n.SetFillColor(8)
-	#htemp.getXaxis().SetLimits(-100, 100)
-	#htemp.getYaxis().SetLimits(-100, 100)
+	leg = TLegend(0.7,0.6,0.95,0.95)
+	leg.AddEntry( a, "Start", "P")
+
+	a.Draw("hits")
+
+	#leg.Draw()
+	
 	c1.Update()					# Makes the canvas show the histogram.
     
 	img = ROOT.TImage.Create()				# creates image
 	img.FromPad(c1)							# takes it from canvas
 	img.WriteImage(output)	# Saves it to png file with this name in input file directory.
+
+	return c1
 
 def input_files(inputDirectory, inputFile):
 	# Checks the input files and returns list of those to process.
@@ -110,7 +133,7 @@ def output(outputDirectory, outputName, inputFile):
 	# Checks the output path exists and return the .root output file name/path.
 	if os.path.isdir(outputDirectory) and outputName == 'default':
 		inputpath, extension = os.path.splitext(inputFile)
-		outputName = os.path.basename(inputpath) + '_mom.png'
+		outputName = os.path.basename(inputpath) + '.png' # add a tag here before .png to change filename
 		print '\nOutput = ' + os.path.join(outputDirectory,outputName)
 		return True, os.path.join(outputDirectory,outputName)
 
@@ -159,15 +182,18 @@ def main():
 
 		for event in reader:
 			
-			n = get_mom(event)
+			a = get_pos(event)
 
-			make_graph(n, outputFile)
-			
+			#make_graph(a, outputFile)
+
 		reader.close()
 
 	raw_input("press <ENTER> to close")	# Waits for user to press enter so you may view the chart.
 
+
 	print "\nProcessed " + str(file_counter) + " files."
+
+	#print "Outputted to - " + outputFile
 
 if __name__=='__main__':
 	main()

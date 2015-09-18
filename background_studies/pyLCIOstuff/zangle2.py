@@ -1,5 +1,5 @@
-# Modified hitCounts script that creates a histogram of all the transvarse momenta.
-# Author Miles Toon , 07/09/15
+# Modified posPlot script that plots Zenith angle of electrons and positrons. compares ones that left and ones that stayed in detector
+# Author Miles Toon , 09/09/15
 
 import os, sys, argparse, os.path
 import ROOT
@@ -9,7 +9,7 @@ from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TGraph2D, TTree, TH3F, TMath
+from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TGraph2D, TTree, TH3F, TMath, TLegend # not all are used but I'm being safe
 
 def args_parse():
 	# Takes in arguments from the command line, using argparse allows for --help interface.
@@ -35,34 +35,93 @@ def args_parse():
 
 	return parser.parse_args()
 
-def get_mom(event): # Each detector is a 'collection', the No. of Elements are the hits.
+def get_pos(event): # Each detector is a 'collection', the No. of Elements are the hits.
 
-	n = TH1F("n", "Transverse Momenta", 100, 0, 2) # creates 1d histogram
-	mcpart = event.getCollection("MCParticle") 
-	for ding in mcpart: 							# for every entry in the collection
-		if ding.getPDG() == 11 or ding.getPDG() == -11: # only if it is electron or positron
-			mom = ding.getMomentum()
+	i = 0
+	j = 0
+	n = TH1F("n", "Zenith Angles", 100, 0, 2) # first histogram to be filled with particles below the cut
+	m = TH1F("m", "Zenith Angles", 100, 0, 2) # second for above
+ 	k = 0 # counter for the number of particles below
+	mcpart = event.getCollection("MCParticle") # essentially 'opens up' the collection
+    
+   
+	
+	for ding in mcpart: # for every entry in the collection - can be called whatever
+		mom = ding.getMomentum() # gets the momentum in a 3 vector fro mthe slcio file collection
+		left = ding.hasLeftDetector() # checks if the particle has left
 
-			x = mom[0] # assigns value to variable
+		if (ding.getPDG() == 11 or ding.getPDG() == -11) and mom[2]!=0 and left: # condition that only allows electrons or positrons (their pdg id) also, the momenta cant be 0
+			
+			i+=1
+
+			x = mom[0] # assign a vales from the 3 vector to a variable
 			y = mom[1]
+			z = mom[2] 
+			if z ==0:
+				print "weird angle..." # was to show me how many zeros I was getting
 			
-			t = TMath.Sqrt((x*x)+(y*y)) # calculates the transverse momentum using Pythagoras
-			n.Fill(t, 1) # fills the histogram
+			t = TMath.Sqrt((x*x)+(y*y)) # calculates transverse momentum using Pythatgoras
 			
-	return n
+				
+			try: 		# try statement allows to get around division by 0
+				theta = TMath.ATan(t / TMath.Abs(z)) # calculate the angle
+			except ZeroDivisionError:
+			
+				theta = 90 # if the z momentum is 0, the angle is 90.
 
-def make_graph(n, output):
+			m.Fill(theta, 1) # fills up the histogram so the value of theta gets 1 extra weight per cycle
+
+		if (ding.getPDG() == 11 or ding.getPDG() == -11) and mom[2]!=0 and left == False: 
+			
+			j+=1
+
+			x = mom[0] # assign a vales from the 3 vector to a variable
+			y = mom[1]
+			z = mom[2] 
+			if z ==0:
+				print "weird angle..." # was to show me how many zeros I was getting
+			
+			t = TMath.Sqrt((x*x)+(y*y)) # calculates transverse momentum using Pythatgoras
+			
+				
+			try: 		# try statement allows to get around division by 0
+				theta = TMath.ATan(t / TMath.Abs(z)) # calculate the angle
+			except ZeroDivisionError:
+			
+				theta = 90 # if the z momentum is 0, the angle is 90.
+
+			n.Fill(theta, 1) # fills the other histogram
+
+	print "number of particles left: ", i, "\nnumber of particles didn't leave: ", j
+	return m, n # returns the two histograms
+
+def make_graph(n, m, output): # output is the name for the image that will be saved
 	
 
 	c1 = TCanvas() # Creates the canvas to draw the bar chart to.
 	c1.SetGrid() # Adds grid lines to canvas.
-	c1.cd()
-	c1.SetLogy(1)
+	c1.cd() 		# selects canvas
+	c1.SetLogy(1) 	# sets log scale on y axis
+	n.GetXaxis().SetTitle("Zenith Angle (Degrees)")
+	n.GetYaxis().SetTitle("Count")
 
-	n.Draw("BAR1") 				# Draws the histogram to the canvas.
-	n.SetFillColor(8)
-	#htemp.getXaxis().SetLimits(-100, 100)
-	#htemp.getYaxis().SetLimits(-100, 100)
+	leg = TLegend(0.6,0.7,0.89,0.89)
+	leg.AddEntry(n, "Particles Not Left", "F")
+	leg.AddEntry(m, "Particles Have Left", "F")
+
+	n.Draw() 				# Draws the histogram to the canvas.
+	n.SetLineColor(12)
+	n.SetFillColor(31)
+	n.SetStats(0)
+
+	m.Draw("same")			# Draws onto same canvas without replacing
+	m.SetStats(0)
+	m.SetFillStyle(3344)
+	m.SetLineColor(2)
+	m.SetFillColor(2)
+	
+	leg.Draw()
+
 	c1.Update()					# Makes the canvas show the histogram.
     
 	img = ROOT.TImage.Create()				# creates image
@@ -110,7 +169,7 @@ def output(outputDirectory, outputName, inputFile):
 	# Checks the output path exists and return the .root output file name/path.
 	if os.path.isdir(outputDirectory) and outputName == 'default':
 		inputpath, extension = os.path.splitext(inputFile)
-		outputName = os.path.basename(inputpath) + '_mom.png'
+		outputName = os.path.basename(inputpath) + '_angle_compare_left.png' # change this entry to tag stuff on the end of the image name
 		print '\nOutput = ' + os.path.join(outputDirectory,outputName)
 		return True, os.path.join(outputDirectory,outputName)
 
@@ -159,15 +218,18 @@ def main():
 
 		for event in reader:
 			
-			n = get_mom(event)
+			m, n = get_pos(event) # assigns the output histograms of the funtion to the variables n and m
 
-			make_graph(n, outputFile)
+			make_graph(n, m, outputFile) 
 			
 		reader.close()
 
 	raw_input("press <ENTER> to close")	# Waits for user to press enter so you may view the chart.
 
+
 	print "\nProcessed " + str(file_counter) + " files."
+
+	#print "Outputted to - " + outputFile
 
 if __name__=='__main__':
 	main()

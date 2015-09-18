@@ -1,5 +1,5 @@
-# Modified hitCounts script that creates a histogram of all the transvarse momenta.
-# Author Miles Toon , 07/09/15
+# Modified hitCounts script that plots x y z coordinates of the start of each particle
+# Author Miles Toon , 16/09/15 
 
 import os, sys, argparse, os.path
 import ROOT
@@ -9,7 +9,7 @@ from pyLCIO import IOIMPL
 from pyLCIO import UTIL
 from pyLCIO import EVENT
 
-from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TGraph2D, TTree, TH3F, TMath
+from ROOT import TFile, TNtuple, TCanvas, TH1F, TAxis, TSystem, TGraph, TLegend
 
 def args_parse():
 	# Takes in arguments from the command line, using argparse allows for --help interface.
@@ -35,39 +35,64 @@ def args_parse():
 
 	return parser.parse_args()
 
-def get_mom(event): # Each detector is a 'collection', the No. of Elements are the hits.
+def get_pos(event): # start position of each particle
 
-	n = TH1F("n", "Transverse Momenta", 100, 0, 2) # creates 1d histogram
-	mcpart = event.getCollection("MCParticle") 
-	for ding in mcpart: 							# for every entry in the collection
-		if ding.getPDG() == 11 or ding.getPDG() == -11: # only if it is electron or positron
-			mom = ding.getMomentum()
-
-			x = mom[0] # assigns value to variable
-			y = mom[1]
+	a = TNtuple("a", "a", "x:y:z:x2:y2:z2") # creates ntuple to store the values of x y z
+	
+	mcpart = event.getCollection("MCParticle")
+	for ding in mcpart:
+		ptype = ding.getPDG()
+		if ptype != 11 and ptype != -11:
 			
-			t = TMath.Sqrt((x*x)+(y*y)) # calculates the transverse momentum using Pythagoras
-			n.Fill(t, 1) # fills the histogram
-			
-	return n
+			pos = ding.getVertex()
+			end = ding.getEndpoint()		
 
-def make_graph(n, output):
+			x = pos[0]
+			y = pos[1]
+			z = pos[2]
+
+			x2 = end[0]
+			y2 = end[1]
+			z2 = end[2]
+
+			print x, "\t", y, "\t", z 
+
+			a.Fill(x,y,z,x2,y2,z2)
+
+	return  a
+
+def make_graph( a, output ):
 	
 
-	c1 = TCanvas() # Creates the canvas to draw the bar chart to.
+	c1 = TCanvas("c1","c1", 1000, 1000) # Creates the canvas to draw the bar chart to.
 	c1.SetGrid() # Adds grid lines to canvas.
-	c1.cd()
-	c1.SetLogy(1)
 
-	n.Draw("BAR1") 				# Draws the histogram to the canvas.
-	n.SetFillColor(8)
-	#htemp.getXaxis().SetLimits(-100, 100)
-	#htemp.getYaxis().SetLimits(-100, 100)
+	leg = TLegend(0.7,0.6,0.95,0.95)
+	leg.AddEntry( a, "Start", "P")
+
+	n0 = TNtuple("n0", "n0", "x:y:z") # creates ntuple to store the values of x y z
+	n0.SetMarkerColor(0)
+	n0.Fill(-4500,-4500,-5700)
+	n0.Fill(4500,4500,5700)
+	n0.Draw("x:y:z")
+
+	#a.SetMarkerColor(1)
+	#a.SetMarkerStyle(6)
+	#a.Draw("x:y:z","","same") 				# Draws the histogram to the canvas.
+
+	a.SetMarkerColor(2)
+	a.SetMarkerStyle(6)
+	a.Draw("x2:y2:z2","","same") 			# Draws the histogram to the canvas.
+
+	#leg.Draw()
+	
 	c1.Update()					# Makes the canvas show the histogram.
     
 	img = ROOT.TImage.Create()				# creates image
 	img.FromPad(c1)							# takes it from canvas
 	img.WriteImage(output)	# Saves it to png file with this name in input file directory.
+
+	return c1
 
 def input_files(inputDirectory, inputFile):
 	# Checks the input files and returns list of those to process.
@@ -110,7 +135,7 @@ def output(outputDirectory, outputName, inputFile):
 	# Checks the output path exists and return the .root output file name/path.
 	if os.path.isdir(outputDirectory) and outputName == 'default':
 		inputpath, extension = os.path.splitext(inputFile)
-		outputName = os.path.basename(inputpath) + '_mom.png'
+		outputName = os.path.basename(inputpath) + '_startPlot.png'
 		print '\nOutput = ' + os.path.join(outputDirectory,outputName)
 		return True, os.path.join(outputDirectory,outputName)
 
@@ -159,15 +184,19 @@ def main():
 
 		for event in reader:
 			
-			n = get_mom(event)
+			a = get_pos(event)
 
-			make_graph(n, outputFile)
+			make_graph(a, outputFile)
+
 			
 		reader.close()
 
 	raw_input("press <ENTER> to close")	# Waits for user to press enter so you may view the chart.
 
+
 	print "\nProcessed " + str(file_counter) + " files."
+
+	#print "Outputted to - " + outputFile
 
 if __name__=='__main__':
 	main()
