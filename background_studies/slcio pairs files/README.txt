@@ -1,0 +1,1 @@
+Some .slcio files ran through the SLIC process for use with the pyLCIO scripts.
